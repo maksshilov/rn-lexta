@@ -4,17 +4,14 @@ import { Button, Image, ImageBackground, SafeAreaView, StyleSheet, Text, View } 
 import { NavigationContainer } from '@react-navigation/native'
 import AppLoading from 'expo-app-loading'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-
+import { createStackNavigator } from '@react-navigation/stack'
 import { bootstrap } from './src/bootstrap'
 import LoginScreen from './src/screens/loginScreen'
-import MainScreen from './src/screens/mainScreen'
-import SearchScreen from './src/screens/searchScreen'
-import FavScreen from './src/screens/favScreen'
-import MessageScreen from './src/screens/messageScreen'
+import MainNavigation from './src/MainNavigation'
+import ProfileScreen from './src/screens/profileScreen'
 
-const Tab = createMaterialBottomTabNavigator()
+const Stack = createStackNavigator()
 
 const App = () => {
 	const [isReady, setIsReady] = React.useState(false)
@@ -35,86 +32,18 @@ const App = () => {
 
 	let content = (
 		<NavigationContainer>
-			<Tab.Navigator
-				shifting={false}
-				barStyle={{ backgroundColor: '#fff' }}
-				activeColor="#8f2d32"
-			>
-				<Tab.Screen
-					name="main"
-					component={MainScreen}
-					options={{
-						tabBarLabel: (
-							<Text style={{ fontSize: 11, fontFamily: 'gothampro-regular' }}>
-								Главная
-							</Text>
-						),
-						tabBarIcon: ({ color }) => (
-							<MaterialCommunityIcons name="home-outline" color={color} size={24} />
-						),
-					}}
+			<Stack.Navigator initialRouteName="Main">
+				<Stack.Screen
+					name="Main"
+					component={MainNavigation}
+					options={{ headerShown: false }}
 				/>
-				<Tab.Screen
-					name="search"
-					component={SearchScreen}
-					options={{
-						tabBarLabel: (
-							<Text style={{ fontSize: 11, fontFamily: 'gothampro-regular' }}>
-								Поиск
-							</Text>
-						),
-						tabBarIcon: ({ color }) => (
-							<MaterialCommunityIcons name="magnify" color={color} size={24} />
-						),
-					}}
+				<Stack.Screen
+					name="Profile"
+					component={ProfileScreen}
+					options={{ headerShown: false }}
 				/>
-				<Tab.Screen
-					name="logo"
-					component={MainScreen}
-					options={{
-						tabBarLabel: '',
-						tabBarIcon: () => (
-							<Image
-								resizeMode="contain"
-								source={require('./assets/logo_bottom.png')}
-								style={{
-									width: '120%',
-									height: '120%',
-									marginTop: 5,
-								}}
-							/>
-						),
-					}}
-				/>
-				<Tab.Screen
-					name="fav"
-					component={FavScreen}
-					options={{
-						tabBarLabel: (
-							<Text style={{ fontSize: 11, fontFamily: 'gothampro-regular' }}>
-								Избранное
-							</Text>
-						),
-						tabBarIcon: ({ color }) => (
-							<MaterialCommunityIcons name="heart-outline" color={color} size={24} />
-						),
-					}}
-				/>
-				<Tab.Screen
-					name="message"
-					component={MessageScreen}
-					options={{
-						tabBarLabel: (
-							<Text style={{ fontSize: 11, fontFamily: 'gothampro-regular' }}>
-								Сообщения
-							</Text>
-						),
-						tabBarIcon: ({ color }) => (
-							<MaterialCommunityIcons name="forum-outline" color={color} size={24} />
-						),
-					}}
-				/>
-			</Tab.Navigator>
+			</Stack.Navigator>
 		</NavigationContainer>
 	)
 

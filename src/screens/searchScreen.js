@@ -1,11 +1,15 @@
 import React from 'react'
-import { Image, ImageBackground, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
+import LottieView from 'lottie-react-native'
 
 const SearchScreen = () => {
 	return (
-		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-			<Text>Search screen</Text>
-		</View>
+		<>
+			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+				<Text>Search screen</Text>
+			</View>
+			{/* <LottieView source={require('../../assets/12049-vik4graphic-no-bg')} autoPlay loop /> */}
+		</>
 	)
 }
 export default SearchScreen
