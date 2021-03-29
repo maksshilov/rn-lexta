@@ -7,7 +7,7 @@ import ProfileMenuSection from '../components/profileMenuSection'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const ProfileScreen = () => {
+export default function ProfileScreen() {
 	return (
 		<ScrollView style={{ flex: 1, paddingHorizontal: 10 }}>
 			<View style={{ paddingTop: windowHeight * 0.05, alignItems: 'center' }}>
@@ -40,4 +40,3 @@ const ProfileScreen = () => {
 		</ScrollView>
 	)
 }
-export default ProfileScreen

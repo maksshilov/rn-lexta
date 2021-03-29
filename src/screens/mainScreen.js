@@ -3,7 +3,7 @@ import { Image, Text, View, Dimensions, Animated } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import Carousel from '../components/carousel'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-// import Animated from 'react-native-reanimated'
+import ObjectMini from '../components/objectMini'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -143,104 +143,49 @@ export default function MainScreen({ navigation }) {
 							marginBottom: 10,
 						}}
 					>
-						<View
-							style={{
-								width: windowWidth * 0.45,
-							}}
+						<TouchableOpacity
+							onPress={() =>
+								navigation.navigate('Object', {
+									price: '6 000 000',
+									rooms: '6-комн.',
+									square: '66.6 м2',
+									floor: '6 эт.',
+									address: 'г. Обнинск, пр-т Маркса, 666',
+								})
+							}
 						>
-							<Image
-								source={{
-									uri: `https://picsum.photos/1440/2842?random=${Math.round(
-										Math.random() * 1000
-									)}`,
-								}}
-								resizeMode="cover"
-								style={{
-									width: windowWidth * 0.45,
-									height: windowWidth * 0.45,
-									marginBottom: 10,
-								}}
+							<ObjectMini
+								windowWidth={windowWidth}
+								price="6 000 000"
+								rooms="6-комн."
+								square="66.6 м2"
+								floor="6 эт."
+								address="г. Обнинск, пр-т Маркса, 666"
+								navigation={navigation}
 							/>
+						</TouchableOpacity>
 
-							<Text
-								style={{
-									fontFamily: 'gothampro-bold',
-									fontSize: 12,
-									marginBottom: 10,
-								}}
-							>
-								6 000 000 &#8381;
-							</Text>
-							<Text
-								style={{
-									fontFamily: 'gothampro-regular',
-									fontSize: 12,
-									marginBottom: 10,
-								}}
-							>
-								2-комн. | 75.5 м2 | 6 эт.
-							</Text>
-							<Text
-								style={{
-									fontFamily: 'gothampro-regular',
-									fontSize: 12,
-									marginBottom: 10,
-									color: 'grey',
-									lineHeight: 15,
-								}}
-							>
-								г. Обнинск, пр-т Маркса, 120
-							</Text>
-						</View>
-						<View
-							style={{
-								width: windowWidth * 0.45,
-							}}
+						<TouchableOpacity
+							onPress={() =>
+								navigation.navigate('Object', {
+									price: '2 000 000',
+									rooms: '2-комн.',
+									square: '22.2 м2',
+									floor: '2 эт.',
+									address: 'г. Обнинск, пр-т Маркса, 222',
+								})
+							}
 						>
-							<Image
-								source={{
-									uri: `https://picsum.photos/1440/2842?random=${Math.round(
-										Math.random() * 1000
-									)}`,
-								}}
-								resizeMode="cover"
-								style={{
-									width: windowWidth * 0.45,
-									height: windowWidth * 0.45,
-									marginBottom: 10,
-								}}
+							<ObjectMini
+								windowWidth={windowWidth}
+								price="2 000 000"
+								rooms="2-комн."
+								square="22.2 м2"
+								floor="2 эт."
+								address="г. Обнинск, пр-т Маркса, 222"
+								navigation={navigation}
 							/>
-
-							<Text
-								style={{
-									fontFamily: 'gothampro-bold',
-									fontSize: 12,
-									marginBottom: 10,
-								}}
-							>
-								6 000 000 &#8381;
-							</Text>
-							<Text
-								style={{
-									fontFamily: 'gothampro-regular',
-									fontSize: 12,
-									marginBottom: 10,
-								}}
-							>
-								2-комн. | 75.5 м2 | 6 эт.
-							</Text>
-							<Text
-								style={{
-									fontFamily: 'gothampro-regular',
-									fontSize: 12,
-									marginBottom: 10,
-									color: 'grey',
-									lineHeight: 15,
-								}}
-							>
-								г. Обнинск, пр-т Маркса, 120
-							</Text>
-						</View>
+						</TouchableOpacity>
 					</View>
 				</View>
 				{/* NEWS */}

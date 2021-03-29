@@ -1,15 +1,13 @@
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { Button, Image, ImageBackground, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import AppLoading from 'expo-app-loading'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { createStackNavigator } from '@react-navigation/stack'
 import { bootstrap } from './src/bootstrap'
 import LoginScreen from './src/screens/loginScreen'
 import MainNavigation from './src/MainNavigation'
 import ProfileScreen from './src/screens/profileScreen'
+import ObjectScreen from './src/screens/objectScreen'
 
 const Stack = createStackNavigator()
 
@@ -41,6 +39,11 @@ const App = () => {
 				<Stack.Screen
 					name="Profile"
 					component={ProfileScreen}
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="Object"
+					component={ObjectScreen}
 					options={{ headerShown: false }}
 				/>
 			</Stack.Navigator>

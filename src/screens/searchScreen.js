@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, View } from 'react-native'
 import LottieView from 'lottie-react-native'
 
-const SearchScreen = () => {
+export default function SearchScreen() {
 	return (
 		<>
 			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -12,4 +12,3 @@ const SearchScreen = () => {
 		</>
 	)
 }
-export default SearchScreen

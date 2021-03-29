@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Text, View, Dimensions, Image, StyleSheet } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -30,14 +30,16 @@ const dummyData = [
 const Slide = memo(function Slide({ data }) {
 	return (
 		<View style={styles.slide}>
-			<View
-				style={{
-					...styles.slideImage,
-					elevation: 10,
-				}}
-			>
-				<Image source={{ uri: data.image }} style={styles.slideImage}></Image>
-			</View>
+			<TouchableOpacity>
+				<View
+					style={{
+						...styles.slideImage,
+						elevation: 10,
+					}}
+				>
+					<Image source={{ uri: data.image }} style={styles.slideImage}></Image>
+				</View>
+			</TouchableOpacity>
 			<Text style={styles.slideTitle}>{data.title}</Text>
 		</View>
 	)

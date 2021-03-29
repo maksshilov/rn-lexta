@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, ImageBackground, Text, View } from 'react-native'
 
-const LoginScreen = () => {
+export default function LoginScreen() {
 	const loginHandler = () => {
 		fetch(
 			'https://lexta.kproject.su/api/GetToken.php?user=admin@lexta.kproject.su&password=cbaf40ce7d522f59ece3d21b20aa9f15'
@@ -70,5 +70,3 @@ const LoginScreen = () => {
 		</View>
 	)
 }
-
-export default LoginScreen
