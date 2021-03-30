@@ -4,7 +4,6 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function PhoneShow() {
 	const [phone, setPhone] = useState(false)
-	console.log(phone)
 	return (
 		<TouchableOpacity
 			style={{ alignItems: 'center' }}

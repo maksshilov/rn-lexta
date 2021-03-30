@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useState } from 'react'
-import { FlatList, Image, Dimensions, View, Text, StyleSheet } from 'react-native'
+import React, { useRef } from 'react'
+import { Dimensions, View, Text } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AppDetails from '../components/appDetails'
@@ -8,65 +8,22 @@ import ObjectParams from '../components/objectParams'
 import ObjectMini from '../components/objectMini'
 import { WebView } from 'react-native-webview'
 import PhoneShow from '../components/phoneShow'
+import ObjectCarousel from '../components/objectCarousel'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const images = Array.from({ length: 10 }).map((_, i) => {
-	return {
-		id: i,
-		image: `https://picsum.photos/600/600?random=${Math.round(Math.random() * 1000)}`,
-	}
-})
-
-const Slide = ({ data }) => {
-	return (
-		<View style={{ flex: 1 }}>
-			<Image
-				source={{ uri: data.image }}
-				style={{ width: windowWidth, height: windowWidth / 1.2 }}
-			/>
-		</View>
-	)
-}
-
 export default function ObjectScreen({ route, navigation }) {
-	const [index, setIndex] = useState(0)
-	const indexRef = useRef(index)
-	indexRef.current = index
-	const onScroll = useCallback((event) => {
-		const slideSize = event.nativeEvent.layoutMeasurement.width
-		const index = event.nativeEvent.contentOffset.x / slideSize
-		const roundIndex = Math.round(index)
-		const distance = Math.abs(roundIndex - index)
-		const isNoMansLand = 0.4 < distance
-
-		if (roundIndex !== indexRef.current && !isNoMansLand) {
-			setIndex(roundIndex)
-		}
-	}, [])
+	const scrollToTop = useRef(null)
 
 	return (
-		<ScrollView>
+		<ScrollView ref={scrollToTop} scrollTo contentContainerStyle={{ backgroundColor: '#fff' }}>
 			<View style={{ alignItems: 'center' }}>
-				<FlatList
-					onScroll={onScroll}
-					showsHorizontalScrollIndicator={false}
-					horizontal
-					pagingEnabled
-					data={images}
-					keyExtractor={(item) => String(item.id)}
-					renderItem={({ item }) => {
-						return <Slide data={item} />
-					}}
-				/>
+				<ObjectCarousel />
 				<View style={{ position: 'absolute', left: 20, top: 30 }}>
 					<TouchableOpacity onPress={() => navigation.goBack()}>
 						<MaterialCommunityIcons name="arrow-left-thick" color="#fff" size={30} />
 					</TouchableOpacity>
 				</View>
-				<Text style={{ marginTop: -30, fontFamily: 'gothampro-regular' }}>
-					{index + 1}/10
-				</Text>
 			</View>
 			<View style={{ paddingHorizontal: 10 }}>
 				{/* DATE */}
@@ -95,7 +52,7 @@ export default function ObjectScreen({ route, navigation }) {
 							fontSize: 20,
 						}}
 					>
-						4 599 999 &#8381;
+						{route.params.price} &#8381;
 					</Text>
 					<View
 						style={{
@@ -111,13 +68,13 @@ export default function ObjectScreen({ route, navigation }) {
 				</View>
 				{/* PARAMS */}
 				<View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
-					<ObjectParams type="Квартира" value="2-комн." />
+					<ObjectParams type="Квартира" value={route.params.rooms} />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
-					<ObjectParams type="Площадь" value="62 м2" />
+					<ObjectParams type="Площадь" value={route.params.square} />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
 					<ObjectParams type="Кухня" value="10.5 м2" />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
-					<ObjectParams type="Этаж" value="3 из 24" />
+					<ObjectParams type="Этаж" value={route.params.floor} />
 				</View>
 				{/* DESCR */}
 				<View>
@@ -289,7 +246,7 @@ export default function ObjectScreen({ route, navigation }) {
 							marginBottom: 15,
 						}}
 					>
-						Калужская обл., г. Обнинск, пр. Ленина, д.134, к.3
+						{route.params.address}
 					</Text>
 				</View>
 				{/* PHONE */}
@@ -325,15 +282,18 @@ export default function ObjectScreen({ route, navigation }) {
 					}}
 				>
 					<TouchableOpacity
-						onPress={() =>
-							navigation.navigate('Object', {
-								price: '6 000 000',
-								rooms: '6-комн.',
-								square: '66.6 м2',
-								floor: '6 эт.',
-								address: 'г. Обнинск, пр-т Маркса, 666',
-							})
-						}
+						onPress={() => {
+							{
+								navigation.navigate('Object', {
+									price: '6 000 000',
+									rooms: '6-комн.',
+									square: '66.6 м2',
+									floor: '6 эт.',
+									address: 'г. Обнинск, пр-т Маркса, 666',
+								})
+								scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
+							}
+						}}
 					>
 						<ObjectMini
 							windowWidth={windowWidth}
@@ -347,7 +307,7 @@ export default function ObjectScreen({ route, navigation }) {
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						onPress={() =>
+						onPress={() => {
 							navigation.navigate('Object', {
 								price: '2 000 000',
 								rooms: '2-комн.',
@@ -355,7 +315,8 @@ export default function ObjectScreen({ route, navigation }) {
 								floor: '2 эт.',
 								address: 'г. Обнинск, пр-т Маркса, 222',
 							})
-						}
+							scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
+						}}
 					>
 						<ObjectMini
 							windowWidth={windowWidth}
@@ -377,7 +338,7 @@ export default function ObjectScreen({ route, navigation }) {
 					}}
 				>
 					<TouchableOpacity
-						onPress={() =>
+						onPress={() => {
 							navigation.navigate('Object', {
 								price: '5 000 000',
 								rooms: '5-комн.',
@@ -385,7 +346,8 @@ export default function ObjectScreen({ route, navigation }) {
 								floor: '5 эт.',
 								address: 'г. Обнинск, пр-т Маркса, 555',
 							})
-						}
+							scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
+						}}
 					>
 						<ObjectMini
 							windowWidth={windowWidth}
@@ -399,7 +361,7 @@ export default function ObjectScreen({ route, navigation }) {
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						onPress={() =>
+						onPress={() => {
 							navigation.navigate('Object', {
 								price: '1 000 000',
 								rooms: '1-комн.',
@@ -407,7 +369,8 @@ export default function ObjectScreen({ route, navigation }) {
 								floor: '1 эт.',
 								address: 'г. Обнинск, пр-т Маркса, 111',
 							})
-						}
+							scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
+						}}
 					>
 						<ObjectMini
 							windowWidth={windowWidth}

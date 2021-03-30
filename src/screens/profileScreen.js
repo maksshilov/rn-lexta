@@ -9,7 +9,9 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function ProfileScreen() {
 	return (
-		<ScrollView style={{ flex: 1, paddingHorizontal: 10 }}>
+		<ScrollView
+			contentContainerStyle={{ flex: 1, paddingHorizontal: 10, backgroundColor: '#fff' }}
+		>
 			<View style={{ paddingTop: windowHeight * 0.05, alignItems: 'center' }}>
 				<View style={{ paddingVertical: 10 }}>
 					<MaterialCommunityIcons name="account-circle" size={80} color="grey" />
