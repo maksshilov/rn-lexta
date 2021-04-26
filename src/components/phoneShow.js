@@ -1,25 +1,28 @@
-import React, { useCallback, useRef, useState } from 'react'
-import { FlatList, Image, Dimensions, View, Text, TouchableOpacity } from 'react-native'
-const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
+import React, { useState } from 'react'
+import { Dimensions, View, Text, Pressable } from 'react-native'
+const { width: windowWidth } = Dimensions.get('window')
 
 export default function PhoneShow() {
 	const [phone, setPhone] = useState(false)
 	return (
-		<TouchableOpacity
-			style={{ alignItems: 'center' }}
-			onPress={() => {
-				setPhone(!phone)
+		<View
+			style={{
+				marginBottom: 20,
+				alignItems: 'center',
 			}}
 		>
-			<View
+			<Pressable
+				android_ripple={{ color: '#fff' }}
 				style={{
 					backgroundColor: '#912e33',
-					alignItems: 'center',
-					justifyContent: 'center',
 					width: windowWidth * 0.9,
 					height: windowWidth * 0.1,
 					borderRadius: 5,
-					marginBottom: 20,
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+				onPress={() => {
+					setPhone(!phone)
 				}}
 			>
 				<Text
@@ -31,7 +34,7 @@ export default function PhoneShow() {
 				>
 					{phone ? '+223 (322) 223-322' : 'Показать телефон'}
 				</Text>
-			</View>
-		</TouchableOpacity>
+			</Pressable>
+		</View>
 	)
 }

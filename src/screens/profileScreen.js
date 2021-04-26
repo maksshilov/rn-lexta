@@ -10,7 +10,7 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 export default function ProfileScreen() {
 	return (
 		<ScrollView
-			contentContainerStyle={{ flex: 1, paddingHorizontal: 10, backgroundColor: '#fff' }}
+			contentContainerStyle={{ flex: 0, paddingHorizontal: 10, backgroundColor: '#fff' }}
 		>
 			<View style={{ paddingTop: windowHeight * 0.05, alignItems: 'center' }}>
 				<View style={{ paddingVertical: 10 }}>

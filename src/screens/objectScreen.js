@@ -249,7 +249,6 @@ export default function ObjectScreen({ route, navigation }) {
 						{route.params.address}
 					</Text>
 				</View>
-				{/* PHONE */}
 			</View>
 			<View style={{ width: windowWidth, height: windowWidth * 0.5, marginBottom: 30 }}>
 				<WebView
@@ -262,6 +261,7 @@ export default function ObjectScreen({ route, navigation }) {
 					}}
 				/>
 			</View>
+			{/* PHONE */}
 			<PhoneShow />
 			<View style={{ paddingHorizontal: 10 }}>
 				<Text

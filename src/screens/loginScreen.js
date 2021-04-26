@@ -1,7 +1,7 @@
 import React from 'react'
-import { Image, ImageBackground, Text, View } from 'react-native'
+import { Image, ImageBackground, Text, View, TouchableOpacity } from 'react-native'
 
-export default function LoginScreen() {
+export default function LoginScreen({ setToken }) {
 	const loginHandler = () => {
 		fetch(
 			'https://lexta.kproject.su/api/GetToken.php?user=admin@lexta.kproject.su&password=cbaf40ce7d522f59ece3d21b20aa9f15'
@@ -16,7 +16,7 @@ export default function LoginScreen() {
 				style={{ flex: 1, alignItems: 'center' }}
 			>
 				<Image
-					source={require('../../assets/bg_login.png')}
+					source={require('../../assets/logo_login.png')}
 					style={{ width: 270, marginTop: 170 }}
 					resizeMode={'contain'}
 				/>

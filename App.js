@@ -1,15 +1,10 @@
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { NavigationContainer } from '@react-navigation/native'
 import AppLoading from 'expo-app-loading'
-import { createStackNavigator } from '@react-navigation/stack'
 import { bootstrap } from './src/bootstrap'
 import LoginScreen from './src/screens/loginScreen'
-import MainNavigation from './src/MainNavigation'
-import ProfileScreen from './src/screens/profileScreen'
-import ObjectScreen from './src/screens/objectScreen'
-
-const Stack = createStackNavigator()
+import AppNavigator from './src/components/appNavigator'
+import { TokenProvider } from './src/components/tokenContext'
 
 const App = () => {
 	const [isReady, setIsReady] = React.useState(false)
@@ -28,29 +23,14 @@ const App = () => {
 		)
 	}
 
-	let content = (
-		<NavigationContainer>
-			<Stack.Navigator initialRouteName="Main">
-				<Stack.Screen
-					name="Main"
-					component={MainNavigation}
-					options={{ headerShown: false }}
-				/>
-				<Stack.Screen
-					name="Profile"
-					component={ProfileScreen}
-					options={{ headerShown: false }}
-				/>
-				<Stack.Screen
-					name="Object"
-					component={ObjectScreen}
-					options={{ headerShown: false }}
-				/>
-			</Stack.Navigator>
-		</NavigationContainer>
-	)
-
-	return content
+	return <AppNavigator />
+	// return token ? (
+	// 	<TokenProvider value={token}>
+	// 		<AppNavigator />
+	// 	</TokenProvider>
+	// ) : (
+	// 	<LoginScreen setToken={setToken} />
+	// )
 }
 
 export default App

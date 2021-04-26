@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Dimensions, Image, StyleSheet } from 'react-native'
+import { Text, View, Dimensions, Image, StyleSheet, Pressable } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
@@ -30,11 +30,15 @@ const dummyData = [
 const Slide = React.memo(function Slide({ data }) {
 	return (
 		<View style={styles.slide}>
-			<TouchableOpacity>
-				<View style={{ ...styles.slideImage, elevation: 5 }}>
-					<Image source={{ uri: data.image }} style={styles.slideImage}></Image>
-				</View>
-			</TouchableOpacity>
+			<Pressable
+				android_ripple={{ color: '#fff' }}
+				style={{ ...styles.slideImage, elevation: 5 }}
+				onPress={() => {}}
+			>
+				{/* <View style={{ ...styles.slideImage, elevation: 5 }}> */}
+				<Image source={{ uri: data.image }} style={styles.slideImage}></Image>
+				{/* </View> */}
+			</Pressable>
 			<Text style={styles.slideTitle}>{data.title}</Text>
 		</View>
 	)
@@ -65,7 +69,6 @@ const styles = StyleSheet.create({
 		paddingBottom: 10,
 	},
 	slideImage: {
-		backgroundColor: '#000',
 		width: windowWidth * 0.4,
 		height: windowWidth * 0.4 * 1.25,
 		borderRadius: 7,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native'
 
 export default function ObjectMini({
 	windowWidth,
@@ -29,6 +29,7 @@ export default function ObjectMini({
 					marginBottom: 10,
 				}}
 			/>
+
 			<Text
 				style={{
 					fontFamily: 'gothampro-bold',

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Text, View, Dimensions, Animated } from 'react-native'
+import { Image, Text, View, Dimensions, Animated, Pressable } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import Carousel from '../components/carousel'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
