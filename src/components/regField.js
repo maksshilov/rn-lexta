@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
 	},
 	inputText: {
 		width: windowWidth * 0.65,
-		color: '#fdfffc',
 		fontFamily: 'gothampro-regular',
 		fontSize: 15,
 		color: '#868686',
@@ -97,7 +96,6 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	textGender: {
-		color: '#fdfffc',
 		fontFamily: 'gothampro-regular',
 		fontSize: 15,
 		color: '#868686',

@@ -78,6 +78,11 @@ const RegistrationScreen = () => {
 					>
 						<Text style={{ ...styles.text, color: '#fff' }}>Зарегистрироваться</Text>
 					</Pressable>
+					<Text style={styles.textBtm}>* отмечены поля обязательные для заполнения</Text>
+					<Text style={styles.textBtm}>
+						Нажимая кнопку «Зарегистрироваться», вы подтверждаете согласие с условиями
+						использования ЛЕХТА и политикой о данных пользователей.
+					</Text>
 				</ScrollView>
 			</View>
 		</React.Fragment>
@@ -104,5 +109,15 @@ const styles = StyleSheet.create({
 	text: {
 		fontFamily: 'gothampro-regular',
 		fontSize: 18,
+	},
+	textBtm: {
+		width: windowWidth * 0.8,
+		textAlign: 'center',
+		lineHeight: 15,
+		marginTop: 20,
+		fontFamily: 'gothampro-regular',
+		fontSize: 12,
+		color: '#868686',
+		marginBottom: 20,
 	},
 })
