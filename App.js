@@ -2,8 +2,8 @@ import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import AppLoading from 'expo-app-loading'
 import { bootstrap } from './src/bootstrap'
-import LoginScreen from './src/screens/loginScreen'
 import AppNavigator from './src/components/appNavigator'
+import LoginRegNavigator from './src/components/loginRegNavigator'
 import { TokenProvider } from './src/components/tokenContext'
 
 const App = () => {
@@ -23,14 +23,14 @@ const App = () => {
 		)
 	}
 
-	return <AppNavigator />
-	// return token ? (
-	// 	<TokenProvider value={token}>
-	// 		<AppNavigator />
-	// 	</TokenProvider>
-	// ) : (
-	// 	<LoginScreen setToken={setToken} />
-	// )
+	// return <loginRegNavigator />
+	return token ? (
+		<TokenProvider value={token}>
+			<AppNavigator />
+		</TokenProvider>
+	) : (
+		<LoginRegNavigator />
+	)
 }
 
 export default App

@@ -3,10 +3,10 @@ import { Image, Text } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 
-import MainScreen from '../src/screens/mainScreen'
-import SearchScreen from '../src/screens/searchScreen'
-import FavScreen from '../src/screens/favScreen'
-import MessageScreen from '../src/screens/messageScreen'
+import MainScreen from './screens/MainScreen'
+import SearchScreen from './screens/SearchScreen'
+import FavScreen from './screens/FavScreen'
+import MessageScreen from './screens/MessageScreen'
 
 const Tab = createMaterialBottomTabNavigator()
 

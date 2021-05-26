@@ -1,72 +1,91 @@
-import React from 'react'
-import { Image, ImageBackground, Text, View, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react'
+import { Text, View, Dimensions, ScrollView, StyleSheet, Pressable, TextInput } from 'react-native'
+import md5 from 'md5'
 
-export default function LoginScreen({ setToken }) {
-	const loginHandler = () => {
-		fetch(
-			'https://lexta.kproject.su/api/GetToken.php?user=admin@lexta.kproject.su&password=cbaf40ce7d522f59ece3d21b20aa9f15'
-		)
-			.then((res) => res.json())
-			.then((json) => setToken(json.Token))
+const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
+
+const LoginScreen = () => {
+	const [login, setLogin] = useState('')
+	const [pass, setPass] = useState('')
+
+	const loginHandler = async () => {
+		await fetch(`https://lexta.pro/api/GetToken.php?user=${login}&password=${md5(pass)}`, {
+			mode: 'no-cors',
+		})
+			.then((res) => res.text())
+			.then((data) => console.log(data))
 	}
 	return (
-		<View style={{ flex: 1 }}>
-			<ImageBackground
-				source={require('../../assets/bg_login.png')}
-				style={{ flex: 1, alignItems: 'center' }}
+		<React.Fragment>
+			<ScrollView
+				contentContainerStyle={{ marginTop: windowHeight * 0.1, alignItems: 'center' }}
 			>
-				<Image
-					source={require('../../assets/logo_login.png')}
-					style={{ width: 270, marginTop: 170 }}
-					resizeMode={'contain'}
-				/>
-				<View
-					style={{
-						marginTop: 180,
-					}}
-				>
-					<TouchableOpacity
-						onPress={() => loginHandler()}
-						style={{
-							backgroundColor: '#912e33',
-							width: 270,
-							height: 50,
-							alignItems: 'center',
-							justifyContent: 'center',
-							borderRadius: 6,
-						}}
-					>
-						<Text
-							style={{ fontFamily: 'gothampro-regular', fontSize: 18, color: '#fff' }}
-						>
-							Войти
-						</Text>
-					</TouchableOpacity>
+				<View style={styles.inputView}>
+					<TextInput
+						placeholder="Телефон или электронная почта"
+						onChangeText={setLogin}
+						style={styles.inputText}
+					/>
 				</View>
-				<View
-					style={{
-						marginTop: 50,
-					}}
-				>
-					<TouchableOpacity
-						style={{
-							borderWidth: 2,
-							borderColor: '#912e33',
-							width: 270,
-							height: 50,
-							alignItems: 'center',
-							justifyContent: 'center',
-							borderRadius: 6,
-						}}
-					>
-						<Text
-							style={{ fontFamily: 'gothampro-regular', fontSize: 18, color: '#000' }}
-						>
-							Зарегистрироваться
-						</Text>
-					</TouchableOpacity>
+				<View style={styles.inputView}>
+					<TextInput
+						placeholder="Пароль"
+						textContentType="password"
+						secureTextEntry
+						onChangeText={setPass}
+						style={styles.inputText}
+					/>
 				</View>
-			</ImageBackground>
-		</View>
+
+				<Pressable
+					android_ripple
+					onPress={() => {
+						if (login && pass) {
+							loginHandler()
+						} else {
+							console.log('err')
+						}
+					}}
+					style={{ ...styles.btn, ...styles.btnLogin }}
+				>
+					<Text style={{ ...styles.text, color: '#fff' }}>Войти</Text>
+				</Pressable>
+			</ScrollView>
+		</React.Fragment>
 	)
 }
+
+const styles = StyleSheet.create({
+	inputView: {
+		paddingLeft: 15,
+		justifyContent: 'center',
+		width: windowWidth * 0.8,
+		height: windowWidth * 0.12,
+		borderRadius: 5,
+		borderWidth: 1,
+		borderColor: '#868686',
+		marginBottom: 20,
+	},
+	inputText: {
+		color: '#fdfffc',
+		fontFamily: 'gothampro-regular',
+		fontSize: 15,
+		color: '#868686',
+	},
+	btn: {
+		width: windowWidth * 0.8,
+		height: 50,
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderRadius: 6,
+	},
+	btnLogin: {
+		backgroundColor: '#912e33',
+	},
+	text: {
+		fontFamily: 'gothampro-regular',
+		fontSize: 18,
+	},
+})
+
+export default LoginScreen

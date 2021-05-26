@@ -2,29 +2,29 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import MainNavigation from '../MainNavigation'
-import ProfileScreen from '../screens/ProfileScreen'
-import ObjectScreen from '../screens/ObjectScreen'
+import StartScreen from '../screens/StartScreen'
+import LoginScreen from '../screens/LoginScreen'
+import RegistrationScreen from '../screens/RegistrationScreen'
 
 const Stack = createStackNavigator()
 
-export default function AppNavigator() {
+export default function LoginRegNavigator({}) {
 	return (
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName="Main">
 				<Stack.Screen
-					name="Main"
-					component={MainNavigation}
+					name="Start"
+					component={StartScreen}
 					options={{ headerShown: false }}
 				/>
 				<Stack.Screen
-					name="Profile"
-					component={ProfileScreen}
+					name="Login"
+					component={LoginScreen}
 					options={{ headerShown: false }}
 				/>
 				<Stack.Screen
-					name="Object"
-					component={ObjectScreen}
+					name="Registration"
+					component={RegistrationScreen}
 					options={{ headerShown: false }}
 				/>
 			</Stack.Navigator>
