@@ -1,5 +1,16 @@
 import React from 'react'
-import { Image, ImageBackground, Text, View, TouchableOpacity, StyleSheet } from 'react-native'
+import {
+	Image,
+	ImageBackground,
+	Text,
+	View,
+	TouchableOpacity,
+	StyleSheet,
+	Dimensions,
+} from 'react-native'
+import Logo from '../components/logo'
+
+const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function StartScreen({ navigation }) {
 	return (
@@ -8,11 +19,8 @@ export default function StartScreen({ navigation }) {
 				source={require('../../assets/bg_login.png')}
 				style={{ flex: 1, alignItems: 'center' }}
 			>
-				<Image
-					source={require('../../assets/logo_login.png')}
-					style={{ width: 270, marginTop: 170 }}
-					resizeMode={'contain'}
-				/>
+				<Logo width={0.67} mt={0.2} />
+
 				<View style={{ marginTop: 180 }}>
 					<TouchableOpacity
 						onPress={() => navigation.navigate('Login')}

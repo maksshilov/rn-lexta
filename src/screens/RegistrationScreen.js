@@ -60,7 +60,7 @@ const RegistrationScreen = () => {
 					<Text style={styles.header}>Регистрация</Text>
 					<RegField label="Имя*" value={firstName} setValue={setFirstName} />
 					<RegField label="Фамилия*" value={lastName} setValue={setLastName} />
-					<RegField label="Телефон*" value={phone} setValue={setPhone} />
+					<RegField phone label="Телефон*" value={phone} setValue={setPhone} />
 					<RegField label="E-mail*" value={email} setValue={setEmail} />
 					<RegField label="Дата рождения" value={birthDate} setValue={setBirthDate} />
 					<RegField gender value={gender} setValue={setGender} />

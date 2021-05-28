@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Text, View, Dimensions, ScrollView, StyleSheet, Pressable, TextInput } from 'react-native'
 import md5 from 'md5'
+import Logo from '../components/logo'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -20,6 +21,7 @@ const LoginScreen = () => {
 			<ScrollView
 				contentContainerStyle={{ marginTop: windowHeight * 0.1, alignItems: 'center' }}
 			>
+				<Text style={styles.header}>Вход</Text>
 				<View style={styles.inputView}>
 					<TextInput
 						placeholder="Телефон или электронная почта"
@@ -56,6 +58,11 @@ const LoginScreen = () => {
 }
 
 const styles = StyleSheet.create({
+	header: {
+		fontFamily: 'gothampro-bold',
+		fontSize: 20,
+		marginBottom: 20,
+	},
 	inputView: {
 		paddingLeft: 15,
 		justifyContent: 'center',

@@ -6,8 +6,10 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function RegField({ label, value, setValue, pass, gender = false }) {
+export default function RegField({ label, value, setValue, pass, gender = false, phone }) {
 	const passProps = pass ? { secureTextEntry: true, textContentType: 'password' } : false
+	const phoneProps = phone ? { keyboardType: 'phone-pad' } : false
+
 	return !gender ? (
 		<View style={styles.inputView}>
 			<TextInput
@@ -16,6 +18,7 @@ export default function RegField({ label, value, setValue, pass, gender = false 
 				value={value}
 				onChangeText={(e) => setValue(e)}
 				{...passProps}
+				{...phoneProps}
 			/>
 			{value ? (
 				<Icon
