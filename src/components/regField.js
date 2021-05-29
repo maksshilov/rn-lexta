@@ -6,12 +6,25 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function RegField({ label, value, setValue, pass, gender = false, phone }) {
+export default function RegField({
+	label,
+	value = true,
+	setValue,
+	pass,
+	gender = false,
+	phone,
+	error = false,
+}) {
 	const passProps = pass ? { secureTextEntry: true, textContentType: 'password' } : false
 	const phoneProps = phone ? { keyboardType: 'phone-pad' } : false
-
+	// console.log(error)
 	return !gender ? (
-		<View style={styles.inputView}>
+		<View
+			style={[
+				styles.inputView,
+				// !value && styles.error
+			]}
+		>
 			<TextInput
 				placeholder={label}
 				style={styles.inputText}
@@ -71,6 +84,9 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: '#868686',
 		marginBottom: 20,
+	},
+	error: {
+		backgroundColor: 'rgba(255,0,0,0.3)',
 	},
 	inputText: {
 		width: windowWidth * 0.65,

@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { Text, View, Dimensions, ScrollView, StyleSheet, Pressable } from 'react-native'
+import { Text, View, Dimensions, ScrollView, StyleSheet, Pressable, Alert } from 'react-native'
 import md5 from 'md5'
-
+import Loader from '../components/loader'
 import RegField from '../components/regField'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({ navigation }) => {
+	const [loading, setLoading] = useState(false)
+
 	const [firstName, setFirstName] = useState('')
 	const [lastName, setLastName] = useState('')
 	const [phone, setPhone] = useState('')
@@ -15,8 +17,15 @@ const RegistrationScreen = () => {
 	const [pass, setPass] = useState('')
 	const [rpass, setRpass] = useState('')
 	const [gender, setGender] = useState('')
-
-	const myHeaders = new Headers()
+	const [errors, setErrors] = useState({
+		firstName: { value: firstName, error: false },
+		lastName: { value: lastName, error: false },
+		phone: { value: phone, error: false },
+		email: { value: email, error: false },
+		gender: { value: gender, error: false },
+		pass: { value: pass, error: false },
+		rpass: { value: rpass, error: false },
+	})
 
 	const data = new FormData()
 	data.append('catalogue', 1)
@@ -29,27 +38,48 @@ const RegistrationScreen = () => {
 	data.append('f_Phone', phone)
 	data.append('f_Email', email)
 	data.append('f_BirthDate', birthDate)
-	data.append('Password1', md5(pass))
-	data.append('Password2', md5(rpass))
+	data.append('Password1', pass)
+	data.append('Password2', rpass)
 	data.append('f_Gender', gender)
 
-	let fields = [firstName, lastName, phone, email, birthDate, pass, rpass]
+	const regHandler = async () => {
+		if (!firstName) return Alert.alert('Ошибка', 'Вы не ввели имя')
+		if (!lastName) return Alert.alert('Ошибка', 'Вы не ввели фамилию')
+		if (!phone) return Alert.alert('Ошибка', 'Вы не ввели телефон')
+		if (!email) return Alert.alert('Ошибка', 'Вы не ввели почту')
+		if (!gender) return Alert.alert('Ошибка', 'Вы не указали пол')
+		if (!pass) return Alert.alert('Ошибка', 'Вы не ввели пароль')
+		if (!rpass) return Alert.alert('Ошибка', 'Вы не ввели подтверждение пароля')
+		if (pass !== rpass) return Alert.alert('Ошибка', 'Пароли не совпадают')
 
-	const checkHandler = () => {
-		fields.forEach((f) => {
-			if (!f) {
-				return console.log(`THERE IS NO `)
-			}
+		setLoading(true)
+		await fetch('https://lexta.pro/netcat/add.php', {
+			method: 'POST',
+			mode: 'no-cors',
+			headers: new Headers(),
+			body: data,
 		})
-	}
-
-	const regHandler = () => {
-		checkHandler()
-		console.log(data)
+			.then((response) => {
+				response.text()
+			})
+			.then(() => {
+				setLoading(false)
+				Alert.alert('Регистрация', 'Регистрация прошла успешно!', [
+					{
+						text: 'Войти',
+						onPress: () => {
+							navigation.navigate('Login')
+						},
+					},
+				])
+			})
+			.catch((err) => console.log(err))
 	}
 
 	return (
 		<React.Fragment>
+			{loading && <Loader />}
+
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
 				<ScrollView
 					contentContainerStyle={{
@@ -58,14 +88,47 @@ const RegistrationScreen = () => {
 					}}
 				>
 					<Text style={styles.header}>Регистрация</Text>
-					<RegField label="Имя*" value={firstName} setValue={setFirstName} />
-					<RegField label="Фамилия*" value={lastName} setValue={setLastName} />
-					<RegField phone label="Телефон*" value={phone} setValue={setPhone} />
-					<RegField label="E-mail*" value={email} setValue={setEmail} />
-					<RegField label="Дата рождения" value={birthDate} setValue={setBirthDate} />
-					<RegField gender value={gender} setValue={setGender} />
-					<RegField pass label="Пароль*" value={pass} setValue={setPass} />
 					<RegField
+						error={errors.firstName.error}
+						label="Имя*"
+						value={firstName}
+						setValue={setFirstName}
+					/>
+					<RegField
+						error={errors.lastName.error}
+						label="Фамилия*"
+						value={lastName}
+						setValue={setLastName}
+					/>
+					<RegField
+						error={errors.phone.error}
+						phone
+						label="Телефон*"
+						value={phone}
+						setValue={setPhone}
+					/>
+					<RegField
+						error={errors.email.error}
+						label="E-mail*"
+						value={email}
+						setValue={setEmail}
+					/>
+					<RegField label="Дата рождения" value={birthDate} setValue={setBirthDate} />
+					<RegField
+						error={errors.gender.error}
+						gender
+						value={gender}
+						setValue={setGender}
+					/>
+					<RegField
+						error={errors.pass.error}
+						pass
+						label="Пароль*"
+						value={pass}
+						setValue={setPass}
+					/>
+					<RegField
+						error={errors.rpass.error}
 						pass
 						label="Подтверждение пароля*"
 						value={rpass}

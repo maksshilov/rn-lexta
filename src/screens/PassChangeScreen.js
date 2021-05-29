@@ -13,46 +13,48 @@ import md5 from 'md5'
 
 import Loader from '../components/loader'
 import { connect } from 'react-redux'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const LoginScreen = ({ state, setToken, navigation }) => {
+const PassChangeScreen = ({ state, setToken, navigation }) => {
 	const [login, setLogin] = useState('')
+	const [oldPass, setOldPass] = useState('')
 	const [pass, setPass] = useState('')
+	const [rpass, setRpass] = useState('')
 	const [loading, setLoading] = useState(false)
 
+	const data = new FormData()
+	data.append('user', md5(login))
+	data.append('pwOld', oldPass)
+	data.append('pw1', pass)
+	data.append('pw2', rpass)
+
 	const loginHandler = async () => {
-		await fetch(`https://lexta.pro/api/GetToken.php?user=${login}&password=${md5(pass)}`, {
+		await fetch(`https://lexta.pro/api/ChangePassword.php`, {
+			method: 'POST',
 			mode: 'no-cors',
+			headers: new Headers(),
+			body: data,
 		})
 			.then((res) => {
 				setLoading(true)
 				return res.json()
 			})
-			.then((token) => {
-				if (token['Status']) {
-					fetch(
-						`https://lexta.pro/api/GetUserInfo.php?token=${token['Token']}&user=${login}`,
+			.then((data) => {
+				if (data.status) {
+					setLoading(false)
+					Alert.alert('Изменение пароля', 'Ваш пароль был успешно изменён!', [
 						{
-							mode: 'no-cors',
-						}
-					)
-						.then((res) => res.json())
-						.then((data) => setToken({ ...data[0], Token: token['Token'] }))
-						.then(() => setLoading(false))
-						.catch((e) => console.log(e))
-				} else {
-					Alert.alert('Ошибка', JSON.stringify(token))
-				}
-				return token
-			})
-			.then((token) => {
-				if (!token['Status']) {
-					setLoading(false)
-					Alert.alert('Ошибка', JSON.stringify(token))
+							text: 'Вернуться в Настройки',
+							onPress: () => {
+								navigation.navigate('Profile')
+							},
+						},
+					])
 				} else {
 					setLoading(false)
-					navigation.navigate('Main')
+					Alert.alert('Error', JSON.stringify(data))
 				}
 			})
 			.catch((e) => {
@@ -67,7 +69,14 @@ const LoginScreen = ({ state, setToken, navigation }) => {
 				<ScrollView
 					contentContainerStyle={{ marginTop: windowHeight * 0.1, alignItems: 'center' }}
 				>
-					<Text style={styles.header}>Вход</Text>
+					<MaterialCommunityIcons
+						name="lock-outline"
+						color="#8f2d32"
+						size={50}
+						style={{ marginBottom: 10 }}
+					/>
+
+					<Text style={styles.header}>Изменение пароля</Text>
 					<View style={styles.inputView}>
 						<TextInput
 							placeholder="Телефон или электронная почта"
@@ -77,10 +86,28 @@ const LoginScreen = ({ state, setToken, navigation }) => {
 					</View>
 					<View style={styles.inputView}>
 						<TextInput
-							placeholder="Пароль"
+							placeholder="Старый пароль"
+							textContentType="password"
+							secureTextEntry
+							onChangeText={setOldPass}
+							style={styles.inputText}
+						/>
+					</View>
+					<View style={styles.inputView}>
+						<TextInput
+							placeholder="Новый пароль"
 							textContentType="password"
 							secureTextEntry
 							onChangeText={setPass}
+							style={styles.inputText}
+						/>
+					</View>
+					<View style={styles.inputView}>
+						<TextInput
+							placeholder="Новый пароль. Ещё разок"
+							textContentType="password"
+							secureTextEntry
+							onChangeText={setRpass}
 							style={styles.inputText}
 						/>
 					</View>
@@ -96,7 +123,7 @@ const LoginScreen = ({ state, setToken, navigation }) => {
 						}}
 						style={{ ...styles.btn, ...styles.btnLogin }}
 					>
-						<Text style={{ ...styles.text, color: '#fff' }}>Войти</Text>
+						<Text style={{ ...styles.text, color: '#fff' }}>Изменить</Text>
 					</Pressable>
 				</ScrollView>
 			</View>
@@ -142,7 +169,7 @@ const styles = StyleSheet.create({
 	},
 })
 
-// export default LoginScreen
+// export default PassChangeScreen
 
 // ----------------------- REDUX start
 
@@ -157,4 +184,4 @@ const mapDispatchToProps = (dispatch) => {
 
 // ----------------------- REDUX end
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(PassChangeScreen)

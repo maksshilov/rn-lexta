@@ -6,6 +6,9 @@ import AppNavigator from './src/components/appNavigator'
 import LoginRegNavigator from './src/components/loginRegNavigator'
 import { TokenProvider } from './src/components/tokenContext'
 
+import { Provider } from 'react-redux'
+import store from './src/store'
+
 const App = () => {
 	const [isReady, setIsReady] = React.useState(false)
 	const [token, setToken] = React.useState(false)
@@ -23,13 +26,21 @@ const App = () => {
 		)
 	}
 
-	// return <loginRegNavigator />
-	return token ? (
-		<TokenProvider value={token}>
-			<AppNavigator />
-		</TokenProvider>
-	) : (
-		<LoginRegNavigator />
+	// let content = token ? (
+	// 	<TokenProvider value={token}>
+	// 		<AppNavigator />
+	// 	</TokenProvider>
+	// ) : (
+	// 	<LoginRegNavigator />
+	// )
+
+	return (
+		<React.Fragment>
+			<StatusBar translucent backgroundColor="transparent" />
+			<Provider store={store}>
+				<AppNavigator />
+			</Provider>
+		</React.Fragment>
 	)
 }
 
