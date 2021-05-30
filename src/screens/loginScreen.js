@@ -12,6 +12,8 @@ import {
 } from 'react-native'
 import md5 from 'md5'
 
+import { useAsyncStorage } from '@react-native-async-storage/async-storage'
+
 import Loader from '../components/loader'
 import { handlePressIn, handlePressOut } from '../components/animatedScale'
 
@@ -23,6 +25,11 @@ const LoginScreen = ({ state, setToken, navigation }) => {
 	const [login, setLogin] = useState('')
 	const [pass, setPass] = useState('')
 	const [loading, setLoading] = useState(false)
+	const { setItem } = useAsyncStorage('@storage_key')
+
+	const writeItemToStorage = async (newValue) => {
+		await setItem(newValue)
+	}
 
 	const loginHandler = async () => {
 		await fetch(`https://lexta.pro/api/GetToken.php?user=${login}&password=${md5(pass)}`, {
@@ -41,6 +48,15 @@ const LoginScreen = ({ state, setToken, navigation }) => {
 						}
 					)
 						.then((res) => res.json())
+						.then((data) => {
+							const storage = JSON.stringify({
+								Email: data[0].Email,
+								Token: token['Token'],
+							})
+							writeItemToStorage(storage)
+
+							return data
+						})
 						.then((data) => setToken({ ...data[0], Token: token['Token'] }))
 						.then(() => setLoading(false))
 						.catch((e) => console.log(e))

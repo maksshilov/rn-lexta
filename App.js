@@ -5,6 +5,7 @@ import { bootstrap } from './src/bootstrap'
 import AppNavigator from './src/components/appNavigator'
 import LoginRegNavigator from './src/components/loginRegNavigator'
 import { TokenProvider } from './src/components/tokenContext'
+import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 
 import { Provider } from 'react-redux'
 import store from './src/store'
@@ -13,6 +14,20 @@ const App = () => {
 	const [isReady, setIsReady] = React.useState(false)
 	const [token, setToken] = React.useState(false)
 	const [data, setData] = React.useState(false)
+
+	const [session, setSession] = React.useState(false)
+	const { getItem } = useAsyncStorage('@storage_key')
+
+	console.log(session)
+
+	const readItemFromStorage = async () => {
+		const item = await getItem()
+		if (item) setSession(true)
+	}
+
+	React.useEffect(() => {
+		readItemFromStorage()
+	}, [])
 
 	if (!isReady) {
 		return (
@@ -26,19 +41,11 @@ const App = () => {
 		)
 	}
 
-	// let content = token ? (
-	// 	<TokenProvider value={token}>
-	// 		<AppNavigator />
-	// 	</TokenProvider>
-	// ) : (
-	// 	<LoginRegNavigator />
-	// )
-
 	return (
 		<React.Fragment>
 			<StatusBar translucent backgroundColor="transparent" />
 			<Provider store={store}>
-				<AppNavigator />
+				{session ? <AppNavigator page={'Main'} /> : <AppNavigator page={'Start'} />}
 			</Provider>
 		</React.Fragment>
 	)

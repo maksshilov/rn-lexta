@@ -13,10 +13,16 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import ProfileMenuItem from '../components/profileMenuItem'
 import ProfileMenuSection from '../components/profileMenuSection'
 import { connect } from 'react-redux'
+import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ProfileScreen = ({ navigation, state }) => {
+	const { removeItem } = useAsyncStorage('@storage_key')
+	const removeItemFromStorage = async () => {
+		const item = await removeItem()
+	}
+
 	return (
 		<ScrollView
 			contentContainerStyle={{ flex: 0, paddingHorizontal: 10, backgroundColor: '#fff' }}
@@ -51,7 +57,13 @@ const ProfileScreen = ({ navigation, state }) => {
 
 			<ProfileMenuItem title="Как устроена платформа ЛЕХТА" icon="wan" />
 			<ProfileMenuItem title="Помощь" icon="help" />
-			<Pressable android_ripple onPress={() => navigation.navigate('Start')}>
+			<Pressable
+				android_ripple
+				onPress={() => {
+					removeItemFromStorage()
+					navigation.navigate('Start')
+				}}
+			>
 				<ProfileMenuItem title="Выйти" icon="logout" last />
 			</Pressable>
 		</ScrollView>

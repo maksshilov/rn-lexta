@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
@@ -11,12 +11,14 @@ import ProfileScreen from '../screens/ProfileScreen'
 import PassChangeScreen from '../screens/PassChangeScreen'
 import ObjectScreen from '../screens/ObjectScreen'
 
+import store from '../store'
+
 const Stack = createStackNavigator()
 
-export default function AppNavigator() {
+export default function AppNavigator({ page }) {
 	return (
 		<NavigationContainer>
-			<Stack.Navigator initialRouteName="Start">
+			<Stack.Navigator initialRouteName={page}>
 				<Stack.Screen
 					name="Start"
 					component={StartScreen}
