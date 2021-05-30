@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
-import { Text, View, Dimensions, ScrollView, StyleSheet, Pressable, Alert } from 'react-native'
+import {
+	Text,
+	View,
+	Dimensions,
+	ScrollView,
+	StyleSheet,
+	Pressable,
+	Alert,
+	ActivityIndicator,
+} from 'react-native'
 import md5 from 'md5'
 import Loader from '../components/loader'
 import RegField from '../components/regField'
@@ -139,7 +148,9 @@ const RegistrationScreen = ({ navigation }) => {
 						onPress={regHandler}
 						style={{ ...styles.btn, ...styles.btnLogin }}
 					>
-						<Text style={{ ...styles.text, color: '#fff' }}>Зарегистрироваться</Text>
+						<Text style={{ ...styles.text, color: '#fff' }}>
+							{loading ? <ActivityIndicator color="#fff" /> : 'Зарегистрироваться'}
+						</Text>
 					</Pressable>
 					<Text style={styles.textBtm}>* отмечены поля обязательные для заполнения</Text>
 					<Text style={styles.textBtm}>

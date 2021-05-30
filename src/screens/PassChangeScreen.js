@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
 // export default PassChangeScreen
 
 // ----------------------- REDUX start
-
 const mapStateToProps = (state) => {
 	return { state }
 }
@@ -181,7 +180,6 @@ const mapDispatchToProps = (dispatch) => {
 		setToken: (token) => dispatch({ type: 'SET_TOKEN', payload: token }),
 	}
 }
-
 // ----------------------- REDUX end
 
 export default connect(mapStateToProps, mapDispatchToProps)(PassChangeScreen)

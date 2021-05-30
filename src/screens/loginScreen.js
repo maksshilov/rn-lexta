@@ -8,10 +8,13 @@ import {
 	Pressable,
 	TextInput,
 	Alert,
+	ActivityIndicator,
 } from 'react-native'
 import md5 from 'md5'
 
 import Loader from '../components/loader'
+import { handlePressIn, handlePressOut } from '../components/animatedScale'
+
 import { connect } from 'react-redux'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
@@ -62,7 +65,7 @@ const LoginScreen = ({ state, setToken, navigation }) => {
 
 	return (
 		<React.Fragment>
-			{loading && <Loader />}
+			{/* {loading && <Loader />} */}
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
 				<ScrollView
 					contentContainerStyle={{ marginTop: windowHeight * 0.1, alignItems: 'center' }}
@@ -96,7 +99,9 @@ const LoginScreen = ({ state, setToken, navigation }) => {
 						}}
 						style={{ ...styles.btn, ...styles.btnLogin }}
 					>
-						<Text style={{ ...styles.text, color: '#fff' }}>Войти</Text>
+						<Text style={{ ...styles.text, color: '#fff' }}>
+							{loading ? <ActivityIndicator color="#fff" /> : 'Войти'}
+						</Text>
 					</Pressable>
 				</ScrollView>
 			</View>

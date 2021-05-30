@@ -2,27 +2,12 @@ import React from 'react'
 import { Image, View, Dimensions, Animated } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { handlePressIn, handlePressOut } from '../components/animatedScale'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function Header({ navigation, scrollY }) {
-	const touchScaleK = React.useRef(new Animated.Value(1)).current
-
-	const handlePressIn = () => {
-		Animated.spring(touchScaleK, {
-			toValue: 0.75,
-			useNativeDriver: false,
-		}).start()
-	}
-	const handlePressOut = () => {
-		Animated.spring(touchScaleK, {
-			toValue: 1,
-			friction: 3,
-			tension: 40,
-			useNativeDriver: false,
-		}).start()
-		navigation.navigate('Profile')
-	}
+	const touchScaleAva = React.useRef(new Animated.Value(1)).current
 
 	return (
 		<Animated.View
@@ -59,10 +44,13 @@ export default function Header({ navigation, scrollY }) {
 					paddingRight: 20,
 				}}
 			>
-				<Animated.View style={{ transform: [{ scale: touchScaleK }] }}>
+				<Animated.View style={{ transform: [{ scale: touchScaleAva }] }}>
 					<TouchableOpacity
-						onPressIn={handlePressIn}
-						onPressOut={handlePressOut}
+						onPressIn={() => handlePressIn(touchScaleAva)}
+						onPressOut={() => {
+							handlePressOut(touchScaleAva)
+							navigation.navigate('Profile')
+						}}
 						activeOpacity={0.7}
 					>
 						<MaterialCommunityIcons name="account-circle" size={40} color="grey" />
