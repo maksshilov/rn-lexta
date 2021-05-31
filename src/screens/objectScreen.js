@@ -9,10 +9,20 @@ import ObjectMini from '../components/objectMini'
 import { WebView } from 'react-native-webview'
 import PhoneShow from '../components/phoneShow'
 import ObjectCarousel from '../components/objectCarousel'
+import { connect } from 'react-redux'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function ObjectScreen({ route, navigation }) {
+const ObjectScreen = ({ route, navigation, state }) => {
+	const object = route.params.object
+	const { Price, NumberRooms, TotalArea, Floor, Street } =
+		state.reducerObjects[route.params.object]
+
+	// const Price = state.reducerObjects[route.params.object].Price
+	// const NumberRooms = state.reducerObjects[route.params.object].NumberRooms
+	// const TotalArea = state.reducerObjects[route.params.object].TotalArea
+	// const Floor = state.reducerObjects[route.params.object].Floor
+	// const Street = state.reducerObjects[route.params.object].Street
 	const scrollToTop = useRef(null)
 
 	return (
@@ -52,7 +62,7 @@ export default function ObjectScreen({ route, navigation }) {
 							fontSize: 20,
 						}}
 					>
-						{route.params.price} &#8381;
+						{Price} &#8381;
 					</Text>
 					<View
 						style={{
@@ -68,13 +78,13 @@ export default function ObjectScreen({ route, navigation }) {
 				</View>
 				{/* PARAMS */}
 				<View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
-					<ObjectParams type="Квартира" value={route.params.rooms} />
+					<ObjectParams type="Квартира" value={NumberRooms} />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
-					<ObjectParams type="Площадь" value={route.params.square} />
+					<ObjectParams type="Площадь" value={TotalArea} />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
 					<ObjectParams type="Кухня" value="10.5 м2" />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
-					<ObjectParams type="Этаж" value={route.params.floor} />
+					<ObjectParams type="Этаж" value={Floor} />
 				</View>
 				{/* DESCR */}
 				<View>
@@ -246,7 +256,7 @@ export default function ObjectScreen({ route, navigation }) {
 							marginBottom: 15,
 						}}
 					>
-						{route.params.address}
+						{Street}
 					</Text>
 				</View>
 			</View>
@@ -256,8 +266,7 @@ export default function ObjectScreen({ route, navigation }) {
 					onError={(err) => console.log(err)}
 					originWhitelist={['*']}
 					source={{
-						html:
-							'<div style="margin:-10"><script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Abca82711819eec264960544252481589b96aea2acaadee5d058cc52bc27247ab&amp;width=1000&amp;height=500&amp;lang=ru_RU&amp;scroll=true"></script></div>',
+						html: '<div style="margin:-10"><script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Abca82711819eec264960544252481589b96aea2acaadee5d058cc52bc27247ab&amp;width=1000&amp;height=500&amp;lang=ru_RU&amp;scroll=true"></script></div>',
 					}}
 				/>
 			</View>
@@ -273,7 +282,7 @@ export default function ObjectScreen({ route, navigation }) {
 				>
 					Похожие объявления рядом
 				</Text>
-				<View
+				{/* <View
 					style={{
 						flexDirection: 'row',
 						justifyContent: 'space-between',
@@ -285,11 +294,11 @@ export default function ObjectScreen({ route, navigation }) {
 						onPress={() => {
 							{
 								navigation.navigate('Object', {
-									price: '6 000 000',
-									rooms: '6-комн.',
-									square: '66.6 м2',
-									floor: '6 эт.',
-									address: 'г. Обнинск, пр-т Маркса, 666',
+									Price: '6 000 000',
+									NumberRooms: '6-комн.',
+									TotalArea: '66.6 м2',
+									Floor: '6 эт.',
+									Street: 'г. Обнинск, пр-т Маркса, 666',
 								})
 								scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
 							}
@@ -297,11 +306,11 @@ export default function ObjectScreen({ route, navigation }) {
 					>
 						<ObjectMini
 							windowWidth={windowWidth}
-							price="6 000 000"
-							rooms="6-комн."
-							square="66.6 м2"
-							floor="6 эт."
-							address="г. Обнинск, пр-т Маркса, 666"
+							Price="6 000 000"
+							NumberRooms="6-комн."
+							TotalArea="66.6 м2"
+							Floor="6 эт."
+							Street="г. Обнинск, пр-т Маркса, 666"
 							navigation={navigation}
 						/>
 					</TouchableOpacity>
@@ -309,27 +318,27 @@ export default function ObjectScreen({ route, navigation }) {
 					<TouchableOpacity
 						onPress={() => {
 							navigation.navigate('Object', {
-								price: '2 000 000',
-								rooms: '2-комн.',
-								square: '22.2 м2',
-								floor: '2 эт.',
-								address: 'г. Обнинск, пр-т Маркса, 222',
+								Price: '2 000 000',
+								NumberRooms: '2-комн.',
+								TotalArea: '22.2 м2',
+								Floor: '2 эт.',
+								Street: 'г. Обнинск, пр-т Маркса, 222',
 							})
 							scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
 						}}
 					>
 						<ObjectMini
 							windowWidth={windowWidth}
-							price="2 000 000"
-							rooms="2-комн."
-							square="22.2 м2"
-							floor="2 эт."
-							address="г. Обнинск, пр-т Маркса, 222"
+							Price="2 000 000"
+							NumberRooms="2-комн."
+							TotalArea="22.2 м2"
+							Floor="2 эт."
+							Street="г. Обнинск, пр-т Маркса, 222"
 							navigation={navigation}
 						/>
 					</TouchableOpacity>
-				</View>
-				<View
+				</View> */}
+				{/* <View
 					style={{
 						flexDirection: 'row',
 						justifyContent: 'space-between',
@@ -340,22 +349,22 @@ export default function ObjectScreen({ route, navigation }) {
 					<TouchableOpacity
 						onPress={() => {
 							navigation.navigate('Object', {
-								price: '5 000 000',
-								rooms: '5-комн.',
-								square: '55.5 м2',
-								floor: '5 эт.',
-								address: 'г. Обнинск, пр-т Маркса, 555',
+								Price: '5 000 000',
+								NumberRooms: '5-комн.',
+								TotalArea: '55.5 м2',
+								Floor: '5 эт.',
+								Street: 'г. Обнинск, пр-т Маркса, 555',
 							})
 							scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
 						}}
 					>
 						<ObjectMini
 							windowWidth={windowWidth}
-							price="5 000 000"
-							rooms="5-комн."
-							square="55.5 м2"
-							floor="5 эт."
-							address="г. Обнинск, пр-т Маркса, 555"
+							Price="5 000 000"
+							NumberRooms="5-комн."
+							TotalArea="55.5 м2"
+							Floor="5 эт."
+							Street="г. Обнинск, пр-т Маркса, 555"
 							navigation={navigation}
 						/>
 					</TouchableOpacity>
@@ -363,26 +372,26 @@ export default function ObjectScreen({ route, navigation }) {
 					<TouchableOpacity
 						onPress={() => {
 							navigation.navigate('Object', {
-								price: '1 000 000',
-								rooms: '1-комн.',
-								square: '11.1 м1',
-								floor: '1 эт.',
-								address: 'г. Обнинск, пр-т Маркса, 111',
+								Price: '1 000 000',
+								NumberRooms: '1-комн.',
+								TotalArea: '11.1 м1',
+								Floor: '1 эт.',
+								Street: 'г. Обнинск, пр-т Маркса, 111',
 							})
 							scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
 						}}
 					>
 						<ObjectMini
 							windowWidth={windowWidth}
-							price="1 000 000"
-							rooms="1-комн."
-							square="11.1 м1"
-							floor="1 эт."
-							address="г. Обнинск, пр-т Маркса, 111"
+							Price="1 000 000"
+							NumberRooms="1-комн."
+							TotalArea="11.1 м1"
+							Floor="1 эт."
+							Street="г. Обнинск, пр-т Маркса, 111"
 							navigation={navigation}
 						/>
 					</TouchableOpacity>
-				</View>
+				</View> */}
 			</View>
 			<TouchableOpacity style={{ alignItems: 'center' }}>
 				<View
@@ -412,3 +421,8 @@ export default function ObjectScreen({ route, navigation }) {
 		</ScrollView>
 	)
 }
+
+const mapStateToProps = (state) => {
+	return { state }
+}
+export default connect(mapStateToProps)(ObjectScreen)

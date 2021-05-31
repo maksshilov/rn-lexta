@@ -21,7 +21,7 @@ import { connect } from 'react-redux'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const LoginScreen = ({ state, setToken, navigation }) => {
+const LoginScreen = ({ state, setUserInfo, navigation }) => {
 	const [login, setLogin] = useState('')
 	const [pass, setPass] = useState('')
 	const [loading, setLoading] = useState(false)
@@ -50,14 +50,14 @@ const LoginScreen = ({ state, setToken, navigation }) => {
 						.then((res) => res.json())
 						.then((data) => {
 							const storage = JSON.stringify({
-								Email: data[0].Email,
+								...data[0],
 								Token: token['Token'],
 							})
 							writeItemToStorage(storage)
 
 							return data
 						})
-						.then((data) => setToken({ ...data[0], Token: token['Token'] }))
+						.then((data) => setUserInfo({ ...data[0], Token: token['Token'] }))
 						.then(() => setLoading(false))
 						.catch((e) => console.log(e))
 				} else {
@@ -172,7 +172,7 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
 	return {
-		setToken: (token) => dispatch({ type: 'SET_TOKEN', payload: token }),
+		setUserInfo: (token) => dispatch({ type: 'SET_USER_INFO', payload: token }),
 	}
 }
 

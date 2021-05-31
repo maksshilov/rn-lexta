@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
@@ -10,8 +10,6 @@ import MainNavigation from '../MainNavigation'
 import ProfileScreen from '../screens/ProfileScreen'
 import PassChangeScreen from '../screens/PassChangeScreen'
 import ObjectScreen from '../screens/ObjectScreen'
-
-import store from '../store'
 
 const Stack = createStackNavigator()
 

@@ -17,10 +17,10 @@ const App = () => {
 	React.useEffect(() => {
 		setInterval(() => {
 			updateToken(aStorage)
-		}, 10000)
-	}, [])
+		}, 60000)
+	}, [aStorage])
 
-	let content = session ? <AppNavigator page={'Main'} /> : <AppNavigator page={'Start'} />
+	let content = <AppNavigator page={session ? 'Main' : 'Start'} />
 
 	if (!isReady) {
 		return (

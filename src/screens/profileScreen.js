@@ -18,9 +18,11 @@ import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ProfileScreen = ({ navigation, state }) => {
+	const { FirstName, LastName } = state.reducerUser
 	const { removeItem } = useAsyncStorage('@storage_key')
+
 	const removeItemFromStorage = async () => {
-		const item = await removeItem()
+		await removeItem()
 	}
 
 	return (
@@ -32,7 +34,7 @@ const ProfileScreen = ({ navigation, state }) => {
 					<MaterialCommunityIcons name="account-circle" size={80} color="grey" />
 				</View>
 				<Text style={{ fontFamily: 'gothampro-bold', fontSize: 22 }}>
-					{state.FirstName} {state.LastName}
+					{FirstName} {LastName}
 				</Text>
 			</View>
 			<View

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, Text, View, Dimensions, Animated, Pressable } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import Carousel from '../components/carousel'
@@ -7,10 +7,47 @@ import ObjectMini from '../components/objectMini'
 import Header from '../components/header'
 import SubHeader from '../components/subHeader'
 import News from '../components/news'
+import { connect } from 'react-redux'
+import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function MainScreen({ navigation }) {
+function shuffle(a) {
+	for (let i = a.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1))
+		;[a[i], a[j]] = [a[j], a[i]]
+	}
+	return a
+}
+
+const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
+	const { getItem } = useAsyncStorage('@storage_key')
+	const getObjects = async () => {
+		const item = await getItem()
+		const itemToJson = JSON.parse(item)
+		setUserInfo(itemToJson)
+		await fetch(
+			`https://lexta.pro/api/GetObjects.php?token=${itemToJson.Token}&user=${itemToJson.Email}`,
+			{
+				mode: 'no-cors',
+			}
+		)
+			.then((res) => res.json())
+			.then((json) => {
+				const idxs = shuffle(Array.from({ length: json.length }).map((_, i) => i))
+				let popular = []
+				for (let i = 0; i < 2; i++) {
+					popular.push(json[idxs[i]])
+				}
+				setObjects(popular)
+			})
+			.catch((e) => console.log(e))
+	}
+
+	useEffect(() => {
+		getObjects()
+	}, [])
+
 	const scrollY = React.useRef(new Animated.Value(0)).current
 
 	return (
@@ -51,49 +88,12 @@ export default function MainScreen({ navigation }) {
 							marginBottom: 10,
 						}}
 					>
-						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate('Object', {
-									price: '6 000 000',
-									rooms: '6-комн.',
-									square: '66.6 м2',
-									floor: '6 эт.',
-									address: 'г. Обнинск, пр-т Маркса, 666',
-								})
-							}
-						>
-							<ObjectMini
-								windowWidth={windowWidth}
-								price="6 000 000"
-								rooms="6-комн."
-								square="66.6 м2"
-								floor="6 эт."
-								address="г. Обнинск, пр-т Маркса, 666"
-								navigation={navigation}
-							/>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate('Object', {
-									price: '2 000 000',
-									rooms: '2-комн.',
-									square: '22.2 м2',
-									floor: '2 эт.',
-									address: 'г. Обнинск, пр-т Маркса, 222',
-								})
-							}
-						>
-							<ObjectMini
-								windowWidth={windowWidth}
-								price="2 000 000"
-								rooms="2-комн."
-								square="22.2 м2"
-								floor="2 эт."
-								address="г. Обнинск, пр-т Маркса, 222"
-								navigation={navigation}
-							/>
-						</TouchableOpacity>
+						{Boolean(state.reducerObjects) && (
+							<React.Fragment>
+								<ObjectMini object={0} navigation={navigation} />
+								<ObjectMini object={1} navigation={navigation} />
+							</React.Fragment>
+						)}
 					</View>
 				</View>
 				{/* NEWS */}
@@ -125,3 +125,15 @@ export default function MainScreen({ navigation }) {
 		</>
 	)
 }
+
+const mapStateToProps = (state) => {
+	return { state }
+}
+const mapDispatchToProps = (dispatch) => {
+	return {
+		setUserInfo: (token) => dispatch({ type: 'SET_USER_INFO', payload: token }),
+		setObjects: (payload) => dispatch({ type: 'SET_OBJECTS', payload }),
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)

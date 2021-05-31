@@ -10,7 +10,7 @@ const updateToken = async (item) => {
 		headers: new Headers(),
 	})
 		.then((res) => res.json())
-		// .then((data) => console.log('UPDATETOKEN >>>', data.Message))
+		.then((data) => console.log('UPDATETOKEN >>>', data.Message))
 
 		.catch((e) => console.log(e))
 }
