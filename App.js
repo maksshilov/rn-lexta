@@ -1,40 +1,66 @@
-import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import AppLoading from 'expo-app-loading'
+import { StatusBar } from 'expo-status-bar'
 import { bootstrap } from './src/bootstrap'
 import AppNavigator from './src/components/appNavigator'
-import LoginRegNavigator from './src/components/loginRegNavigator'
-import { TokenProvider } from './src/components/tokenContext'
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
-
+import updateToken from './src/components/updateToken'
 import { Provider } from 'react-redux'
 import store from './src/store'
 
 const App = () => {
 	const [isReady, setIsReady] = React.useState(false)
-	const [token, setToken] = React.useState(false)
-	const [data, setData] = React.useState(false)
-
+	const [aStorage, setAStorage] = React.useState({})
 	const [session, setSession] = React.useState(false)
 	const { getItem } = useAsyncStorage('@storage_key')
 
-	console.log(session)
-
-	const readItemFromStorage = async () => {
-		const item = await getItem()
-		if (item) setSession(true)
-	}
-
 	React.useEffect(() => {
-		readItemFromStorage()
+		setInterval(() => {
+			updateToken(aStorage)
+		}, 10000)
 	}, [])
+
+	let content = session ? <AppNavigator page={'Main'} /> : <AppNavigator page={'Start'} />
 
 	if (!isReady) {
 		return (
 			<React.Fragment>
 				<AppLoading
 					startAsync={bootstrap}
-					onFinish={() => setIsReady(true)}
+					onFinish={async () => {
+						const item = await getItem()
+						const itemToJson = JSON.parse(item)
+
+						if (item) {
+							await fetch(
+								`https://lexta.pro/api/UpdateToken.php?user=${itemToJson.Email}&token=${itemToJson.Token}`,
+								{
+									method: 'POST',
+									mode: 'no-cors',
+									headers: new Headers(),
+								}
+							)
+								.then((res) => res.json())
+								.then((data) => {
+									console.log('APPLOADING >>> ', data.Message)
+									if (item && data.Message == 'update success') {
+										console.log('woohoo')
+										setSession(true)
+										setAStorage(itemToJson)
+										setIsReady(true)
+									} else {
+										console.log('fuck')
+										setSession(false)
+										setIsReady(true)
+									}
+								})
+								.catch((e) => console.log(e))
+						} else {
+							console.log('nothing in storage')
+							setSession(false)
+							setIsReady(true)
+						}
+					}}
 					onError={(err) => console.log(err)}
 				/>
 			</React.Fragment>
@@ -44,9 +70,7 @@ const App = () => {
 	return (
 		<React.Fragment>
 			<StatusBar translucent backgroundColor="transparent" />
-			<Provider store={store}>
-				{session ? <AppNavigator page={'Main'} /> : <AppNavigator page={'Start'} />}
-			</Provider>
+			<Provider store={store}>{content}</Provider>
 		</React.Fragment>
 	)
 }

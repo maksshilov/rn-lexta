@@ -62,32 +62,41 @@ const RegistrationScreen = ({ navigation }) => {
 		if (pass !== rpass) return Alert.alert('Ошибка', 'Пароли не совпадают')
 
 		setLoading(true)
-		await fetch('https://lexta.pro/netcat/add.php', {
-			method: 'POST',
-			mode: 'no-cors',
-			headers: new Headers(),
-			body: data,
-		})
-			.then((response) => {
-				response.text()
+		await fetch(`https://lexta.pro/api/CheckLogin.php?user=${email}`, { mode: 'no-cors' })
+			.then((res) => res.json())
+			.then(async (exist) => {
+				if (!exist.status) {
+					await fetch('https://lexta.pro/netcat/add.php', {
+						method: 'POST',
+						mode: 'no-cors',
+						headers: new Headers(),
+						body: data,
+					})
+						.then((response) => {
+							response.text()
+						})
+						.then(() => {
+							setLoading(false)
+							Alert.alert('Регистрация', 'Регистрация прошла успешно!', [
+								{
+									text: 'Войти',
+									onPress: () => {
+										navigation.navigate('Login')
+									},
+								},
+							])
+						})
+						.catch((err) => console.log(err))
+				} else {
+					Alert.alert('Ошибка', `Пользователь с почтой ${email} уже существует.`)
+				}
 			})
-			.then(() => {
-				setLoading(false)
-				Alert.alert('Регистрация', 'Регистрация прошла успешно!', [
-					{
-						text: 'Войти',
-						onPress: () => {
-							navigation.navigate('Login')
-						},
-					},
-				])
-			})
-			.catch((err) => console.log(err))
+			.then(() => setLoading(false))
 	}
 
 	return (
 		<React.Fragment>
-			{loading && <Loader />}
+			{/* {loading && <Loader />} */}
 
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
 				<ScrollView
