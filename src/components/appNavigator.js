@@ -9,6 +9,7 @@ import RegistrationScreen from '../screens/RegistrationScreen'
 import MainNavigation from '../MainNavigation'
 import ProfileScreen from '../screens/ProfileScreen'
 import PassChangeScreen from '../screens/PassChangeScreen'
+import ProfileDetailsScreen from '../screens/ProfileDetailsScreen'
 import ObjectScreen from '../screens/ObjectScreen'
 
 const Stack = createStackNavigator()
@@ -40,6 +41,11 @@ export default function AppNavigator({ page }) {
 				<Stack.Screen
 					name="Profile"
 					component={ProfileScreen}
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="ProfileDetails"
+					component={ProfileDetailsScreen}
 					options={{ headerShown: false }}
 				/>
 				<Stack.Screen

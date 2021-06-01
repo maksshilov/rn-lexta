@@ -30,7 +30,7 @@ const App = () => {
 					onFinish={async () => {
 						const item = await getItem()
 						const itemToJson = JSON.parse(item)
-
+						console.log('1 - itemToJson', itemToJson)
 						if (item) {
 							await fetch(
 								`https://lexta.pro/api/UpdateToken.php?user=${itemToJson.Email}&token=${itemToJson.Token}`,
@@ -46,6 +46,8 @@ const App = () => {
 									if (item && data.Message == 'update success') {
 										console.log('woohoo')
 										setSession(true)
+										console.log('2 - itemToJson', itemToJson)
+
 										setAStorage(itemToJson)
 										setIsReady(true)
 									} else {

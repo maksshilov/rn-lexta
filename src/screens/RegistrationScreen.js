@@ -1,17 +1,9 @@
 import React, { useState } from 'react'
-import {
-	Text,
-	View,
-	Dimensions,
-	ScrollView,
-	StyleSheet,
-	Pressable,
-	Alert,
-	ActivityIndicator,
-} from 'react-native'
+import { Text, View, Dimensions, ScrollView, StyleSheet, Pressable, Alert, ActivityIndicator } from 'react-native'
 import md5 from 'md5'
 import Loader from '../components/loader'
 import RegField from '../components/regField'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -106,65 +98,21 @@ const RegistrationScreen = ({ navigation }) => {
 					}}
 				>
 					<Text style={styles.header}>Регистрация</Text>
-					<RegField
-						error={errors.firstName.error}
-						label="Имя*"
-						value={firstName}
-						setValue={setFirstName}
-					/>
-					<RegField
-						error={errors.lastName.error}
-						label="Фамилия*"
-						value={lastName}
-						setValue={setLastName}
-					/>
-					<RegField
-						error={errors.phone.error}
-						phone
-						label="Телефон*"
-						value={phone}
-						setValue={setPhone}
-					/>
-					<RegField
-						error={errors.email.error}
-						label="E-mail*"
-						value={email}
-						setValue={setEmail}
-					/>
-					<RegField label="Дата рождения" value={birthDate} setValue={setBirthDate} />
-					<RegField
-						error={errors.gender.error}
-						gender
-						value={gender}
-						setValue={setGender}
-					/>
-					<RegField
-						error={errors.pass.error}
-						pass
-						label="Пароль*"
-						value={pass}
-						setValue={setPass}
-					/>
-					<RegField
-						error={errors.rpass.error}
-						pass
-						label="Подтверждение пароля*"
-						value={rpass}
-						setValue={setRpass}
-					/>
-					<Pressable
-						android_ripple
-						onPress={regHandler}
-						style={{ ...styles.btn, ...styles.btnLogin }}
-					>
-						<Text style={{ ...styles.text, color: '#fff' }}>
-							{loading ? <ActivityIndicator color="#fff" /> : 'Зарегистрироваться'}
-						</Text>
+					<RegField error={errors.firstName.error} label="Имя*" value={firstName} setValue={setFirstName} />
+					<RegField error={errors.lastName.error} label="Фамилия*" value={lastName} setValue={setLastName} />
+					<RegField error={errors.phone.error} phone label="Телефон*" value={phone} setValue={setPhone} />
+					<RegField error={errors.email.error} label="E-mail*" value={email} setValue={setEmail} />
+					<RegField birthDate label="Дата рождения" value={birthDate} setValue={setBirthDate} />
+					<RegField error={errors.gender.error} gender value={gender} setValue={setGender} />
+					<RegField error={errors.pass.error} pass label="Пароль*" value={pass} setValue={setPass} />
+					<RegField error={errors.rpass.error} pass label="Подтверждение пароля*" value={rpass} setValue={setRpass} />
+					<Pressable android_ripple onPress={regHandler} style={{ ...styles.btn, ...styles.btnLogin }}>
+						<Text style={{ ...styles.text, color: '#fff' }}>{loading ? <ActivityIndicator color="#fff" /> : 'Зарегистрироваться'}</Text>
 					</Pressable>
 					<Text style={styles.textBtm}>* отмечены поля обязательные для заполнения</Text>
 					<Text style={styles.textBtm}>
-						Нажимая кнопку «Зарегистрироваться», вы подтверждаете согласие с условиями
-						использования ЛЕХТА и политикой о данных пользователей.
+						Нажимая кнопку «Зарегистрироваться», вы подтверждаете согласие с условиями использования ЛЕХТА и политикой о данных
+						пользователей.
 					</Text>
 				</ScrollView>
 			</View>

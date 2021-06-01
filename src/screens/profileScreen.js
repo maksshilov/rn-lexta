@@ -1,14 +1,6 @@
 import React from 'react'
-import {
-	Image,
-	ImageBackground,
-	Text,
-	View,
-	Dimensions,
-	SectionList,
-	Pressable,
-} from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
+import { Text, View, Dimensions } from 'react-native'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import ProfileMenuItem from '../components/profileMenuItem'
 import ProfileMenuSection from '../components/profileMenuSection'
@@ -17,7 +9,7 @@ import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const ProfileScreen = ({ navigation, state }) => {
+const ProfileScreen = ({ navigation, state, clearState }) => {
 	const { FirstName, LastName } = state.reducerUser
 	const { removeItem } = useAsyncStorage('@storage_key')
 
@@ -46,10 +38,12 @@ const ProfileScreen = ({ navigation, state }) => {
 				}}
 			/>
 			<ProfileMenuSection title="НАСТРОЙКИ АККАУНТА" />
-			<ProfileMenuItem title="Персональные данные" icon="account-outline" />
-			<Pressable android_ripple onPress={() => navigation.navigate('PassChange')}>
+			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileDetails')}>
+				<ProfileMenuItem title="Персональные данные" icon="account-outline" />
+			</TouchableOpacity>
+			<TouchableOpacity android_ripple onPress={() => navigation.navigate('PassChange')}>
 				<ProfileMenuItem title="Изменить пароль" icon="lock-outline" />
-			</Pressable>
+			</TouchableOpacity>
 			<ProfileMenuItem title="Мои объявления" icon="format-list-bulleted-square" />
 			<ProfileMenuItem title="Мои подписки" icon="email-newsletter" />
 			<ProfileMenuItem title="Избранное" icon="heart-outline" />
@@ -59,15 +53,16 @@ const ProfileScreen = ({ navigation, state }) => {
 
 			<ProfileMenuItem title="Как устроена платформа ЛЕХТА" icon="wan" />
 			<ProfileMenuItem title="Помощь" icon="help" />
-			<Pressable
+			<TouchableOpacity
 				android_ripple
 				onPress={() => {
 					removeItemFromStorage()
+					clearState()
 					navigation.navigate('Start')
 				}}
 			>
 				<ProfileMenuItem title="Выйти" icon="logout" last />
-			</Pressable>
+			</TouchableOpacity>
 		</ScrollView>
 	)
 }
@@ -75,4 +70,9 @@ const ProfileScreen = ({ navigation, state }) => {
 const mapStateToProps = (state) => {
 	return { state }
 }
-export default connect(mapStateToProps)(ProfileScreen)
+const mapDispathToProps = (dispatch) => {
+	return {
+		clearState: () => dispatch({ type: 'CLEAR' }),
+	}
+}
+export default connect(mapStateToProps, mapDispathToProps)(ProfileScreen)

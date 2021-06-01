@@ -1,13 +1,11 @@
 import React from 'react'
 import {
-	Image,
 	ImageBackground,
 	Text,
 	View,
 	TouchableOpacity,
 	StyleSheet,
 	Dimensions,
-	Pressable,
 	Animated,
 } from 'react-native'
 import Logo from '../components/logo'

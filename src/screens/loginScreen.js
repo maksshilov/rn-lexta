@@ -47,7 +47,9 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 							mode: 'no-cors',
 						}
 					)
-						.then((res) => res.json())
+						.then((res) => {
+							return res.json()
+						})
 						.then((data) => {
 							const storage = JSON.stringify({
 								...data[0],
@@ -57,23 +59,20 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 
 							return data
 						})
-						.then((data) => setUserInfo({ ...data[0], Token: token['Token'] }))
-						.then(() => setLoading(false))
+						.then((data) => {
+							setUserInfo({ ...data[0], Token: token['Token'] })
+						})
+						.then(() => {
+							setLoading(false)
+							navigation.navigate('Main')
+						})
 						.catch((e) => console.log(e))
 				} else {
-					Alert.alert('Ошибка', JSON.stringify(token))
-				}
-				return token
-			})
-			.then((token) => {
-				if (!token['Status']) {
 					setLoading(false)
 					Alert.alert('Ошибка', JSON.stringify(token))
-				} else {
-					setLoading(false)
-					navigation.navigate('Main')
 				}
 			})
+
 			.catch((e) => {
 				console.log(e)
 			})

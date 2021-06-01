@@ -16,24 +16,29 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 	const { getItem } = useAsyncStorage('@storage_key')
 	const getObjects = async () => {
 		const item = await getItem()
-		const itemToJson = JSON.parse(item)
-		setUserInfo(itemToJson)
-		await fetch(
-			`https://lexta.pro/api/GetObjects.php?token=${itemToJson.Token}&user=${itemToJson.Email}`,
-			{
-				mode: 'no-cors',
-			}
-		)
-			.then((res) => res.json())
-			.then((json) => {
-				const idxs = shuffle(Array.from({ length: json.length }).map((_, i) => i))
-				let popular = []
-				for (let i = 0; i < json.length; i++) {
-					popular.push(json[idxs[i]])
+		console.log('MAIN SCREEN. ITEM', item)
+		if (item) {
+			const itemToJson = JSON.parse(item)
+			setUserInfo(itemToJson)
+			await fetch(
+				`https://lexta.pro/api/GetObjects.php?token=${itemToJson.Token}&user=${itemToJson.Email}`,
+				{
+					mode: 'no-cors',
 				}
-				setObjects(popular)
-			})
-			.catch((e) => console.log(e))
+			)
+				.then((res) => res.json())
+				.then((json) => {
+					const idxs = shuffle(Array.from({ length: json.length }).map((_, i) => i))
+					let popular = []
+					for (let i = 0; i < json.length; i++) {
+						popular.push(json[idxs[i]])
+					}
+					setObjects(popular)
+				})
+				.catch((e) => console.log(e))
+		} else {
+			console.log('MainScreen error')
+		}
 	}
 
 	useEffect(() => {
@@ -70,7 +75,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				{/* ПОПУЛЯРНО В ВАШЕМ ГОРОДЕ */}
 				<View style={{ marginBottom: 40 }}>
 					<SubHeader title="Популярное в Вашем городе" />
-					<View style={styles.popularView}>
+					<View style={styles.popularAndNewsView}>
 						{Boolean(state.reducerObjects) && (
 							<React.Fragment>
 								<ObjectMini
@@ -88,7 +93,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				{/* NEWS */}
 				<View>
 					<SubHeader title="Новости" />
-					<View style={styles.newsView}>
+					<View style={styles.popularAndNewsView}>
 						<News
 							date="30.02.2036"
 							title="Lorem, ipsum dolor sit amet consectetur adipisicing elit."
@@ -107,15 +112,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 }
 
 const styles = StyleSheet.create({
-	popularView: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		marginLeft: 10,
-		marginRight: 10,
-		marginTop: 10,
-		marginBottom: 10,
-	},
-	newsView: {
+	popularAndNewsView: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		marginLeft: 10,

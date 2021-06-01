@@ -1,70 +1,61 @@
-import React from 'react'
-import { View, Dimensions, StyleSheet, TextInput, Text } from 'react-native'
+import React, { useState } from 'react'
+import { View, Dimensions, StyleSheet, TextInput, Text, TouchableOpacity } from 'react-native'
 import { RadioButton } from 'react-native-paper'
+import DateTimePickerModal from 'react-native-modal-datetime-picker'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function RegField({
-	label,
-	value = true,
-	setValue,
-	pass,
-	gender = false,
-	phone,
-	error = false,
-}) {
+export default function RegField({ label, value = true, setValue, pass, gender = false, phone, birthDate }) {
+	const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
+
+	const showDatePicker = () => {
+		setDatePickerVisibility(true)
+	}
+
+	const hideDatePicker = () => {
+		setDatePickerVisibility(false)
+	}
+
+	const handleConfirm = (date) => {
+		date = new Date(date).toISOString().substring(0, 10).replace(/-/gi, '.')
+		setValue(date)
+		hideDatePicker()
+	}
+
 	const passProps = pass ? { secureTextEntry: true, textContentType: 'password' } : false
 	const phoneProps = phone ? { keyboardType: 'phone-pad' } : false
-	// console.log(error)
 	return !gender ? (
-		<View
-			style={[
-				styles.inputView,
-				// !value && styles.error
-			]}
-		>
-			<TextInput
-				placeholder={label}
-				style={styles.inputText}
-				value={value}
-				onChangeText={(e) => setValue(e)}
-				{...passProps}
-				{...phoneProps}
-			/>
-			{value ? (
-				<Icon
-					name="times-circle"
-					color={'#912e33'}
-					size={20}
-					onPress={() => setValue('')}
+		<React.Fragment>
+			<View style={styles.inputView}>
+				<TextInput
+					placeholder={label}
+					style={styles.inputText}
+					value={value}
+					onChangeText={(e) => setValue(e)}
+					{...passProps}
+					{...phoneProps}
 				/>
-			) : (
-				false
-			)}
-		</View>
+				{value && !birthDate ? <Icon name="times-circle" color={'#912e33'} size={20} onPress={() => setValue('')} /> : false}
+				{birthDate ? (
+					<TouchableOpacity activeOpacity={0.5} onPress={showDatePicker}>
+						<Icon name="calendar" color={'#868686'} size={20} />
+					</TouchableOpacity>
+				) : (
+					false
+				)}
+			</View>
+			<DateTimePickerModal isVisible={isDatePickerVisible} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
+		</React.Fragment>
 	) : (
 		<View style={styles.inputGender}>
 			<Text style={styles.inputText}>Пол:</Text>
-			<View
-				style={{
-					flexDirection: 'row',
-					alignItems: 'center',
-				}}
-			>
-				<RadioButton
-					color="#912e33"
-					status={value === 1 ? 'checked' : 'uncheked'}
-					onPress={() => setValue(1)}
-				/>
+			<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+				<RadioButton color="#912e33" status={value === 1 ? 'checked' : 'uncheked'} onPress={() => setValue(1)} />
 				<Text style={{ ...styles.textGender, marginRight: 20 }}>Мужской</Text>
-				<RadioButton
-					color="#912e33"
-					status={value === 0 ? 'checked' : 'uncheked'}
-					onPress={() => setValue(0)}
-				/>
-				<Text style={styles.textGender}>Женщина</Text>
+				<RadioButton color="#912e33" status={value === 0 ? 'checked' : 'uncheked'} onPress={() => setValue(0)} />
+				<Text style={styles.textGender}>Женский</Text>
 			</View>
 		</View>
 	)
