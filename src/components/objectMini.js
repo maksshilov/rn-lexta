@@ -1,20 +1,19 @@
 import React from 'react'
 import { Dimensions, Image, Pressable, Text, TouchableOpacity, View } from 'react-native'
-import { connect } from 'react-redux'
+import { numSplit } from '../components/scripts'
+
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const ObjectMini = (props) => {
-	const { object, navigation, state } = props
-
-	console.log('OBJECTMINI', props)
-	const { Price, NumberRooms, TotalArea, Floor, Street } = state.reducerObjects[object]
+export default function ObjectMini({ object, navigation, toTop }) {
+	const { Price, NumberRooms, TotalArea, Floor, Street } = object
 	return (
 		<TouchableOpacity
-			onPress={() =>
+			onPress={() => {
 				navigation.navigate('Object', {
 					object,
 				})
-			}
+				toTop({ x: 0, y: 0, animated: true })
+			}}
 		>
 			<View
 				style={{
@@ -42,15 +41,7 @@ const ObjectMini = (props) => {
 						marginBottom: 10,
 					}}
 				>
-					{Price.toString()
-						.split('')
-						.reverse()
-						.join('')
-						.replace(/([0-9]{3})/g, '$1 ')
-						.split('')
-						.reverse()
-						.join('')}{' '}
-					&#8381;
+					{numSplit(Price)} &#8381;
 				</Text>
 				<Text
 					style={{
@@ -76,9 +67,3 @@ const ObjectMini = (props) => {
 		</TouchableOpacity>
 	)
 }
-
-const mapStateToProps = (state) => {
-	return { state }
-}
-
-export default connect(mapStateToProps)(ObjectMini)

@@ -1,24 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { Image, Text, View, Dimensions, Animated, Pressable } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import React, { useEffect } from 'react'
+import { Image, View, Dimensions, Animated, Pressable, StyleSheet } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import Carousel from '../components/carousel'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import ObjectMini from '../components/objectMini'
 import Header from '../components/header'
 import SubHeader from '../components/subHeader'
 import News from '../components/news'
 import { connect } from 'react-redux'
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
+import { shuffle } from '../components/scripts'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
-
-function shuffle(a) {
-	for (let i = a.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1))
-		;[a[i], a[j]] = [a[j], a[i]]
-	}
-	return a
-}
 
 const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 	const { getItem } = useAsyncStorage('@storage_key')
@@ -36,7 +28,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 			.then((json) => {
 				const idxs = shuffle(Array.from({ length: json.length }).map((_, i) => i))
 				let popular = []
-				for (let i = 0; i < 2; i++) {
+				for (let i = 0; i < json.length; i++) {
 					popular.push(json[idxs[i]])
 				}
 				setObjects(popular)
@@ -78,20 +70,17 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				{/* ПОПУЛЯРНО В ВАШЕМ ГОРОДЕ */}
 				<View style={{ marginBottom: 40 }}>
 					<SubHeader title="Популярное в Вашем городе" />
-					<View
-						style={{
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							marginLeft: 10,
-							marginRight: 10,
-							marginTop: 10,
-							marginBottom: 10,
-						}}
-					>
+					<View style={styles.popularView}>
 						{Boolean(state.reducerObjects) && (
 							<React.Fragment>
-								<ObjectMini object={0} navigation={navigation} />
-								<ObjectMini object={1} navigation={navigation} />
+								<ObjectMini
+									object={state.reducerObjects[0]}
+									navigation={navigation}
+								/>
+								<ObjectMini
+									object={state.reducerObjects[1]}
+									navigation={navigation}
+								/>
 							</React.Fragment>
 						)}
 					</View>
@@ -99,16 +88,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				{/* NEWS */}
 				<View>
 					<SubHeader title="Новости" />
-					<View
-						style={{
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							marginLeft: 10,
-							marginRight: 10,
-							marginTop: 10,
-							marginBottom: 10,
-						}}
-					>
+					<View style={styles.newsView}>
 						<News
 							date="30.02.2036"
 							title="Lorem, ipsum dolor sit amet consectetur adipisicing elit."
@@ -125,6 +105,25 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 		</>
 	)
 }
+
+const styles = StyleSheet.create({
+	popularView: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginLeft: 10,
+		marginRight: 10,
+		marginTop: 10,
+		marginBottom: 10,
+	},
+	newsView: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginLeft: 10,
+		marginRight: 10,
+		marginTop: 10,
+		marginBottom: 10,
+	},
+})
 
 const mapStateToProps = (state) => {
 	return { state }

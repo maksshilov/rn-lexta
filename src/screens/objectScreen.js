@@ -9,20 +9,15 @@ import ObjectMini from '../components/objectMini'
 import { WebView } from 'react-native-webview'
 import PhoneShow from '../components/phoneShow'
 import ObjectCarousel from '../components/objectCarousel'
+import { numSplit } from '../components/scripts'
+
 import { connect } from 'react-redux'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ObjectScreen = ({ route, navigation, state }) => {
-	const object = route.params.object
-	const { Price, NumberRooms, TotalArea, Floor, Street } =
-		state.reducerObjects[route.params.object]
+	const { Price, NumberRooms, TotalArea, Floor, Street, KitchenArea } = route.params.object
 
-	// const Price = state.reducerObjects[route.params.object].Price
-	// const NumberRooms = state.reducerObjects[route.params.object].NumberRooms
-	// const TotalArea = state.reducerObjects[route.params.object].TotalArea
-	// const Floor = state.reducerObjects[route.params.object].Floor
-	// const Street = state.reducerObjects[route.params.object].Street
 	const scrollToTop = useRef(null)
 
 	return (
@@ -62,7 +57,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 							fontSize: 20,
 						}}
 					>
-						{Price} &#8381;
+						{numSplit(Price)} &#8381;
 					</Text>
 					<View
 						style={{
@@ -78,7 +73,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 				</View>
 				{/* PARAMS */}
 				<View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
-					<ObjectParams type="Квартира" value={NumberRooms} />
+					<ObjectParams type="Квартира" value={`${NumberRooms}-комн`} />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
 					<ObjectParams type="Площадь" value={TotalArea} />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
@@ -170,11 +165,11 @@ const ObjectScreen = ({ route, navigation, state }) => {
 					>
 						Квартира
 					</Text>
-					<AppDetails label="Количство комнат" value="2" />
-					<AppDetails label="Общая площадь" value="62 м2" />
+					<AppDetails label="Количство комнат" value={NumberRooms} />
+					<AppDetails label="Общая площадь" value={`${TotalArea} м2`} />
 					<AppDetails label="Жилая площадь" value="48 м2" />
-					<AppDetails label="Кухня" value="10.5" />
-					<AppDetails label="Этаж" value="3/24" />
+					<AppDetails label="Кухня" value={`${KitchenArea} м2`} />
+					<AppDetails label="Этаж" value={`${Floor} м2`} />
 					<AppDetails label="Тип дома" value="монолитный" />
 					<AppDetails label="Ремонт" value="косметический" />
 				</View>
@@ -282,7 +277,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 				>
 					Похожие объявления рядом
 				</Text>
-				{/* <View
+				<View
 					style={{
 						flexDirection: 'row',
 						justifyContent: 'space-between',
@@ -290,55 +285,19 @@ const ObjectScreen = ({ route, navigation, state }) => {
 						marginBottom: 10,
 					}}
 				>
-					<TouchableOpacity
-						onPress={() => {
-							{
-								navigation.navigate('Object', {
-									Price: '6 000 000',
-									NumberRooms: '6-комн.',
-									TotalArea: '66.6 м2',
-									Floor: '6 эт.',
-									Street: 'г. Обнинск, пр-т Маркса, 666',
-								})
-								scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
-							}
-						}}
-					>
-						<ObjectMini
-							windowWidth={windowWidth}
-							Price="6 000 000"
-							NumberRooms="6-комн."
-							TotalArea="66.6 м2"
-							Floor="6 эт."
-							Street="г. Обнинск, пр-т Маркса, 666"
-							navigation={navigation}
-						/>
-					</TouchableOpacity>
+					<ObjectMini
+						toTop={scrollToTop.current.scrollTo}
+						object={state.reducerObjects[2]}
+						navigation={navigation}
+					/>
 
-					<TouchableOpacity
-						onPress={() => {
-							navigation.navigate('Object', {
-								Price: '2 000 000',
-								NumberRooms: '2-комн.',
-								TotalArea: '22.2 м2',
-								Floor: '2 эт.',
-								Street: 'г. Обнинск, пр-т Маркса, 222',
-							})
-							scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
-						}}
-					>
-						<ObjectMini
-							windowWidth={windowWidth}
-							Price="2 000 000"
-							NumberRooms="2-комн."
-							TotalArea="22.2 м2"
-							Floor="2 эт."
-							Street="г. Обнинск, пр-т Маркса, 222"
-							navigation={navigation}
-						/>
-					</TouchableOpacity>
-				</View> */}
-				{/* <View
+					<ObjectMini
+						toTop={scrollToTop.current.scrollTo}
+						object={state.reducerObjects[3]}
+						navigation={navigation}
+					/>
+				</View>
+				<View
 					style={{
 						flexDirection: 'row',
 						justifyContent: 'space-between',
@@ -346,52 +305,18 @@ const ObjectScreen = ({ route, navigation, state }) => {
 						marginBottom: 10,
 					}}
 				>
-					<TouchableOpacity
-						onPress={() => {
-							navigation.navigate('Object', {
-								Price: '5 000 000',
-								NumberRooms: '5-комн.',
-								TotalArea: '55.5 м2',
-								Floor: '5 эт.',
-								Street: 'г. Обнинск, пр-т Маркса, 555',
-							})
-							scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
-						}}
-					>
-						<ObjectMini
-							windowWidth={windowWidth}
-							Price="5 000 000"
-							NumberRooms="5-комн."
-							TotalArea="55.5 м2"
-							Floor="5 эт."
-							Street="г. Обнинск, пр-т Маркса, 555"
-							navigation={navigation}
-						/>
-					</TouchableOpacity>
+					<ObjectMini
+						toTop={scrollToTop.current.scrollTo}
+						object={state.reducerObjects[4]}
+						navigation={navigation}
+					/>
 
-					<TouchableOpacity
-						onPress={() => {
-							navigation.navigate('Object', {
-								Price: '1 000 000',
-								NumberRooms: '1-комн.',
-								TotalArea: '11.1 м1',
-								Floor: '1 эт.',
-								Street: 'г. Обнинск, пр-т Маркса, 111',
-							})
-							scrollToTop.current.scrollTo({ x: 0, y: 0, animated: true })
-						}}
-					>
-						<ObjectMini
-							windowWidth={windowWidth}
-							Price="1 000 000"
-							NumberRooms="1-комн."
-							TotalArea="11.1 м1"
-							Floor="1 эт."
-							Street="г. Обнинск, пр-т Маркса, 111"
-							navigation={navigation}
-						/>
-					</TouchableOpacity>
-				</View> */}
+					<ObjectMini
+						toTop={scrollToTop.current.scrollTo}
+						object={state.reducerObjects[5]}
+						navigation={navigation}
+					/>
+				</View>
 			</View>
 			<TouchableOpacity style={{ alignItems: 'center' }}>
 				<View
