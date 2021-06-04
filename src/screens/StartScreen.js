@@ -8,8 +8,8 @@ import {
 	Dimensions,
 	Animated,
 } from 'react-native'
-import Logo from '../components/logo'
-import { handlePressIn, handlePressOut } from '../components/animatedScale'
+import Logo from '../components/Logo'
+import { handlePressIn, handlePressOut } from '../components/AnimatedScale'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 

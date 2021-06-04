@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import md5 from 'md5'
 
-import Loader from '../components/loader'
+import Loader from '../components/Loader'
 import { connect } from 'react-redux'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -66,17 +66,14 @@ const PassChangeScreen = ({ state, setToken, navigation }) => {
 		<React.Fragment>
 			{loading && <Loader />}
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
-				<ScrollView
-					contentContainerStyle={{ marginTop: windowHeight * 0.1, alignItems: 'center' }}
-				>
+				<ScrollView contentContainerStyle={{ alignItems: 'center' }}>
 					<MaterialCommunityIcons
 						name="lock-outline"
 						color="#8f2d32"
 						size={50}
-						style={{ marginBottom: 10 }}
+						style={{ marginTop: 10, marginBottom: 10 }}
 					/>
 
-					<Text style={styles.header}>Изменение пароля</Text>
 					<View style={styles.inputView}>
 						<TextInput
 							placeholder="Телефон или электронная почта"

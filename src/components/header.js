@@ -2,7 +2,7 @@ import React from 'react'
 import { Image, View, Dimensions, Animated } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { handlePressIn, handlePressOut } from '../components/animatedScale'
+import { handlePressIn, handlePressOut } from './AnimatedScale'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 

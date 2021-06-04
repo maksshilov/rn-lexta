@@ -1,10 +1,10 @@
 import React from 'react'
 import { Dimensions, Image, Text, TouchableOpacity, View, StyleSheet } from 'react-native'
-import { numSplit } from '../components/scripts'
+import { numSplit } from './scripts'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function ObjectMini({ object, navigation, toTop = false }) {
+export default function ObjectMini({ object, navigation, toTop = null }) {
 	const { Price, NumberRooms, TotalArea, Floor, Street } = object
 	return (
 		<TouchableOpacity

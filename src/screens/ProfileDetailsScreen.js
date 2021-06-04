@@ -1,23 +1,15 @@
 import React, { useState } from 'react'
-import {
-	Text,
-	View,
-	Dimensions,
-	ScrollView,
-	StyleSheet,
-	Pressable,
-	TextInput,
-	Alert,
-} from 'react-native'
+import { Text, View, Dimensions, ScrollView, StyleSheet, Pressable, Alert } from 'react-native'
 import md5 from 'md5'
-
-import Loader from '../components/loader'
+import ProfileDetailsItems from '../components/ProfileDetailsItems'
+import Loader from '../components/Loader'
 import { connect } from 'react-redux'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ProfileDetailsScreen = ({ state, setToken, navigation }) => {
+	const { FirstName, LastName, Phone, Email, Gender } = state.reducerUser
+
 	const [login, setLogin] = useState('')
 	const [oldPass, setOldPass] = useState('')
 	const [pass, setPass] = useState('')
@@ -66,65 +58,14 @@ const ProfileDetailsScreen = ({ state, setToken, navigation }) => {
 		<React.Fragment>
 			{loading && <Loader />}
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
-				<ScrollView
-					contentContainerStyle={{ marginTop: windowHeight * 0.1, alignItems: 'center' }}
-				>
-					<MaterialCommunityIcons
-						name="account-outline"
-						color="#8f2d32"
-						size={50}
-						style={{ marginBottom: 10 }}
+				<ScrollView contentContainerStyle={{ alignItems: 'center' }}>
+					<ProfileDetailsItems
+						icon="account-outline"
+						content={`${FirstName} ${LastName}`}
 					/>
-
-					<Text style={styles.header}>Персональные данные</Text>
-					<View style={styles.inputView}>
-						<TextInput
-							placeholder="Телефон или электронная почта"
-							onChangeText={setLogin}
-							style={styles.inputText}
-						/>
-					</View>
-					<View style={styles.inputView}>
-						<TextInput
-							placeholder="Старый пароль"
-							textContentType="password"
-							secureTextEntry
-							onChangeText={setOldPass}
-							style={styles.inputText}
-						/>
-					</View>
-					<View style={styles.inputView}>
-						<TextInput
-							placeholder="Новый пароль"
-							textContentType="password"
-							secureTextEntry
-							onChangeText={setPass}
-							style={styles.inputText}
-						/>
-					</View>
-					<View style={styles.inputView}>
-						<TextInput
-							placeholder="Новый пароль. Ещё разок"
-							textContentType="password"
-							secureTextEntry
-							onChangeText={setRpass}
-							style={styles.inputText}
-						/>
-					</View>
-
-					<Pressable
-						android_ripple
-						onPress={() => {
-							if (login && pass) {
-								loginHandler()
-							} else {
-								console.log('err')
-							}
-						}}
-						style={{ ...styles.btn, ...styles.btnLogin }}
-					>
-						<Text style={{ ...styles.text, color: '#fff' }}>Изменить</Text>
-					</Pressable>
+					<ProfileDetailsItems icon="phone" content={Phone} />
+					<ProfileDetailsItems icon="email" content={Email} />
+					<ProfileDetailsItems gender content={Gender ? 'мужской' : 'женский'} />
 				</ScrollView>
 			</View>
 		</React.Fragment>

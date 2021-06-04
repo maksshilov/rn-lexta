@@ -1,13 +1,12 @@
-import React from 'react'
 import { Animated } from 'react-native'
 
-const handlePressIn = (objRef) => {
+function handlePressIn(objRef) {
 	Animated.spring(objRef, {
 		toValue: 0.95,
 		useNativeDriver: false,
 	}).start()
 }
-const handlePressOut = (objRef) => {
+function handlePressOut(objRef) {
 	Animated.spring(objRef, {
 		toValue: 1,
 		friction: 3,

@@ -46,12 +46,20 @@ export default function AppNavigator({ page }) {
 				<Stack.Screen
 					name="ProfileDetails"
 					component={ProfileDetailsScreen}
-					options={{ headerShown: false }}
+					options={{
+						headerShown: true,
+						title: 'Мои данные',
+						headerTitleStyle: { fontFamily: 'gothampro-bold' },
+					}}
 				/>
 				<Stack.Screen
 					name="PassChange"
 					component={PassChangeScreen}
-					options={{ headerShown: false }}
+					options={{
+						headerShown: true,
+						title: 'Изменение пароля',
+						headerTitleStyle: { fontFamily: 'gothampro-bold' },
+					}}
 				/>
 				<Stack.Screen
 					name="Object"

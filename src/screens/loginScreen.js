@@ -11,13 +11,9 @@ import {
 	ActivityIndicator,
 } from 'react-native'
 import md5 from 'md5'
-
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
-
-import Loader from '../components/loader'
-import { handlePressIn, handlePressOut } from '../components/animatedScale'
-
 import { connect } from 'react-redux'
+import LextaService from '../services/LextaService'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -30,23 +26,19 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 	const writeItemToStorage = async (newValue) => {
 		await setItem(newValue)
 	}
-
+	lextaService = new LextaService()
 	const loginHandler = async () => {
-		await fetch(`https://lexta.pro/api/GetToken.php?user=${login}&password=${md5(pass)}`, {
-			mode: 'no-cors',
-		})
+		lextaService
+			.getToken(login, md5(pass))
 			.then((res) => {
 				setLoading(true)
 				return res.json()
 			})
 			.then((token) => {
+				console.log(token)
 				if (token['Status']) {
-					fetch(
-						`https://lexta.pro/api/GetUserInfo.php?token=${token['Token']}&user=${login}`,
-						{
-							mode: 'no-cors',
-						}
-					)
+					lextaService
+						.getUserInfo(token['Token'], login)
 						.then((res) => {
 							return res.json()
 						})
@@ -54,6 +46,7 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 							const storage = JSON.stringify({
 								...data[0],
 								Token: token['Token'],
+								UserId: md5(token['UserId']),
 							})
 							writeItemToStorage(storage)
 

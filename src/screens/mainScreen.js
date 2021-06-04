@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { Image, View, Dimensions, Animated, Pressable, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import Carousel from '../components/carousel'
-import ObjectMini from '../components/objectMini'
-import Header from '../components/header'
-import SubHeader from '../components/subHeader'
-import News from '../components/news'
+import Carousel from '../components/Carousel'
+import ObjectMini from '../components/ObjectMini'
+import Header from '../components/Header'
+import SubHeader from '../components/SubHeader'
+import News from '../components/News'
 import { connect } from 'react-redux'
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 import { shuffle } from '../components/scripts'
@@ -16,7 +16,8 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 	const { getItem } = useAsyncStorage('@storage_key')
 	const getObjects = async () => {
 		const item = await getItem()
-		console.log('MAIN SCREEN. ITEM', item)
+		console.log('NEW TOKEN', JSON.parse(item).Token)
+		// console.log('MAIN SCREEN. ITEM', item)
 		if (item) {
 			const itemToJson = JSON.parse(item)
 			setUserInfo(itemToJson)

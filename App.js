@@ -2,18 +2,23 @@ import React from 'react'
 import AppLoading from 'expo-app-loading'
 import { StatusBar } from 'expo-status-bar'
 import { bootstrap } from './src/bootstrap'
-import AppNavigator from './src/components/appNavigator'
+import AppNavigator from './src/components/AppNavigator'
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 import updateToken from './src/components/updateToken'
 import { Provider } from 'react-redux'
 import store from './src/store'
+import LextaService from './src/services/LextaService'
 
 const App = () => {
 	const [isReady, setIsReady] = React.useState(false)
 	const [aStorage, setAStorage] = React.useState({})
 	const [session, setSession] = React.useState(false)
-	const { getItem } = useAsyncStorage('@storage_key')
+	const { setItem, getItem } = useAsyncStorage('@storage_key')
 
+	const writeItemToStorage = async (newValue) => {
+		await setItem(newValue)
+	}
+	// console.log('aStorage', aStorage)
 	React.useEffect(() => {
 		setInterval(() => {
 			updateToken(aStorage)
@@ -30,30 +35,46 @@ const App = () => {
 					onFinish={async () => {
 						const item = await getItem()
 						const itemToJson = JSON.parse(item)
-						console.log('1 - itemToJson', itemToJson)
+						console.log('OLD TOKEN', itemToJson)
 						if (item) {
-							await fetch(
-								`https://lexta.pro/api/UpdateToken.php?user=${itemToJson.Email}&token=${itemToJson.Token}`,
-								{
-									method: 'POST',
-									mode: 'no-cors',
-									headers: new Headers(),
-								}
-							)
-								.then((res) => res.json())
-								.then((data) => {
-									console.log('APPLOADING >>> ', data.Message)
-									if (item && data.Message == 'update success') {
-										console.log('woohoo')
-										setSession(true)
-										console.log('2 - itemToJson', itemToJson)
+							const data = new FormData()
+							data.append('user', itemToJson.Email)
+							data.append('token', itemToJson.Token)
+							data.append('userId', itemToJson.UserId)
 
-										setAStorage(itemToJson)
-										setIsReady(true)
+							await fetch(`https://lexta.pro/api/UpdateToken.php`, {
+								method: 'POST',
+								mode: 'no-cors',
+								headers: new Headers(),
+								body: data,
+							})
+								.then((res) => res.json())
+								.then((updToken) => {
+									if (item && updToken.Message == 'update success') {
+										lextaService = new LextaService()
+										lextaService
+											.getUserInfo(updToken.Token, itemToJson.Email)
+											.then((res) => {
+												return res.json()
+											})
+											.then((userInfo) => {
+												console.log('userInfo', userInfo)
+												const storage = JSON.stringify({
+													...userInfo[0],
+													Token: updToken.Token,
+													UserId: itemToJson.UserId,
+												})
+
+												writeItemToStorage(storage)
+												setSession(true)
+												setAStorage({ ...itemToJson, Token: data.Token })
+												setIsReady(true)
+												console.log('woohoo')
+											})
 									} else {
-										console.log('fuck')
 										setSession(false)
 										setIsReady(true)
+										console.log('fuck')
 									}
 								})
 								.catch((e) => console.log(e))
