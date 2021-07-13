@@ -56,9 +56,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
 					useNativeDriver: false,
 				})}
-				style={{
-					backgroundColor: '#fff',
-				}}
+				style={{backgroundColor: '#fff'}}
 			>
 				{/* ЖИЛЬЁ НА ЛЮБОЙ ВКУС */}
 				<View>
