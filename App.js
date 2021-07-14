@@ -11,19 +11,19 @@ import LextaService from './src/services/LextaService'
 
 const App = () => {
 	const [isReady, setIsReady] = React.useState(false)
-	const [aStorage, setAStorage] = React.useState({})
 	const [session, setSession] = React.useState(false)
 	const { setItem, getItem } = useAsyncStorage('@storage_key')
 
 	const writeItemToStorage = async (newValue) => {
 		await setItem(newValue)
 	}
-	// console.log('aStorage', aStorage)
+
 	React.useEffect(() => {
 		setInterval(() => {
-			updateToken(aStorage)
+			let { Email, Token, UserId } = store.getState().reducerUser
+			updateToken({ Email, Token, UserId })
 		}, 60000)
-	}, [aStorage])
+	}, [])
 
 	let content = <AppNavigator page={session ? 'Main' : 'Start'} />
 
@@ -35,7 +35,6 @@ const App = () => {
 					onFinish={async () => {
 						const item = await getItem()
 						const itemToJson = JSON.parse(item)
-						console.log('OLD TOKEN', itemToJson)
 						if (item) {
 							const data = new FormData()
 							data.append('user', itemToJson.Email)
@@ -54,11 +53,8 @@ const App = () => {
 										lextaService = new LextaService()
 										lextaService
 											.getUserInfo(updToken.Token, itemToJson.Email)
-											.then((res) => {
-												return res.json()
-											})
+											.then((res) => res.json())
 											.then((userInfo) => {
-												console.log('userInfo', userInfo)
 												const storage = JSON.stringify({
 													...userInfo[0],
 													Token: updToken.Token,
@@ -66,20 +62,23 @@ const App = () => {
 												})
 
 												writeItemToStorage(storage)
+												store.dispatch({
+													type: 'UPD_TOKEN',
+													payload: updToken.Token,
+												})
 												setSession(true)
-												setAStorage({ ...itemToJson, Token: data.Token })
 												setIsReady(true)
-												console.log('woohoo')
+												// console.log('woohoo')
 											})
 									} else {
 										setSession(false)
 										setIsReady(true)
-										console.log('fuck')
+										// console.log('fuck')
 									}
 								})
 								.catch((e) => console.log(e))
 						} else {
-							console.log('nothing in storage')
+							// console.log('nothing in storage')
 							setSession(false)
 							setIsReady(true)
 						}
@@ -99,39 +98,3 @@ const App = () => {
 }
 
 export default App
-
-// let datas = data ? (
-// 	data.map((item) => {
-// 		return (
-// 			<View key={item.Message_ID} style={{ paddingVertical: 10 }}>
-// 				<Text>City: {item.City}</Text>
-// 				<Text>HouseType: {item.HouseType}</Text>
-// 				<Text>BalconyType: {item.BalconyType}</Text>
-// 				<Text>Floor: {item.Floor}</Text>
-// 			</View>
-// 		)
-// 	})
-// ) : (
-// 	<Text>Press "Get objects"</Text>
-// )
-
-// const Main = () => {
-// 	return (
-// 		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-// 			<Button title="Get objects" onPress={() => getObj(false)} />
-// 			<View style={{ flexDirection: 'column' }}>{datas}</View>
-// 			<Button title="Clear" onPress={() => setData(false)} />
-// 			<Button title="Exit" onPress={() => setToken(false)} />
-// 		</View>
-// 	)
-// }
-
-// const getObj = async () => {
-// 	if (token) {
-// 		await fetch(
-// 			`https://lexta.kproject.su/api/GetObjects.php?token=${token}&user=admin@lexta.kproject.su`
-// 		)
-// 			.then((res) => res.json())
-// 			.then((json) => setData(json))
-// 	}
-// }

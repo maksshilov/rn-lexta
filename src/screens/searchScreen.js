@@ -12,17 +12,15 @@ import {
 import Header from '../components/Header'
 import { Picker } from '@react-native-picker/picker'
 import CheckBox from '@react-native-community/checkbox'
-import { numSplit } from '../components/scripts'
-
 import { ScrollView } from 'react-native-gesture-handler'
 import { TokenConsumer } from '../components/tokenContext'
+import store from '../store'
+import md5 from 'md5'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function SearchScreen({ navigation }) {
-	const [data, setData] = useState(false)
-
 	const [cityOrRegion, setcityOrRegion] = useState('')
-	const [catalogType, setcatalogType] = useState('')
+	const [catalogType, setcatalogType] = useState(1)
 	const [f_Category, setf_Category] = useState('')
 	const [f_NumberRooms, setf_NumberRooms] = useState('')
 	const [objectType, setobjectType] = useState(0)
@@ -34,51 +32,48 @@ export default function SearchScreen({ navigation }) {
 	const [kitchenAreaTo, setkitchenAreaTo] = useState('')
 	const [floorFrom, setfloorFrom] = useState('')
 	const [floorTo, setfloorTo] = useState('')
-	const [whichFloor1, setwhichFloor1] = useState(false)
-	const [whichFloor2, setwhichFloor2] = useState(false)
-	const [whichFloor3, setwhichFloor3] = useState(false)
+	const [whichFloor1, setwhichFloor1] = useState('')
+	const [whichFloor2, setwhichFloor2] = useState('')
+	const [whichFloor3, setwhichFloor3] = useState('')
 	const [f_HouseType, setf_HouseType] = useState('')
-	const [mortgage, setmortgage] = useState(false)
-	const [video, setvideo] = useState(false)
-	const [,] = useState('')
-	const [,] = useState('')
-	const [,] = useState('')
-	const [,] = useState('')
-	const [,] = useState('')
-	const [,] = useState('')
+	const [mortgage, setmortgage] = useState('')
+	const [video, setvideo] = useState('')
 
-	const handleSearch = async (token, priceFrom = '90000', priceTo = '100000') => {
-		console.log(token, priceFrom, priceTo)
-		if (token) {
-			await fetch(
-				`https://lexta.kproject.su/api/GetObjects.php?token=${token}&user=admin@lexta.kproject.su&priceFrom=${priceFrom}&priceTo=${priceTo}`
-			)
-				.then((res) => res.json())
-				.then((json) => setData(json))
-				.catch((err) => console.log(err))
-		}
+	let params = `token=${store.getState().reducerUser.Token}&
+	user=${md5(
+		store.getState().reducerUser.Email
+	)}&cityOrRegion=${cityOrRegion}&catalogType=${catalogType}&f_Category=${f_Category}&f_NumberRooms=${f_NumberRooms}&objectType=${objectType}&priceFrom=${priceFrom}&priceTo=${priceTo}&totalAreaFrom=${totalAreaFrom}&totalAreaTo=${totalAreaTo}&kitchenAreaFrom=${kitchenAreaFrom}&kitchenAreaTo=${kitchenAreaTo}&floorFrom=${floorFrom}&floorTo=${floorTo}&whichFloor1=${whichFloor1}&whichFloor2=${whichFloor2}&whichFloor3=${whichFloor3}&f_HouseType=${f_HouseType}&mortgage=${mortgage}&video=${video}`
+
+	console.log(params)
+
+	const handleSearch = async (params) => {
+		await fetch(`https://lexta.pro/object-api/?${params}`)
+			.then((res) => res.json())
+			// .then((json) => console.log(json))
+			.then((json) => json.map((o) => console.log(o['Price'])))
+			.catch((err) => console.log(err))
 	}
 
-	let datas = data ? (
-		data.map((item) => {
-			return (
-				<View key={item.Message_ID} style={{ paddingVertical: 10 }}>
-					<Text>City: {item.City}</Text>
-					<Text>HouseType: {item.HouseType}</Text>
-					<Text>BalconyType: {item.BalconyType}</Text>
-					<Text>Floor: {item.Floor}</Text>
-					<Text>Price: {item.Price}</Text>
-				</View>
-			)
-		})
-	) : (
-		<Text>Press "Get objects"</Text>
-	)
+	// let datas = data ? (
+	// 	data.map((item) => {
+	// 		return (
+	// 			<View key={item.Message_ID} style={{ paddingVertical: 10 }}>
+	// 				<Text>City: {item.City}</Text>
+	// 				<Text>HouseType: {item.HouseType}</Text>
+	// 				<Text>BalconyType: {item.BalconyType}</Text>
+	// 				<Text>Floor: {item.Floor}</Text>
+	// 				<Text>Price: {item.Price}</Text>
+	// 			</View>
+	// 		)
+	// 	})
+	// ) : (
+	// 	<Text>Press "Get objects"</Text>
+	// )
 
 	const Main = () => {
 		return (
 			<View style={{ alignItems: 'center', justifyContent: 'center' }}>
-				<View style={{ flexDirection: 'column' }}>{datas}</View>
+				{/* <View style={{ flexDirection: 'column' }}>{datas}</View> */}
 			</View>
 		)
 	}
@@ -420,7 +415,7 @@ export default function SearchScreen({ navigation }) {
 								</View>
 								<View style={{ flexDirection: 'row' }}>
 									<Pressable
-										onPress={() => setwhichFloor1(!whichFloor1)}
+										onPress={() => setwhichFloor1(whichFloor1 ? '' : 1)}
 										style={[
 											styles.select,
 											{
@@ -442,7 +437,7 @@ export default function SearchScreen({ navigation }) {
 										</Text>
 									</Pressable>
 									<Pressable
-										onPress={() => setwhichFloor2(!whichFloor2)}
+										onPress={() => setwhichFloor2(whichFloor2 ? '' : 1)}
 										style={[
 											styles.select,
 											{
@@ -465,7 +460,7 @@ export default function SearchScreen({ navigation }) {
 										</Text>
 									</Pressable>
 									<Pressable
-										onPress={() => setwhichFloor3(!whichFloor3)}
+										onPress={() => setwhichFloor3(whichFloor3 ? '' : 1)}
 										style={[
 											styles.select,
 											{
@@ -520,7 +515,7 @@ export default function SearchScreen({ navigation }) {
 								{/* MORTGAGE CHECKBOX */}
 								<Pressable
 									style={styles.checkBox}
-									onPress={() => setmortgage(!mortgage)}
+									onPress={() => setmortgage(mortgage ? '' : 1)}
 								>
 									<CheckBox
 										disabled={false}
@@ -531,7 +526,10 @@ export default function SearchScreen({ navigation }) {
 								</Pressable>
 
 								{/* VIDEO CHECKBOX */}
-								<Pressable style={styles.checkBox} onPress={() => setvideo(!video)}>
+								<Pressable
+									style={styles.checkBox}
+									onPress={() => setvideo(video ? '' : 1)}
+								>
 									<CheckBox
 										disabled={false}
 										value={video}
@@ -550,15 +548,13 @@ export default function SearchScreen({ navigation }) {
 										android_ripple={{ color: '#fff' }}
 										style={{
 											backgroundColor: '#912e33',
-											width: windowWidth * 0.3,
+											width: windowWidth * 0.88,
 											height: windowWidth * 0.1,
 											borderRadius: 10,
 											alignItems: 'center',
 											justifyContent: 'center',
 										}}
-										onPress={() => {
-											handleSearch(token, priceFrom, priceTo)
-										}}
+										onPress={() => handleSearch(params)}
 									>
 										<Text
 											style={{
@@ -567,7 +563,7 @@ export default function SearchScreen({ navigation }) {
 												fontSize: 13,
 											}}
 										>
-											Найти
+											Показать
 										</Text>
 									</Pressable>
 								</View>
