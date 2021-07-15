@@ -16,7 +16,20 @@ import { connect } from 'react-redux'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ObjectScreen = ({ route, navigation, state }) => {
-	const { Price, NumberRooms, TotalArea, Floor, Street, KitchenArea } = route.params.object
+	const {
+		Price,
+		NumberRooms,
+		TotalArea,
+		Floor,
+		Street,
+		KitchenArea,
+		Description,
+		CadastralNumber,
+		LivingArea,
+		HouseType,
+		Finishing,
+		HouseNumber,
+	} = route.params.object
 
 	const scrollToTop = useRef(null)
 
@@ -75,9 +88,9 @@ const ObjectScreen = ({ route, navigation, state }) => {
 				<View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}>
 					<ObjectParams type="Квартира" value={`${NumberRooms}-комн`} />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
-					<ObjectParams type="Площадь" value={TotalArea} />
+					<ObjectParams type="Площадь" value={`${TotalArea} м2`} />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
-					<ObjectParams type="Кухня" value="10.5 м2" />
+					<ObjectParams type="Кухня" value={`${KitchenArea} м2`} />
 					<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
 					<ObjectParams type="Этаж" value={Floor} />
 				</View>
@@ -122,15 +135,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 							marginBottom: 30,
 						}}
 					>
-						Продается квартира в зеленом и полностью застроенном микрорайоне. Рядом лес,
-						лыжероллерная трасса, детские и спортивные площадки. В пешей доступности
-						школа, детские сады, больница, бассейн Олимп, магазины.
-						{'\n'}
-						{'\n'}
-						Дом очень теплый и тихий с надежными консьержами. Есть видеона-блюдение по
-						периметру дома и в лифтах. Организовано ТСЖ. У квартиры прозрачная истори -
-						я первый и единственный собственник в браке. Квартира покупалась без
-						использования материнского капитала.
+						{Description}
 					</Text>
 				</View>
 				{/* APP DETAILS */}
@@ -167,11 +172,11 @@ const ObjectScreen = ({ route, navigation, state }) => {
 					</Text>
 					<AppDetails label="Количство комнат" value={NumberRooms} />
 					<AppDetails label="Общая площадь" value={`${TotalArea} м2`} />
-					<AppDetails label="Жилая площадь" value="48 м2" />
+					<AppDetails label="Жилая площадь" value={`${LivingArea} м2`} />
 					<AppDetails label="Кухня" value={`${KitchenArea} м2`} />
 					<AppDetails label="Этаж" value={`${Floor} м2`} />
-					<AppDetails label="Тип дома" value="монолитный" />
-					<AppDetails label="Ремонт" value="косметический" />
+					<AppDetails label="Тип дома" value={HouseType} />
+					<AppDetails label="Ремонт" value={Finishing} />
 				</View>
 				{/* EGRN */}
 				<View style={{ marginBottom: 30 }}>
@@ -213,7 +218,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 							marginBottom: 10,
 						}}
 					>
-						Кадастровый номер: 40:27:******:***
+						Кадастровый номер: {CadastralNumber}
 					</Text>
 					<AppEgrn value="1 собственник" />
 					<AppEgrn value="Указана кадастровая стоимость" />
@@ -251,7 +256,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 							marginBottom: 15,
 						}}
 					>
-						{Street}
+						{Street}, д.{HouseNumber}
 					</Text>
 				</View>
 			</View>

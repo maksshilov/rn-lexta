@@ -7,7 +7,7 @@ export function shuffle(a) {
 }
 
 export function numSplit(s) {
-	return s
+	let newS = s
 		.toString()
 		.split('')
 		.reverse()
@@ -16,4 +16,6 @@ export function numSplit(s) {
 		.split('')
 		.reverse()
 		.join('')
+		.replace(/^\s/, '')
+	return newS
 }

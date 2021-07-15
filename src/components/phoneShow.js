@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Dimensions, View, Text, Pressable } from 'react-native'
 const { width: windowWidth } = Dimensions.get('window')
 
-export default function PhoneShow() {
+export default function PhoneShow({ phoneNumber }) {
 	const [phone, setPhone] = useState(false)
 	return (
 		<View
@@ -15,7 +15,7 @@ export default function PhoneShow() {
 				android_ripple={{ color: '#fff' }}
 				style={{
 					backgroundColor: '#912e33',
-					width: windowWidth * 0.9,
+					width: windowWidth * 0.8,
 					height: windowWidth * 0.1,
 					borderRadius: 5,
 					alignItems: 'center',
@@ -32,7 +32,7 @@ export default function PhoneShow() {
 						fontSize: 13,
 					}}
 				>
-					{phone ? '+223 (322) 223-322' : 'Показать телефон'}
+					{phone ? phoneNumber : 'Показать телефон'}
 				</Text>
 			</Pressable>
 		</View>
