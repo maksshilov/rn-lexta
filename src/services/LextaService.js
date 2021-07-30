@@ -18,4 +18,24 @@ export default class LextaService {
 			mode: 'no-cors',
 		})
 	}
+
+	getSearchObjects = async (params) => {
+		return await fetch(`https://lexta.pro/object-api/?${params}`, {
+			mode: 'no-cors',
+		})
+	}
+
+	setLikeUnlike = async (objectId, type, token, email) => {
+		let data = new FormData()
+		data.append('objectId', objectId)
+		data.append('type', type)
+		data.append('token', token)
+		data.append('email', email)
+		return await fetch(`${this._apiBase}LikeObject.php`, {
+			mode: 'no-cors',
+			method: 'POST',
+			headers: new Headers(),
+			body: data,
+		})
+	}
 }

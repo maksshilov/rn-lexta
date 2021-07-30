@@ -21,6 +21,7 @@ import md5 from 'md5'
 import PhoneShow from '../components/PhoneShow'
 import ObjectCarouselSearch from '../components/ObjectCarouselSearch'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import LextaService from '../services/LextaService'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -52,10 +53,28 @@ export default function SearchScreen({ navigation }) {
 
 	const [like, setLike] = useState(false)
 
-	let params = `token=${store.getState().reducerUser.Token}&
-	user=${md5(
-		store.getState().reducerUser.Email
-	)}&cityOrRegion=${cityOrRegion}&catalogType=${catalogType}&f_Category=${f_Category}&f_NumberRooms=${f_NumberRooms}&objectType=${objectType}&priceFrom=${priceFrom}&priceTo=${priceTo}&totalAreaFrom=${totalAreaFrom}&totalAreaTo=${totalAreaTo}&kitchenAreaFrom=${kitchenAreaFrom}&kitchenAreaTo=${kitchenAreaTo}&floorFrom=${floorFrom}&floorTo=${floorTo}&whichFloor1=${whichFloor1}&whichFloor2=${whichFloor2}&whichFloor3=${whichFloor3}&f_HouseType=${f_HouseType}&mortgage=${mortgage}&video=${video}`
+	let params = `
+	token=${store.getState().reducerUser.Token}&
+	user=${md5(store.getState().reducerUser.Email)}&
+	cityOrRegion=${cityOrRegion}&
+	catalogType=${catalogType}&
+	f_Category=${f_Category}&
+	f_NumberRooms=${f_NumberRooms}&
+	objectType=${objectType}&
+	priceFrom=${priceFrom}&
+	priceTo=${priceTo}&
+	totalAreaFrom=${totalAreaFrom}&
+	totalAreaTo=${totalAreaTo}&
+	kitchenAreaFrom=${kitchenAreaFrom}&
+	kitchenAreaTo=${kitchenAreaTo}&
+	floorFrom=${floorFrom}&
+	floorTo=${floorTo}&
+	whichFloor1=${whichFloor1}&
+	whichFloor2=${whichFloor2}&
+	whichFloor3=${whichFloor3}&
+	f_HouseType=${f_HouseType}&
+	mortgage=${mortgage}&
+	video=${video}`
 
 	const scrollHandler = () => {
 		setTimeout(() => {
@@ -69,12 +88,10 @@ export default function SearchScreen({ navigation }) {
 
 	const handleSearch = async () => {
 		console.log('search button')
-		await fetch(`https://lexta.pro/object-api/?${params}`)
+		lextaService = new LextaService()
+		lextaService
+			.getSearchObjects(params)
 			.then((res) => res.json())
-			.then((json) => {
-				json.map((i) => console.log(i.Price))
-				return json
-			})
 			.then((json) => setResult(json))
 			.then(scrollHandler)
 			.catch((err) => console.log(err))
@@ -82,6 +99,7 @@ export default function SearchScreen({ navigation }) {
 
 	let datas = result.length ? (
 		result.map((object, key) => {
+			console.log(object)
 			return (
 				<TouchableOpacity
 					onPress={() => {
@@ -119,7 +137,9 @@ export default function SearchScreen({ navigation }) {
 							</Text>
 							<MaterialCommunityIcons
 								onPress={() => {
-									setLike(!like)
+									// setLike(!like)
+									// lextaService = new LextaService()
+									// lextaService.setLikeUnlike()
 								}}
 								name={like ? 'heart' : 'heart-outline'}
 								color="#912e33"
@@ -625,8 +645,10 @@ export default function SearchScreen({ navigation }) {
 									>
 										<CheckBox
 											disabled={false}
-											value={mortgage}
-											onValueChange={(newValue) => setmortgage(newValue)}
+											value={Boolean(mortgage)}
+											onValueChange={(newValue) =>
+												setmortgage(mortgage ? '' : '1')
+											}
 										/>
 										<Text style={styles.checkBoxText}>
 											Подходит под ипотеку
@@ -636,12 +658,12 @@ export default function SearchScreen({ navigation }) {
 									{/* VIDEO CHECKBOX */}
 									<Pressable
 										style={styles.checkBox}
-										onPress={() => setvideo(video ? '' : 1)}
+										onPress={() => setvideo(video ? '' : '1')}
 									>
 										<CheckBox
 											disabled={false}
-											value={video}
-											onValueChange={(newValue) => setvideo(newValue)}
+											value={Boolean(video)}
+											onValueChange={() => setvideo(video ? '' : '1')}
 										/>
 										<Text style={styles.checkBoxText}>С видео</Text>
 									</Pressable>
@@ -694,7 +716,7 @@ export default function SearchScreen({ navigation }) {
 						)
 					}}
 				</TokenConsumer>
-				<Main />
+				{/* <Main /> */}
 			</ScrollView>
 		</React.Fragment>
 	)
