@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar'
 import { bootstrap } from './src/bootstrap'
 import AppNavigator from './src/components/AppNavigator'
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
-import updateToken from './src/components/updateToken'
+import updateToken from './src/services/updateToken'
 import { Provider } from 'react-redux'
 import store from './src/store'
 import LextaService from './src/services/LextaService'
@@ -35,11 +35,12 @@ const App = () => {
 					onFinish={async () => {
 						const item = await getItem()
 						const itemToJson = JSON.parse(item)
+						const { Email, Token, UserId } = itemToJson
 						if (item) {
 							const data = new FormData()
-							data.append('user', itemToJson.Email)
-							data.append('token', itemToJson.Token)
-							data.append('userId', itemToJson.UserId)
+							data.append('user', Email)
+							data.append('token', Token)
+							data.append('userId', UserId)
 
 							await fetch(`https://lexta.pro/api/UpdateToken.php`, {
 								method: 'POST',
@@ -52,15 +53,14 @@ const App = () => {
 									if (item && updToken.Message == 'update success') {
 										lextaService = new LextaService()
 										lextaService
-											.getUserInfo(updToken.Token, itemToJson.Email)
+											.getUserInfo(updToken.Token, Email)
 											.then((res) => res.json())
 											.then((userInfo) => {
 												const storage = JSON.stringify({
 													...userInfo[0],
 													Token: updToken.Token,
-													UserId: itemToJson.UserId,
+													UserId: UserId,
 												})
-
 												writeItemToStorage(storage)
 												store.dispatch({
 													type: 'UPD_TOKEN',

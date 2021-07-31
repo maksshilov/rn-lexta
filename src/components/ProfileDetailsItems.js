@@ -7,7 +7,7 @@ export default function ProfileDetailsItems({ icon, gender, content }) {
 	return (
 		<View style={styles.view}>
 			{icon && (
-				<MaterialCommunityIcons name={icon} color="#868686" size={40} style={styles.icon} />
+				<MaterialCommunityIcons name={icon} color="#868686" size={25} style={styles.icon} />
 			)}
 
 			{gender && <Text style={styles.textBold}>Пол: </Text>}
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
 	view: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		width: windowWidth * 0.8,
-		marginTop: 10,
+		width: windowWidth * 0.9,
+		marginTop: 20,
 		marginBottom: 10,
 	},
 	icon: {
@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		fontFamily: 'gothampro-regular',
-		fontSize: 25,
+		fontSize: 20,
 	},
 	textBold: {
 		fontFamily: 'gothampro-bold',
-		fontSize: 25,
+		fontSize: 20,
 	},
 })

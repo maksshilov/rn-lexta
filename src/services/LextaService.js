@@ -13,6 +13,7 @@ export default class LextaService {
 			body: data,
 		})
 	}
+
 	getUserInfo = async (token, login) => {
 		return await fetch(`${this._apiBase}GetUserInfo.php?token=${token}&user=${login}`, {
 			mode: 'no-cors',

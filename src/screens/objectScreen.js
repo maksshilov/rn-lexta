@@ -29,6 +29,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 		HouseType,
 		Finishing,
 		HouseNumber,
+		Date: date,
 	} = route.params.object
 
 	const scrollToTop = useRef(null)
@@ -53,7 +54,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 						marginTop: 25,
 					}}
 				>
-					30 февраля 2020
+					{date}
 				</Text>
 				{/* PRICE */}
 				<View
