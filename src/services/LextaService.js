@@ -35,7 +35,7 @@ export default class LextaService {
 		data.append('objectId', objectId)
 		data.append('type', type)
 		data.append('token', token)
-		data.append('email', email)
+		data.append('user', email)
 		return await fetch(`${this._apiBase}LikeObject.php`, {
 			mode: 'no-cors',
 			method: 'POST',
