@@ -11,6 +11,7 @@ import ProfileScreen from '../screens/ProfileScreen'
 import PassChangeScreen from '../screens/PassChangeScreen'
 import ProfileDetailsScreen from '../screens/ProfileDetailsScreen'
 import ObjectScreen from '../screens/ObjectScreen'
+import SearchScreenResult from '../screens/SearchScreenResult'
 
 const Stack = createStackNavigator()
 
@@ -64,6 +65,11 @@ export default function AppNavigator({ page }) {
 				<Stack.Screen
 					name="Object"
 					component={ObjectScreen}
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="SearchResult"
+					component={SearchScreenResult}
 					options={{ headerShown: false }}
 				/>
 			</Stack.Navigator>

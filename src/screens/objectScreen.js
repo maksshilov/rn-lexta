@@ -31,7 +31,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 		HouseNumber,
 		Date: date,
 		Img,
-	} = route.params.object
+	} = route.params.item
 
 	const scrollToTop = useRef(null)
 

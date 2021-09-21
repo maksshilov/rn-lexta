@@ -10,6 +10,9 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	Image,
+	FlatList,
+	Modal,
+	Alert,
 } from 'react-native'
 import Header from '../components/Header'
 import { Picker } from '@react-native-picker/picker'
@@ -23,6 +26,7 @@ import PhoneShow from '../components/PhoneShow'
 import ObjectCarouselSearch from '../components/ObjectCarouselSearch'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import LextaService from '../services/LextaService'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -52,6 +56,7 @@ export default function SearchScreen({ navigation }) {
 	const [dataSourceCords, setDataSourceCords] = useState([])
 	const [ref, setRef] = useState(null)
 
+	const [modalVisible, setModalVisible] = useState(false)
 	const [like, setLike] = useState(false)
 
 	let params = `
@@ -88,117 +93,101 @@ export default function SearchScreen({ navigation }) {
 	}
 
 	const handleSearch = async () => {
-		console.log('search button')
 		lextaService = new LextaService()
 		lextaService
 			.getSearchObjects(params)
 			.then((res) => res.json())
-			.then((json) => setResult(json))
-			.then(scrollHandler)
+			.then((result) => navigation.navigate('SearchResult', { result }))
 			.catch((err) => console.log(err))
 	}
 
-	let datas = result.length ? (
-		result.map((object, key) => {
-			// console.log('SEARCH OBJECT', object)
-			return (
-				<TouchableOpacity
-					onPress={() => {
-						navigation.navigate('Object', {
-							object,
-						})
-					}}
-					android_ripple
-					activeOpacity={0.5}
-					key={object.Message_ID}
-					style={{
-						backgroundColor: '#fff',
-						elevation: 5,
-						width: windowWidth * 0.88,
-						marginBottom: 20,
-					}}
-				>
-					{/* <ObjectCarouselSearch imgArray={object.Img} /> */}
-					<View>
-						<Image
-							source={{ uri: `https://lexta.pro${object.Img[0]}` }}
-							style={{ width: windowWidth * 0.88, height: windowWidth * 0.88 }}
-							resizeMethod="scale"
+	const renderItem = ({ item }) => (
+		<View style={{ width: windowWidth, alignItems: 'center' }}>
+			<TouchableOpacity
+				onPress={() => {
+					console.log(item)
+					navigation.navigate('Object', {
+						item,
+					})
+				}}
+				android_ripple
+				activeOpacity={0.5}
+				key={item.Message_ID}
+				style={{
+					backgroundColor: '#fff',
+					elevation: 5,
+					width: windowWidth * 0.88,
+					marginBottom: 20,
+				}}
+			>
+				{/* <ObjectCarouselSearch imgArray={item.Img} /> */}
+				<View>
+					<Image
+						source={{ uri: `https://lexta.pro${item.Img[0]}` }}
+						style={{ width: windowWidth * 0.88, height: windowWidth * 0.88 }}
+						resizeMethod="scale"
+					/>
+				</View>
+				<View style={{ paddingHorizontal: 10 }}>
+					<View
+						style={{
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+							alignItems: 'center',
+						}}
+					>
+						<Text
+							style={{
+								fontFamily: 'gothampro-bold',
+								fontSize: 20,
+								marginVertical: 10,
+							}}
+						>
+							{numSplit(item.Price)} руб.
+						</Text>
+						<MaterialCommunityIcons
+							onPress={() => {
+								// setLike(!like)
+								// lextaService = new LextaService()
+								// lextaService.setLikeUnlike()
+							}}
+							name={like ? 'heart' : 'heart-outline'}
+							color="#912e33"
+							size={25}
+							style={{ marginRight: 5 }}
 						/>
 					</View>
-					<View style={{ paddingHorizontal: 10 }}>
-						<View
-							style={{
-								flexDirection: 'row',
-								justifyContent: 'space-between',
-								alignItems: 'center',
-							}}
-						>
-							<Text
-								style={{
-									fontFamily: 'gothampro-bold',
-									fontSize: 20,
-									marginVertical: 10,
-								}}
-							>
-								{numSplit(object.Price)} руб.
-							</Text>
-							<MaterialCommunityIcons
-								onPress={() => {
-									// setLike(!like)
-									// lextaService = new LextaService()
-									// lextaService.setLikeUnlike()
-								}}
-								name={like ? 'heart' : 'heart-outline'}
-								color="#912e33"
-								size={25}
-								style={{ marginRight: 5 }}
-							/>
-						</View>
-						<Text
-							style={{
-								fontFamily: 'gothampro-regular',
-								fontSize: 15,
-								lineHeight: 20,
-								marginBottom: 20,
-							}}
-						>
-							{object.Name}, {object.ObjectType}
-							{'\n'}
-							{object.TotalArea} м2,{'\n'}
-							{object.Floor}/{object.FloorsInHouse} эт.
-						</Text>
-						<Text
-							style={{
-								fontFamily: 'gothampro-regular',
-								fontSize: 15,
-								lineHeight: 20,
-								marginBottom: 20,
-							}}
-						>
-							{object.City}, {object.Region}
-							{'\n'}
-							{object.Street}, {object.HouseNumber}
-						</Text>
-					</View>
-					<PhoneShow phoneNumber={object.Phone} />
-				</TouchableOpacity>
-			)
-		})
-	) : (
-		<View></View>
-		// <View style={{ alignItems: 'center' }}>
-		// 	<Text>0 объявлений</Text>
-		// </View>
+					<Text
+						style={{
+							fontFamily: 'gothampro-regular',
+							fontSize: 15,
+							lineHeight: 20,
+							marginBottom: 20,
+						}}
+					>
+						{item.Name}, {item.ObjectType}
+						{'\n'}
+						{item.TotalArea} м2,{'\n'}
+						{item.Floor}/{item.FloorsInHouse} эт.
+					</Text>
+					<Text
+						style={{
+							fontFamily: 'gothampro-regular',
+							fontSize: 15,
+							lineHeight: 20,
+							marginBottom: 20,
+						}}
+					>
+						{item.City}, {item.Region}
+						{'\n'}
+						{item.Street}, {item.HouseNumber}
+					</Text>
+				</View>
+				<PhoneShow phoneNumber={item.Phone} />
+			</TouchableOpacity>
+		</View>
 	)
 
-	const Main = () => {
-		return (
-			<View style={{ alignItems: 'center', justifyContent: 'center' }}>
-				{/* <View style={{ flexDirection: 'column' }}>{datas}</View> */}
-			</View>
-		)
-	}
 	const scrollY = React.useRef(new Animated.Value(0)).current
 
 	return (
@@ -705,27 +694,47 @@ export default function SearchScreen({ navigation }) {
 									</View>
 								</View>
 
-								<View>
-									<Text
-										style={{
-											fontFamily: 'gothampro-bold',
-											fontSize: 15,
-											marginVertical: 20,
-											textAlign: 'center',
-										}}
-									>
-										Найдено {result.length} объявление
-									</Text>
-								</View>
-
 								{/* SEARCH RESULTS */}
-								<View>{datas}</View>
+								{/* <SafeAreaView>
+									<FlatList
+										data={result}
+										renderItem={renderItem}
+										keyExtractor={(item) => item.Message_ID}
+									/>
+								</SafeAreaView> */}
 							</View>
 						)
 					}}
 				</TokenConsumer>
 				{/* <Main /> */}
 			</ScrollView>
+			<Modal
+				animationType="slide"
+				transparent={false}
+				visible={modalVisible}
+				onRequestClose={() => setModalVisible(!modalVisible)}
+			>
+				<View style={{ alignItems: 'center' }}>
+					<View>
+						<Text
+							style={{
+								fontFamily: 'gothampro-bold',
+								fontSize: 15,
+								marginVertical: 20,
+								textAlign: 'center',
+							}}
+						>
+							Найдено {result.length} объявление
+						</Text>
+					</View>
+
+					<FlatList
+						data={result}
+						renderItem={renderItem}
+						keyExtractor={(item) => item.Message_ID}
+					/>
+				</View>
+			</Modal>
 		</React.Fragment>
 	)
 }
