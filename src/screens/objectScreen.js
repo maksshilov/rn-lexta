@@ -30,6 +30,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 		Finishing,
 		HouseNumber,
 		Date: date,
+		Img,
 	} = route.params.object
 
 	const scrollToTop = useRef(null)
@@ -37,7 +38,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 	return (
 		<ScrollView ref={scrollToTop} scrollTo contentContainerStyle={{ backgroundColor: '#fff' }}>
 			<View style={{ alignItems: 'center' }}>
-				<ObjectCarousel />
+				<ObjectCarousel imgArray={Img} />
 				<View style={{ position: 'absolute', left: 20, top: 30 }}>
 					<TouchableOpacity onPress={() => navigation.goBack()}>
 						<MaterialCommunityIcons name="arrow-left-thick" color="#fff" size={30} />

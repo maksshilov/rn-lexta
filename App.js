@@ -19,10 +19,8 @@ const App = () => {
 	}
 
 	React.useEffect(() => {
-		setInterval(() => {
-			let { Email, Token, UserId } = store.getState().reducerUser
-			updateToken({ Email, Token, UserId })
-		}, 60000)
+		let { Email, Token, UserId } = store.getState().reducerUser
+		updateToken({ Email, Token, UserId })
 	}, [])
 
 	let content = <AppNavigator page={session ? 'Main' : 'Start'} />

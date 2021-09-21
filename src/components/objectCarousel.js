@@ -3,14 +3,14 @@ import { FlatList, Image, Dimensions, View, Text, StyleSheet } from 'react-nativ
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const images = Array.from({ length: 10 }).map((_, i) => {
-	return {
-		id: i,
-		image: `https://picsum.photos/600/600?random=${Math.round(Math.random() * 1000)}`,
-	}
-})
-
-export default function ObjectCarousel() {
+export default function ObjectCarousel({ imgArray }) {
+	const images = imgArray.map((i, idx) => {
+		return {
+			id: idx,
+			image: `https://lexta.pro${i}`,
+		}
+	})
+	console.log(images.length)
 	const Slide = ({ data }) => {
 		return (
 			<View style={{ flex: 1 }}>
@@ -68,7 +68,9 @@ export default function ObjectCarousel() {
 					return <Slide data={item} />
 				}}
 			/>
-			<Text style={{ marginTop: -30, fontFamily: 'gothampro-regular' }}>{index + 1}/10</Text>
+			<Text style={{ marginTop: -30, fontFamily: 'gothampro-regular' }}>
+				{index + 1}/{imgArray.length}
+			</Text>
 		</>
 	)
 }

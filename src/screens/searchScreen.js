@@ -9,6 +9,7 @@ import {
 	Animated,
 	StyleSheet,
 	TouchableOpacity,
+	Image,
 } from 'react-native'
 import Header from '../components/Header'
 import { Picker } from '@react-native-picker/picker'
@@ -99,7 +100,7 @@ export default function SearchScreen({ navigation }) {
 
 	let datas = result.length ? (
 		result.map((object, key) => {
-			console.log('SEARCH OBJECT', object)
+			// console.log('SEARCH OBJECT', object)
 			return (
 				<TouchableOpacity
 					onPress={() => {
@@ -117,7 +118,14 @@ export default function SearchScreen({ navigation }) {
 						marginBottom: 20,
 					}}
 				>
-					<ObjectCarouselSearch />
+					{/* <ObjectCarouselSearch imgArray={object.Img} /> */}
+					<View>
+						<Image
+							source={{ uri: `https://lexta.pro${object.Img[0]}` }}
+							style={{ width: windowWidth * 0.88, height: windowWidth * 0.88 }}
+							resizeMethod="scale"
+						/>
+					</View>
 					<View style={{ paddingHorizontal: 10 }}>
 						<View
 							style={{

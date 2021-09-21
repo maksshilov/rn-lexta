@@ -3,14 +3,13 @@ import { FlatList, Image, Dimensions, View, Text, StyleSheet } from 'react-nativ
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const images = Array.from({ length: 3 }).map((_, i) => {
-	return {
-		id: i,
-		image: `https://picsum.photos/600/600?random=${Math.round(Math.random() * 1000)}`,
-	}
-})
-
-export default function ObjectCarouselSearch() {
+export default function ObjectCarouselSearch({ imgArray }) {
+	const images = imgArray.map((i, idx) => {
+		return {
+			id: idx,
+			image: `https://lexta.pro${i}`,
+		}
+	})
 	const Slide = ({ data }) => {
 		return (
 			<View style={{ backgroundColor: 'silver' }}>
@@ -80,7 +79,7 @@ export default function ObjectCarouselSearch() {
 						marginBottom: 10,
 					}}
 				>
-					{index + 1}/3
+					{index + 1}/{imgArray.length}
 				</Text>
 			</View>
 		</>

@@ -5,7 +5,6 @@ import { numSplit } from './scripts'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function ObjectMini({ object, navigation, toTop = null }) {
-	// console.log(object)
 	const { Price, NumberRooms, TotalArea, Floor, Street, Img } = object
 
 	return (
@@ -20,9 +19,7 @@ export default function ObjectMini({ object, navigation, toTop = null }) {
 			<View style={{ width: windowWidth * 0.45 }}>
 				<Image
 					source={{
-						uri: `https://picsum.photos/1440/2842?random=${Math.round(
-							Math.random() * 1000
-						)}`,
+						uri: `https://lexta.pro${Img[0]}`,
 					}}
 					resizeMode="cover"
 					style={styles.imageView}

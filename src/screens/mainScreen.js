@@ -21,14 +21,12 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 		if (item) {
 			const itemToJson = JSON.parse(item)
 			setUserInfo(itemToJson)
+			console.log(itemToJson)
 			lextaService = new LextaService()
 			lextaService
 				.getAllObjects(itemToJson.Token, md5(itemToJson.Email))
-				.then((res) => {
-					return res.json()
-				})
+				.then((res) => res.json())
 				.then((json) => {
-					console.log(json.length)
 					const idxs = shuffle(Array.from({ length: json.length }).map((_, i) => i))
 					let popular = []
 					for (let i = 0; i < json.length; i++) {
