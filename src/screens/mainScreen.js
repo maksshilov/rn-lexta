@@ -9,6 +9,8 @@ import News from '../components/News'
 import { connect } from 'react-redux'
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 import { shuffle } from '../components/scripts'
+import LextaService from '../services/LextaService'
+import md5 from 'md5'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -16,19 +18,17 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 	const { getItem } = useAsyncStorage('@storage_key')
 	const getObjects = async () => {
 		const item = await getItem()
-		console.log('NEW TOKEN', JSON.parse(item).Token)
-		// console.log('MAIN SCREEN. ITEM', item)
 		if (item) {
 			const itemToJson = JSON.parse(item)
 			setUserInfo(itemToJson)
-			await fetch(
-				`https://lexta.pro/api/GetObjects.php?token=${itemToJson.Token}&user=${itemToJson.Email}`,
-				{
-					mode: 'no-cors',
-				}
-			)
-				.then((res) => res.json())
+			lextaService = new LextaService()
+			lextaService
+				.getAllObjects(itemToJson.Token, md5(itemToJson.Email))
+				.then((res) => {
+					return res.json()
+				})
 				.then((json) => {
+					console.log(json.length)
 					const idxs = shuffle(Array.from({ length: json.length }).map((_, i) => i))
 					let popular = []
 					for (let i = 0; i < json.length; i++) {
@@ -56,7 +56,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
 					useNativeDriver: false,
 				})}
-				style={{backgroundColor: '#fff'}}
+				style={{ backgroundColor: '#fff' }}
 			>
 				{/* ЖИЛЬЁ НА ЛЮБОЙ ВКУС */}
 				<View>

@@ -5,7 +5,9 @@ import { numSplit } from './scripts'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function ObjectMini({ object, navigation, toTop = null }) {
-	const { Price, NumberRooms, TotalArea, Floor, Street } = object
+	// console.log(object)
+	const { Price, NumberRooms, TotalArea, Floor, Street, Img } = object
+
 	return (
 		<TouchableOpacity
 			onPress={() => {

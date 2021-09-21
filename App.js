@@ -35,8 +35,8 @@ const App = () => {
 					onFinish={async () => {
 						const item = await getItem()
 						const itemToJson = JSON.parse(item)
-						const { Email, Token, UserId } = itemToJson
 						if (item) {
+							const { Email, Token, UserId } = itemToJson
 							const data = new FormData()
 							data.append('user', Email)
 							data.append('token', Token)

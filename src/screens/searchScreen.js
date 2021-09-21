@@ -99,7 +99,7 @@ export default function SearchScreen({ navigation }) {
 
 	let datas = result.length ? (
 		result.map((object, key) => {
-			console.log(object)
+			console.log('SEARCH OBJECT', object)
 			return (
 				<TouchableOpacity
 					onPress={() => {

@@ -17,8 +17,8 @@ const updateToken = async ({ Email, Token, UserId }) => {
 	})
 		.then((res) => res.json())
 		.then(async (json) => {
-			console.log('UPDTKN.JS___1 >>> json.Message: ', json.Message)
-			console.log(json.Token)
+			// console.log('UPDTKN.JS___1 >>> json.Message: ', json.Message)
+			// console.log(json.Token)
 			return json
 		})
 		.then(async (json) => {

@@ -8,14 +8,16 @@ export function shuffle(a) {
 
 export function numSplit(s) {
 	let newS = s
-		.toString()
-		.split('')
-		.reverse()
-		.join('')
-		.replace(/([0-9]{3})/g, '$1 ')
-		.split('')
-		.reverse()
-		.join('')
-		.replace(/^\s/, '')
+		? s
+				.toString()
+				.split('')
+				.reverse()
+				.join('')
+				.replace(/([0-9]{3})/g, '$1 ')
+				.split('')
+				.reverse()
+				.join('')
+				.replace(/^\s/, '')
+		: 0
 	return newS
 }
