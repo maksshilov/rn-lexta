@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { Dimensions, FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { numSplit } from '../components/scripts'
-import PhoneShow from '../components/PhoneShow'
-import LextaService from '../services/LextaService'
-import store from '../store'
-import md5 from 'md5'
+import React from 'react'
+import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native'
+import { numSplit } from './scripts'
+import PhoneShow from './PhoneShow'
+import Like from './Like'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function SearchScreenResultItem({ item }) {
+export default function ObjectCard({ item, userFavorites, navigation }) {
 	return (
 		<View style={{ width: windowWidth, alignItems: 'center' }}>
 			<TouchableOpacity
@@ -54,20 +51,9 @@ export default function SearchScreenResultItem({ item }) {
 						>
 							{numSplit(item.Price)} руб.
 						</Text>
-						<MaterialCommunityIcons
-							onPress={() => {
-								handleSetFavorites(item.Message_ID)
-								setLike(!like)
-							}}
-							// name={
-							// 	userFavorites.filter((i) => i == objectId).length
-							// 		? 'heart'
-							// 		: 'heart-outline'
-							// }
-							name={like ? 'heart' : 'heart-outline'}
-							color="#912e33"
-							size={25}
-							style={{ marginRight: 5 }}
+						<Like
+							like={userFavorites.filter((i) => i == item.Message_ID).length}
+							objectId={item.Message_ID}
 						/>
 					</View>
 					<Text
