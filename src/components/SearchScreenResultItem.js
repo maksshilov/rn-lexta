@@ -6,63 +6,11 @@ import PhoneShow from '../components/PhoneShow'
 import LextaService from '../services/LextaService'
 import store from '../store'
 import md5 from 'md5'
-import Like from '../components/Like'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function SearchScreenResult({ route, navigation }) {
-	lextaService = new LextaService()
-	const DATA = route.params.result
-
-	const [userFavorites, setUserFavorites] = useState([])
-
-	const { Token, Email } = store.getState().reducerUser
-
-	const getFavorites = async () => {
-		await lextaService
-			.getUserInfo(Token, Email)
-			.then((res) => res.json())
-			.then((json) => setUserFavorites(JSON.parse(json[0].Favorites)))
-	}
-	useEffect(() => {
-		getFavorites()
-	}, [])
-
-	console.log(userFavorites)
-
-	// const handleSetFavorites = async (objectId) => {
-	// 	const email = md5(Email)
-	// 	await lextaService
-	// 		.getUserInfo(Token, Email)
-	// 		.then((res) => res.json())
-	// 		.then(async (json) => {
-	// 			setUserFavorites(JSON.parse(json[0].Favorites))
-	// 			// console.log('SEARCHSCREENRESULTS.JS > favorites before >', json[0].Favorites)
-	// 			if (JSON.parse(json[0].Favorites).filter((i) => i == objectId).length) {
-	// 				await lextaService.setLikeUnlike(objectId, 'dislike', Token, email)
-	// 			} else {
-	// 				await lextaService.setLikeUnlike(objectId, 'like', Token, email)
-	// 			}
-	// 		})
-	// 		.then(() => {
-	// 			lextaService
-	// 				.getUserInfo(Token, Email)
-	// 				.then((res) => res.json())
-	// 				.then((json) =>
-	// 					console.log('SEARCHSCREENRESULTS.JS > favorites after >', json[0].Favorites)
-	// 				)
-	// 		})
-	// 		.catch((err) => console.error(err))
-	// }
-
-	// const handleHeartIcon = (objectId) => {
-	// 	if (userFavorites.filter((i) => i == objectId).length) {
-	// 		return 'heart'
-	// 	} else {
-	// 		return 'heart-outline'
-	// 	}
-	// }
-	const renderItem = ({ item }) => (
+export default function SearchScreenResultItem({ item }) {
+	return (
 		<View style={{ width: windowWidth, alignItems: 'center' }}>
 			<TouchableOpacity
 				onPress={() => {
@@ -106,11 +54,7 @@ export default function SearchScreenResult({ route, navigation }) {
 						>
 							{numSplit(item.Price)} руб.
 						</Text>
-						<Like
-							like={userFavorites.filter((i) => i == item.Message_ID).length}
-							objectId={item.Message_ID}
-						/>
-						{/* <MaterialCommunityIcons
+						<MaterialCommunityIcons
 							onPress={() => {
 								handleSetFavorites(item.Message_ID)
 								setLike(!like)
@@ -124,7 +68,7 @@ export default function SearchScreenResult({ route, navigation }) {
 							color="#912e33"
 							size={25}
 							style={{ marginRight: 5 }}
-						/> */}
+						/>
 					</View>
 					<Text
 						style={{
@@ -154,27 +98,6 @@ export default function SearchScreenResult({ route, navigation }) {
 				</View>
 				<PhoneShow phoneNumber={item.Phone} />
 			</TouchableOpacity>
-		</View>
-	)
-
-	return (
-		<View style={{ alignItems: 'center', paddingTop: 20 }}>
-			<Text
-				style={{
-					fontFamily: 'gothampro-bold',
-					fontSize: 15,
-					marginVertical: 20,
-					textAlign: 'center',
-				}}
-			>
-				Найдено {DATA.length} объявление
-			</Text>
-
-			<FlatList
-				data={DATA}
-				renderItem={renderItem}
-				keyExtractor={(item) => item.Message_ID}
-			/>
 		</View>
 	)
 }
