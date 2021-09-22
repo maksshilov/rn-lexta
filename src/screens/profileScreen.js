@@ -41,18 +41,29 @@ const ProfileScreen = ({ navigation, state, clearState }) => {
 			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileDetails')}>
 				<ProfileMenuItem title="Персональные данные" icon="account-outline" />
 			</TouchableOpacity>
+			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<TouchableOpacity android_ripple onPress={() => navigation.navigate('PassChange')}>
 				<ProfileMenuItem title="Изменить пароль" icon="lock-outline" />
 			</TouchableOpacity>
+			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<ProfileMenuItem title="Мои объявления" icon="format-list-bulleted-square" />
+			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<ProfileMenuItem title="Мои подписки" icon="email-newsletter" />
-			<ProfileMenuItem title="Избранное" icon="heart-outline" />
+			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
+			<TouchableOpacity android_ripple onPress={() => navigation.navigate('FavScreen')}>
+				<ProfileMenuItem title="Избранное" icon="heart-outline" />
+			</TouchableOpacity>
+			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<ProfileMenuItem title="Изменение цен" icon="update" />
+			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<ProfileMenuItem title="Сообщения" icon="forum-outline" last />
+
 			<ProfileMenuSection title="ПОДДЕРЖКА" />
 
 			<ProfileMenuItem title="Как устроена платформа ЛЕХТА" icon="wan" />
+			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<ProfileMenuItem title="Помощь" icon="help" />
+			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<TouchableOpacity
 				android_ripple
 				onPress={() => {

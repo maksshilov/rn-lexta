@@ -27,7 +27,11 @@ export default function ObjectMini({ object, navigation, toTop = null }) {
 
 				<Text style={styles.price}>{numSplit(Price)} &#8381;</Text>
 				<Text style={styles.details}>
-					{`${NumberRooms}-комн.`} | {`${TotalArea} м2`} | {`${Floor} эт.`}
+					{`${NumberRooms}`}
+					{'\n'}
+					{`${TotalArea} м2`}
+					{'\n'}
+					{`${Floor} этаж`}
 				</Text>
 				<Text style={styles.address}>{Street}</Text>
 			</View>
@@ -44,18 +48,18 @@ const styles = StyleSheet.create({
 	price: {
 		fontFamily: 'gothampro-bold',
 		fontSize: 12,
-		marginBottom: 10,
+		marginBottom: 5,
 	},
 	details: {
+		lineHeight: 15,
 		fontFamily: 'gothampro-regular',
 		fontSize: 12,
-		marginBottom: 10,
+		marginBottom: 5,
 	},
 	address: {
 		fontFamily: 'gothampro-regular',
 		fontSize: 12,
 		marginBottom: 10,
 		color: 'grey',
-		lineHeight: 15,
 	},
 })

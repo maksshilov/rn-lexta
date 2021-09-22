@@ -12,6 +12,7 @@ import PassChangeScreen from '../screens/PassChangeScreen'
 import ProfileDetailsScreen from '../screens/ProfileDetailsScreen'
 import ObjectScreen from '../screens/ObjectScreen'
 import SearchScreenResult from '../screens/SearchScreenResult'
+import FavScreen from '../screens/FavScreen'
 
 const Stack = createStackNavigator()
 
@@ -70,6 +71,11 @@ export default function AppNavigator({ page }) {
 				<Stack.Screen
 					name="SearchResult"
 					component={SearchScreenResult}
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="FavScreen"
+					component={FavScreen}
 					options={{ headerShown: false }}
 				/>
 			</Stack.Navigator>

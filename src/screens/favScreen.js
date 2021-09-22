@@ -4,8 +4,9 @@ import { FlatList, Image, ImageBackground, Text, View } from 'react-native'
 import ObjectCard from '../components/ObjectCard'
 import LextaService from '../services/LextaService'
 import store from '../store'
+import { connect } from 'react-redux'
 
-export default function FavScreen({ navigation }) {
+const FavScreen = ({ state, navigation }) => {
 	const { Token, Email } = store.getState().reducerUser
 
 	const lextaService = new LextaService()
@@ -60,3 +61,15 @@ export default function FavScreen({ navigation }) {
 		</View>
 	)
 }
+
+const mapStateToProps = (state) => {
+	return { state }
+}
+const mapDispatchToProps = (dispatch) => {
+	return {
+		// setUserInfo: (token) => dispatch({ type: 'SET_USER_INFO', payload: token }),
+		// setObjects: (payload) => dispatch({ type: 'SET_OBJECTS', payload }),
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FavScreen)

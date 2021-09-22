@@ -17,7 +17,7 @@ export default function ProfileMenuItem({ title, icon, last = false }) {
 				<Text style={{ fontFamily: 'gothampro-regular', fontSize: 13 }}>{title}</Text>
 				<MaterialCommunityIcons name={icon} color="#8f2d32" size={30} />
 			</View>
-			{last || <View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />}
+			{/* {last || <View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />} */}
 		</>
 	)
 }
