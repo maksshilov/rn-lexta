@@ -21,7 +21,6 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 		if (item) {
 			const itemToJson = JSON.parse(item)
 			setUserInfo(itemToJson)
-			// console.log('MAINSCREEN.JS > const itemToJson >', itemToJson)
 			lextaService = new LextaService()
 			lextaService
 				.getAllObjects(itemToJson.Token, md5(itemToJson.Email))
@@ -76,11 +75,11 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 						{Boolean(state.reducerObjects) && (
 							<React.Fragment>
 								<ObjectMini
-									object={state.reducerObjects[0]}
+									item={state.reducerObjects[0]}
 									navigation={navigation}
 								/>
 								<ObjectMini
-									object={state.reducerObjects[1]}
+									item={state.reducerObjects[1]}
 									navigation={navigation}
 								/>
 							</React.Fragment>

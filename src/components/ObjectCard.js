@@ -8,7 +8,7 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function ObjectCard({ item, userFavorites, navigation }) {
 	return (
-		<View style={{ width: windowWidth, alignItems: 'center' }}>
+		<View style={{ width: windowWidth, alignItems: 'center', paddingTop: 20 }}>
 			<TouchableOpacity
 				onPress={() => {
 					console.log(item)

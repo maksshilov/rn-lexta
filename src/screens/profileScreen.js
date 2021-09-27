@@ -46,7 +46,9 @@ const ProfileScreen = ({ navigation, state, clearState }) => {
 				<ProfileMenuItem title="Изменить пароль" icon="lock-outline" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<ProfileMenuItem title="Мои объявления" icon="format-list-bulleted-square" />
+			<TouchableOpacity android_ripple onPress={() => navigation.navigate('MyObjects')}>
+				<ProfileMenuItem title="Мои объявления" icon="format-list-bulleted-square" />
+			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<ProfileMenuItem title="Мои подписки" icon="email-newsletter" />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />

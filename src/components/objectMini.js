@@ -4,14 +4,14 @@ import { numSplit } from './scripts'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function ObjectMini({ object, navigation, toTop = null }) {
-	const { Price, NumberRooms, TotalArea, Floor, Street, Img } = object
+export default function ObjectMini({ item, navigation, toTop = null }) {
+	const { Price, NumberRooms, TotalArea, Floor, Street, Img } = item
 
 	return (
 		<TouchableOpacity
 			onPress={() => {
 				navigation.navigate('Object', {
-					object,
+					item,
 				})
 				toTop && toTop({ x: 0, y: 0, animated: true })
 			}}

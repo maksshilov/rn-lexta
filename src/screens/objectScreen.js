@@ -294,13 +294,13 @@ const ObjectScreen = ({ route, navigation, state }) => {
 				>
 					<ObjectMini
 						toTop={scrollToTop.current && scrollToTop.current.scrollTo}
-						object={state.reducerObjects[2]}
+						item={state.reducerObjects[2]}
 						navigation={navigation}
 					/>
 
 					<ObjectMini
 						toTop={scrollToTop.current && scrollToTop.current.scrollTo}
-						object={state.reducerObjects[3]}
+						item={state.reducerObjects[3]}
 						navigation={navigation}
 					/>
 				</View>
@@ -314,13 +314,13 @@ const ObjectScreen = ({ route, navigation, state }) => {
 				>
 					<ObjectMini
 						toTop={scrollToTop.current && scrollToTop.current.scrollTo}
-						object={state.reducerObjects[4]}
+						item={state.reducerObjects[4]}
 						navigation={navigation}
 					/>
 
 					<ObjectMini
 						toTop={scrollToTop.current && scrollToTop.current.scrollTo}
-						object={state.reducerObjects[5]}
+						item={state.reducerObjects[5]}
 						navigation={navigation}
 					/>
 				</View>
