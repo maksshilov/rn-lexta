@@ -90,7 +90,7 @@ export default function AddObject() {
 						</Pressable>
 					</View>
 
-					{/*  */}
+					{/* DEAL & RENT TYPE */}
 					<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 						<View style={{ width: windowWidth * 0.44, paddingRight: 3 }}>
 							<Text style={styles.title}>Тип сделки</Text>
@@ -144,7 +144,7 @@ export default function AddObject() {
 						</View>
 					</View>
 
-					{/*  */}
+					{/* OBJECT TYPE & CATEGORY */}
 					<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 						<View style={{ width: windowWidth * 0.44, paddingRight: 3 }}>
 							<Text style={styles.title}>Тип объекта</Text>
@@ -242,6 +242,170 @@ export default function AddObject() {
 								<Picker.Item label="6 комнат" value="6" />
 								<Picker.Item label="7 комнат" value="7" />
 							</Picker>
+						</View>
+					</View>
+
+					{/* DESCRIPTION */}
+					<Text style={styles.title}>Описание</Text>
+					<View style={{ marginBottom: 20 }}>
+						<TextInput
+							multiline
+							value={priceTo}
+							onChangeText={(value) => setpriceTo(value)}
+							placeholder="до"
+							keyboardType="number-pad"
+							style={{
+								...styles.textInput,
+								...styles.textInputInput,
+								paddingVertical: 5,
+								textAlignVertical: 'top',
+								width: windowWidth * 0.88,
+								height: windowWidth * 0.3,
+								borderWidth: 1,
+								borderRadius: 10,
+							}}
+						/>
+					</View>
+
+					{/* REGION & CITY */}
+					<View style={{ flexDirection: 'row', marginBottom: 20 }}>
+						<View style={{ width: windowWidth * 0.44 }}>
+							<Text style={styles.title}>Регион</Text>
+							<TextInput
+								value={priceFrom}
+								onChangeText={(value) => setpriceFrom(value)}
+								placeholder="Регион"
+								keyboardType="number-pad"
+								style={{
+									...styles.textInput,
+									...styles.textInputInput,
+									width: windowWidth * 0.41,
+									height: windowWidth * 0.1,
+									borderRadius: 10,
+								}}
+							/>
+						</View>
+						<View style={{ width: windowWidth * 0.44 }}>
+							<Text style={styles.title}>Город</Text>
+							<TextInput
+								value={priceFrom}
+								onChangeText={(value) => setpriceFrom(value)}
+								placeholder="Город"
+								keyboardType="number-pad"
+								style={{
+									...styles.textInput,
+									...styles.textInputInput,
+									width: windowWidth * 0.44,
+									height: windowWidth * 0.1,
+									borderRadius: 10,
+								}}
+							/>
+						</View>
+					</View>
+
+					{/* HOUSE NUMBER & HIGHWAY */}
+					<View style={{ flexDirection: 'row', marginBottom: 20 }}>
+						<View style={{ width: windowWidth * 0.44 }}>
+							<Text style={styles.title}>Улица</Text>
+							<TextInput
+								value={priceFrom}
+								onChangeText={(value) => setpriceFrom(value)}
+								placeholder="Улица"
+								keyboardType="number-pad"
+								style={{
+									...styles.textInput,
+									...styles.textInputInput,
+									width: windowWidth * 0.41,
+									height: windowWidth * 0.1,
+									borderRadius: 10,
+								}}
+							/>
+						</View>
+						<View style={{ width: windowWidth * 0.44 }}>
+							<Text style={styles.title}>Номер дома</Text>
+							<TextInput
+								value={priceFrom}
+								onChangeText={(value) => setpriceFrom(value)}
+								placeholder="Номер дома"
+								keyboardType="number-pad"
+								style={{
+									...styles.textInput,
+									...styles.textInputInput,
+									width: windowWidth * 0.44,
+									height: windowWidth * 0.1,
+									borderRadius: 10,
+								}}
+							/>
+						</View>
+					</View>
+
+					{/* TYPE */}
+					<View style={{ flexDirection: 'row', marginBottom: 20 }}>
+						<View style={{ width: windowWidth * 0.88 }}>
+							<Text style={styles.title}>Тип недвижимости</Text>
+							<TextInput
+								value={priceFrom}
+								onChangeText={(value) => setpriceFrom(value)}
+								placeholder="Тип недвижимости"
+								keyboardType="number-pad"
+								style={{
+									...styles.textInput,
+									...styles.textInputInput,
+									width: windowWidth * 0.88,
+									height: windowWidth * 0.1,
+									borderRadius: 10,
+								}}
+							/>
+						</View>
+					</View>
+
+					{/* LOCATION */}
+
+					<View>
+						<Text style={styles.title}>Метка на карте</Text>
+						<View
+							style={{
+								width: windowWidth * 0.88,
+								flexDirection: 'row',
+								justifyContent: 'space-between',
+								marginBottom: 20,
+							}}
+						>
+							<TextInput
+								value={priceFrom}
+								onChangeText={(value) => setpriceFrom(value)}
+								placeholder="Широта, долгота"
+								keyboardType="number-pad"
+								style={{
+									...styles.textInput,
+									...styles.textInputInput,
+									width: windowWidth * 0.74,
+									height: windowWidth * 0.1,
+									borderRadius: 10,
+								}}
+							/>
+							<Pressable
+								android_ripple={{ color: '#fff' }}
+								style={{
+									backgroundColor: '#912e33',
+									width: windowWidth * 0.1,
+									height: windowWidth * 0.1,
+									borderRadius: 10,
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}
+								onPress={() => {}}
+							>
+								<Text
+									style={{
+										color: '#fdfffc',
+										fontFamily: 'gothampro-regular',
+										fontSize: 18,
+									}}
+								>
+									+
+								</Text>
+							</Pressable>
 						</View>
 					</View>
 
