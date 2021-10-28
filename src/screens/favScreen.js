@@ -15,32 +15,37 @@ const FavScreen = ({ state, navigation }) => {
 	const [favObjects, setFavObjects] = useState([])
 
 	const getFavoritesObjects = async () => {
-		let email = md5(Email)
-		await lextaService
-			.getAllObjects(Token, email)
+		lextaService
+			.getUserInfo(Token, Email)
 			.then((res) => res.json())
-			.then(async (allObjects) => {
-				lextaService
-					.getUserInfo(Token, Email)
-					.then((res) => res.json())
-					.then((favorites) => {
-						let favObjectsId = JSON.parse(favorites[0].Favorites)
-						let favObjects = []
-						for (let i = 0; i < favObjectsId.length; i++) {
-							const element = favObjectsId[i]
-							favObjects.push(allObjects.filter((i) => i.Message_ID == element)[0])
-						}
-						setUserFavorites(favObjectsId)
-						setFavObjects(favObjects)
-					})
+			.then(async (json) => {
+				let favObjectsId = JSON.parse(json[0].Favorites)
+				let favObjects = []
+				for (let i = 0; i < favObjectsId.length; i++) {
+					const objectId = favObjectsId[i]
+
+					await lextaService
+						.getSearchObjects(
+							`token=${store.getState().reducerUser.Token}&
+						 user=${md5(store.getState().reducerUser.Email)}&
+						 objectId=${objectId}`
+						)
+						.then((res) => res.json())
+						.then((result) => favObjects.push(result))
+						.catch((err) => console.log(err))
+				}
+				setUserFavorites(favObjectsId)
+				setFavObjects(favObjects)
 			})
+			.catch((err) => console.log(err))
 	}
+
 	useEffect(() => {
 		getFavoritesObjects()
 	}, [])
 
 	const renderItem = ({ item }) => (
-		<ObjectCard item={item} userFavorites={userFavorites} navigation={navigation} />
+		<ObjectCard item={item[0]} userFavorites={userFavorites} navigation={navigation} />
 	)
 
 	return (
@@ -49,14 +54,16 @@ const FavScreen = ({ state, navigation }) => {
 				flex: 1,
 				alignItems: 'center',
 				justifyContent: 'center',
-				paddingTop: 0,
+				paddingTop: 30,
 				backgroundColor: '#fff',
 			}}
 		>
 			<FlatList
 				data={favObjects}
 				renderItem={renderItem}
-				keyExtractor={(item) => item.Message_ID}
+				keyExtractor={(item) => {
+					return item[0].Message_ID
+				}}
 			/>
 		</View>
 	)
