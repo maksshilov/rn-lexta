@@ -26,7 +26,7 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 	const writeItemToStorage = async (newValue) => {
 		await setItem(newValue)
 	}
-	lextaService = new LextaService()
+	const lextaService = new LextaService()
 	const loginHandler = async () => {
 		lextaService
 			.getToken(login, md5(pass))

@@ -1,34 +1,74 @@
-import React from 'react'
-import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import md5 from 'md5'
+import React, { useEffect, useState } from 'react'
+import { Dimensions, FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import LextaService from '../services/LextaService'
+import store from '../store'
+import ObjectCard from '../components/ObjectCard'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function MyObjects({ navigation }) {
+	const [postsNum, setpostsNum] = useState(0)
+	const [myObjects, setmyObjects] = useState([])
+
+	useEffect(() => {
+		const lextaService = new LextaService()
+		lextaService
+			.getMyObjects(
+				store.getState().reducerUser.Token,
+				md5(store.getState().reducerUser.Email)
+			)
+			.then((res) => res.json())
+			.then((json) => {
+				setpostsNum(json.length)
+				setmyObjects(json)
+			})
+			.catch((err) => console.error(err))
+	})
+
+	const renderItem = ({ item }) => <ObjectCard item={item} navigation={navigation} />
+
 	return (
 		<View style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center' }}>
-			<ScrollView>
-				<View>
-					<Text
-						style={{
-							fontFamily: 'gothampro-bold',
-							fontSize: 15,
-							marginVertical: 20,
-							textAlign: 'center',
-						}}
-					>
-						0 объявлений
-					</Text>
-				</View>
-				<Pressable
-					android_ripple
-					onPress={() => {
-						navigation.navigate('AddObject')
+			<View>
+				<Text
+					style={{
+						fontFamily: 'gothampro-bold',
+						fontSize: 15,
+						marginVertical: 20,
+						textAlign: 'center',
 					}}
-					style={{ ...styles.btn, ...styles.btnLogin }}
 				>
-					<Text style={{ ...styles.text, color: '#fff' }}>Добавить</Text>
-				</Pressable>
-			</ScrollView>
+					{postsNum} объявлений
+				</Text>
+			</View>
+			<Pressable
+				android_ripple
+				onPress={() => {
+					navigation.navigate('AddObject')
+				}}
+				style={{ ...styles.btn, ...styles.btnLogin }}
+			>
+				<Text style={{ ...styles.text, color: '#fff' }}>Добавить</Text>
+			</Pressable>
+
+			<View
+				style={{
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+					paddingTop: 10,
+					backgroundColor: '#fff',
+				}}
+			>
+				<FlatList
+					data={myObjects}
+					renderItem={renderItem}
+					keyExtractor={(item) => {
+						return item.Message_ID
+					}}
+				/>
+			</View>
 		</View>
 	)
 }

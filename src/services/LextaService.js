@@ -26,8 +26,23 @@ export default class LextaService {
 		})
 	}
 
+	getMyObjects = async (token, user) => {
+		return await fetch(`https://lexta.pro/object-api/?profile=1&token=${token}&user=${user}`, {
+			mode: 'no-cors',
+		})
+	}
+
 	getSearchObjects = async (params) => {
 		return await fetch(`https://lexta.pro/object-api/?${params}`, { mode: 'no-cors' })
+	}
+
+	addObject = async (data) => {
+		return await fetch(`https://lexta.pro/netcat/add.php`, {
+			mode: 'no-cors',
+			method: 'POST',
+			headers: new Headers(),
+			body: data,
+		})
 	}
 
 	setLikeUnlike = async (objectId, type, token, email) => {

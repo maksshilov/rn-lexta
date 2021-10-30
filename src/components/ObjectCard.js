@@ -51,10 +51,12 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 						>
 							{numSplit(item.Price)} руб.
 						</Text>
-						<Like
-							like={userFavorites.filter((i) => i == item.Message_ID).length}
-							objectId={item.Message_ID}
-						/>
+						{userFavorites && (
+							<Like
+								like={userFavorites.filter((i) => i == item.Message_ID).length}
+								objectId={item.Message_ID}
+							/>
+						)}
 					</View>
 					<Text
 						style={{
