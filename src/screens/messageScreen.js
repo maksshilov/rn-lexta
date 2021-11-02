@@ -1,25 +1,28 @@
 import React from 'react'
 import { Button, Text, View } from 'react-native'
 import { connect } from 'react-redux'
+import LextaService from '../services/LextaService'
+import store from '../store'
+import md5 from 'md5'
 
 const MessageScreen = ({ state }) => {
-	const handleCheck = async () => {
-		await fetch(
-			`https://lexta.pro/api/GetObjects.php?token=${state.Token}&user=${state.Email}`,
-			{
-				mode: 'no-cors',
-			}
-		)
+	const handleGetMessages = async () => {
+		const lexta = new LextaService()
+		lexta
+			.getMessages(
+				store.getState().reducerUser.Token,
+				md5(store.getState().reducerUser.Email),
+				0
+			)
 			.then((res) => res.json())
-			.then((some) => console.log(some.length))
-			.catch((e) => console.log(e))
+			.then((json) => console.log(json))
+			.catch((err) => console.error(err))
 	}
 
 	return (
 		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 			<Text>Message screen</Text>
-			<Text>{state.length}</Text>
-			<Button onPress={handleCheck} title="Check" />
+			<Button onPress={handleGetMessages} title="Check" />
 		</View>
 	)
 }

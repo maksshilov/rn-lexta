@@ -9,13 +9,13 @@ import { connect } from 'react-redux'
 const FavScreen = ({ state, navigation }) => {
 	const { Token, Email } = store.getState().reducerUser
 
-	const lextaService = new LextaService()
+	const lexta = new LextaService()
 
 	const [userFavorites, setUserFavorites] = useState([])
 	const [favObjects, setFavObjects] = useState([])
 
 	const getFavoritesObjects = async () => {
-		lextaService
+		lexta
 			.getUserInfo(Token, Email)
 			.then((res) => res.json())
 			.then(async (json) => {
@@ -24,7 +24,7 @@ const FavScreen = ({ state, navigation }) => {
 				for (let i = 0; i < favObjectsId.length; i++) {
 					const objectId = favObjectsId[i]
 
-					await lextaService
+					await lexta
 						.getSearchObjects(
 							`token=${store.getState().reducerUser.Token}&
 						 user=${md5(store.getState().reducerUser.Email)}&

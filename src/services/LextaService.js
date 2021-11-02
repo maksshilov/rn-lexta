@@ -38,8 +38,8 @@ export default class LextaService {
 
 	addObject = async (data) => {
 		return await fetch(`https://lexta.pro/netcat/add.php`, {
-			mode: 'no-cors',
 			method: 'POST',
+			mode: 'no-cors',
 			headers: new Headers(),
 			body: data,
 		})
@@ -52,6 +52,22 @@ export default class LextaService {
 		data.append('token', token)
 		data.append('user', email)
 		return await fetch(`${this._apiBase}LikeObject.php`, {
+			mode: 'no-cors',
+			method: 'POST',
+			headers: new Headers(),
+			body: data,
+		})
+	}
+
+	getMessages = async (token, user, outbox) => {
+		return await fetch(
+			`https://lexta.pro/api/GetMessages.php?token=${token}&user=${user}&outbox=${outbox}`,
+			{ mode: 'no-cors' }
+		)
+	}
+
+	sendMessage = async (data) => {
+		return await fetch(`https://lexta.pro/netcat/add.php`, {
 			mode: 'no-cors',
 			method: 'POST',
 			headers: new Headers(),

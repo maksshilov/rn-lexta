@@ -12,8 +12,8 @@ export default function MyObjects({ navigation }) {
 	const [myObjects, setmyObjects] = useState([])
 
 	useEffect(() => {
-		const lextaService = new LextaService()
-		lextaService
+		const lexta = new LextaService()
+		lexta
 			.getMyObjects(
 				store.getState().reducerUser.Token,
 				md5(store.getState().reducerUser.Email)
@@ -24,7 +24,7 @@ export default function MyObjects({ navigation }) {
 				setmyObjects(json)
 			})
 			.catch((err) => console.error(err))
-	})
+	}, [])
 
 	const renderItem = ({ item }) => <ObjectCard item={item} navigation={navigation} />
 

@@ -10,36 +10,28 @@ import LextaService from '../services/LextaService'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function AddObject() {
-	const [f_Carport, setf_Carport] = useState(0)
-	const [f_ParkingLot, setf_ParkingLot] = useState(0)
-	const [f_Garage, setf_Garage] = useState(0)
-	const [f_Bath, setf_Bath] = useState(0)
-	const [f_GardenHouse, setf_GardenHouse] = useState(0)
-	const [f_HouseholdBuilding, setf_HouseholdBuilding] = useState(0)
-	const [f_ObjectChecked, setf_ObjectChecked] = useState(0)
-	const [f_ObjectRejected, setf_ObjectRejected] = useState(0)
-
-	const [f_ObjectType, setf_ObjectType] = useState(0)
+	const [f_Name, setf_Name] = useState('')
+	const [f_Description, setf_Description] = useState('')
 	const [f_Type, setf_Type] = useState(0)
 	const [f_LeaseType, setf_LeaseType] = useState(0)
 	const [f_TravelType, setf_TravelType] = useState(0)
-	const [f_Category, setf_Category] = useState(0)
-	const [f_NumberRooms, setf_NumberRooms] = useState(0)
-	const [f_Description, setf_Description] = useState('')
 	const [f_Region, setf_Region] = useState('')
 	const [f_City, setf_City] = useState('')
+	const [f_ObjectType, setf_ObjectType] = useState(0)
+	const [f_Category, setf_Category] = useState(0)
+	const [f_NumberRooms, setf_NumberRooms] = useState(0)
+	const [f_TypeProperty, setf_TypeProperty] = useState('')
+	const [f_SubwayStation, setf_SubwayStation] = useState('')
 	const [f_Street, setf_Street] = useState('')
 	const [f_HouseNumber, setf_HouseNumber] = useState('')
-	const [f_TypeProperty, setf_TypeProperty] = useState(0)
-	const [f_Latitude, setf_Latitude] = useState(0)
-	const [f_Longitude, setf_Longitude] = useState(0)
-	const [f_Price, setf_Price] = useState(0)
+	const [f_Price, setf_Price] = useState('')
+	const [f_PriceHistory, setf_PriceHistory] = useState('')
 	const [f_Finishing, setf_Finishing] = useState(0)
-	const [f_TotalArea, setf_TotalArea] = useState(0)
-	const [f_KitchenArea, setf_KitchenArea] = useState(0)
-	const [f_LivingArea, setf_LivingArea] = useState(0)
-	const [f_Floor, setf_Floor] = useState(0)
-	const [f_FloorsInHouse, setf_FloorsInHouse] = useState(0)
+	const [f_TotalArea, setf_TotalArea] = useState('')
+	const [f_KitchenArea, setf_KitchenArea] = useState('')
+	const [f_LivingArea, setf_LivingArea] = useState()
+	const [f_Floor, setf_Floor] = useState('')
+	const [f_FloorsInHouse, setf_FloorsInHouse] = useState('')
 	const [f_FirstFloorType, setf_FirstFloorType] = useState(0)
 	const [f_HouseType, setf_HouseType] = useState(0)
 	const [f_Bathroom, setf_Bathroom] = useState(0)
@@ -49,39 +41,59 @@ export default function AddObject() {
 	const [f_Parking, setf_Parking] = useState(0)
 	const [f_TypeSale, setf_TypeSale] = useState(0)
 	const [f_OfferFrom, setf_OfferFrom] = useState(0)
-	const [f_YearBuilt, setf_YearBuilt] = useState(0)
+	const [f_YearBuilt, setf_YearBuilt] = useState('')
+	const [f_Mortgage, setf_Mortgage] = useState(0)
 	const [f_Video, setf_Video] = useState('')
 	const [f_Phone, setf_Phone] = useState('')
-	const [f_CadastralNumber, setf_CadastralNumber] = useState(0)
-	const [f_Mortgage, setf_Mortgage] = useState('')
+	const [f_CadastralNumber, setf_CadastralNumber] = useState('')
+	const [f_Img, setf_Img] = useState('')
+	const [f_Latitude, setf_Latitude] = useState(0)
+	const [f_Longitude, setf_Longitude] = useState(0)
+	const [f_LandAppointment, setf_LandAppointment] = useState(0)
+	const [f_LandElectricity, setf_LandElectricity] = useState(0)
+	const [f_LandGas, setf_LandGas] = useState(0)
+	const [f_LandWater, setf_LandWater] = useState(0)
+	const [f_LandSewerage, setf_LandSewerage] = useState(0)
+	const [f_LandArea, setf_LandArea] = useState(0)
+	const [f_Carport, setf_Carport] = useState(0)
+	const [f_ParkingLot, setf_ParkingLot] = useState(0)
+	const [f_Garage, setf_Garage] = useState(0)
+	const [f_Bath, setf_Bath] = useState(0)
+	const [f_GardenHouse, setf_GardenHouse] = useState(0)
+	const [f_HouseholdBuilding, setf_HouseholdBuilding] = useState(0)
+	const [f_Facilities, setf_Facilities] = useState(0)
+	const [f_CommercialPropertyType, setf_CommercialPropertyType] = useState(0)
+	const [f_LocationCommercial, setf_LocationCommercial] = useState(0)
+	const [f_LeasePricePeriod, setf_LeasePricePeriod] = useState(0)
+	// f_ViewsNum - DON'T SEND
+	// f_ObjectChecked - DON'T SEND
+	// f_ObjectRejected - DON'T SEND
+	// f_ObjectRejectedComment - DON'T SEND
+	const [f_ViewsNum, setf_ViewsNum] = useState(0)
+	const [f_ObjectChecked, setf_ObjectChecked] = useState(0)
+	const [f_ObjectRejected, setf_ObjectRejected] = useState(0)
+	const [f_ObjectRejectedComment, setf_ObjectRejectedComment] = useState('')
 
 	let data = new FormData()
 	data.append('cc', 6)
 	data.append('sub', 10)
 	data.append('posting', 1)
-	data.append('f_Carport', f_Carport)
-	data.append('f_ParkingLot', f_ParkingLot)
-	data.append('f_Garage', f_Garage)
-	data.append('f_Bath', f_Bath)
-	data.append('f_GardenHouse', f_GardenHouse)
-	data.append('f_HouseholdBuilding', f_HouseholdBuilding)
-	data.append('f_ObjectChecked', f_ObjectChecked)
-	data.append('f_ObjectRejected', f_ObjectRejected)
-	data.append('f_ObjectType', f_ObjectType)
+	data.append('f_Name', f_Name)
+	data.append('f_Description', f_Description)
 	data.append('f_Type', f_Type)
 	data.append('f_LeaseType', f_LeaseType)
 	data.append('f_TravelType', f_TravelType)
-	data.append('f_Category', f_Category)
-	data.append('f_NumberRooms', f_NumberRooms)
-	data.append('f_Description', f_Description)
 	data.append('f_Region', f_Region)
 	data.append('f_City', f_City)
+	data.append('f_ObjectType', f_ObjectType)
+	data.append('f_Category', f_Category)
+	data.append('f_NumberRooms', f_NumberRooms)
+	data.append('f_TypeProperty', f_TypeProperty)
+	data.append('f_SubwayStation', f_SubwayStation)
 	data.append('f_Street', f_Street)
 	data.append('f_HouseNumber', f_HouseNumber)
-	data.append('f_TypeProperty', f_TypeProperty)
-	data.append('f_Latitude', f_Latitude)
-	data.append('f_Longitude', f_Longitude)
 	data.append('f_Price', f_Price)
+	data.append('f_PriceHistory', f_PriceHistory)
 	data.append('f_Finishing', f_Finishing)
 	data.append('f_TotalArea', f_TotalArea)
 	data.append('f_KitchenArea', f_KitchenArea)
@@ -98,19 +110,49 @@ export default function AddObject() {
 	data.append('f_TypeSale', f_TypeSale)
 	data.append('f_OfferFrom', f_OfferFrom)
 	data.append('f_YearBuilt', f_YearBuilt)
+	data.append('f_Mortgage', f_Mortgage)
 	data.append('f_Video', f_Video)
 	data.append('f_Phone', f_Phone)
 	data.append('f_CadastralNumber', f_CadastralNumber)
-	data.append('f_Mortgage', f_Mortgage)
+	// data.append('f_Img', f_Img)
+	data.append('f_Latitude', f_Latitude)
+	data.append('f_Longitude', f_Longitude)
+	data.append('f_LandAppointment', f_LandAppointment)
+	data.append('f_LandElectricity', f_LandElectricity)
+	data.append('f_LandGas', f_LandGas)
+	data.append('f_LandWater', f_LandWater)
+	data.append('f_LandSewerage', f_LandSewerage)
+	data.append('f_LandArea', f_LandArea)
+	data.append('f_Carport', f_Carport)
+	data.append('f_ParkingLot', f_ParkingLot)
+	data.append('f_Garage', f_Garage)
+	data.append('f_Bath', f_Bath)
+	data.append('f_GardenHouse', f_GardenHouse)
+	data.append('f_HouseholdBuilding', f_HouseholdBuilding)
+	data.append('f_Facilities', f_Facilities)
+	data.append('f_CommercialPropertyType', f_CommercialPropertyType)
+	data.append('f_LocationCommercial', f_LocationCommercial)
+	data.append('f_LeasePricePeriod', f_LeasePricePeriod)
+	data.append('f_ViewsNum', f_ViewsNum)
+	data.append('f_ObjectChecked', f_ObjectChecked)
+	data.append('f_ObjectRejected', f_ObjectRejected)
+	data.append('f_ObjectRejectedComment', f_ObjectRejectedComment)
 
 	const handleAddObject = async () => {
 		console.log('handleAddObject')
-		const lextaService = new LextaService()
-		lextaService
-			.addObject(data)
-			.then((res) => res.json())
-			.then((json) => console.log(json))
-			.catch((err) => console.error(err))
+
+		await fetch('https://lexta.pro/netcat/add.php', {
+			method: 'post',
+			mode: 'no-cors',
+			headers: new Headers(),
+			body: data,
+		})
+			.then((res) => {
+				console.log(res.status)
+				return res.text()
+			})
+			.then((json) => console.log('json', json))
+			.catch((err) => console.log(err))
 	}
 
 	return (
@@ -276,7 +318,67 @@ export default function AddObject() {
 										height: windowWidth * 0.1,
 									}}
 									selectedValue={f_Category}
-									onValueChange={(itemValue) => setf_Category(itemValue)}
+									onValueChange={(value) => {
+										setf_Category(value)
+										switch (value) {
+											case '1':
+												setf_Name(`Комнаты, ${f_TotalArea} м2`)
+
+												break
+											case '2':
+												setf_Name(`Квартиры, ${f_TotalArea} м2`)
+
+												break
+											case '3':
+												setf_Name(`Дачи, ${f_TotalArea} м2`)
+
+												break
+											case '4':
+												setf_Name(`Дома, ${f_TotalArea} м2`)
+
+												break
+											case '5':
+												setf_Name(`Коттеджи, ${f_TotalArea} м2`)
+
+												break
+											case '6':
+												setf_Name(`Таунхаусы, ${f_TotalArea} м2`)
+
+												break
+											case '7':
+												setf_Name(`Земельный участок, ${f_TotalArea} м2`)
+
+												break
+											case '8':
+												setf_Name(`Гараж, ${f_TotalArea} м2`)
+
+												break
+											case '9':
+												setf_Name(`Подвал, ${f_TotalArea} м2`)
+
+												break
+											case '10':
+												setf_Name(`Машиноместо, ${f_TotalArea} м2`)
+
+												break
+											case '11':
+												setf_Name(
+													`Погреб (овощехранилище), ${f_TotalArea} м2`
+												)
+
+												break
+											case '12':
+												setf_Name(
+													`Коммерческая недвижимость, ${f_TotalArea} м2`
+												)
+
+												break
+											default:
+												setf_Name(`не выбрано, ${f_TotalArea} м2`)
+
+												break
+										}
+									}}
 								>
 									<Picker.Item label="-- выбрать --" value="0" />
 									<Picker.Item label="Комнаты" value="1" />
@@ -457,8 +559,8 @@ export default function AddObject() {
 							}}
 						>
 							<TextInput
-								value={'111'}
-								onChangeText={() => {}}
+								// value={}
+								// onChangeText={() => {}}
 								placeholder="Широта, долгота"
 								keyboardType="number-pad"
 								style={{
@@ -558,7 +660,63 @@ export default function AddObject() {
 								<Text style={styles.title}>Общая</Text>
 								<TextInput
 									value={f_TotalArea}
-									onChangeText={(value) => setf_TotalArea(value)}
+									onChangeText={(value) => {
+										setf_TotalArea(value)
+										switch (f_Category) {
+											case '1':
+												setf_Name(`Комнаты, ${value} м2`)
+
+												break
+											case '2':
+												setf_Name(`Квартиры, ${value} м2`)
+
+												break
+											case '3':
+												setf_Name(`Дачи, ${value} м2`)
+
+												break
+											case '4':
+												setf_Name(`Дома, ${value} м2`)
+
+												break
+											case '5':
+												setf_Name(`Коттеджи, ${value} м2`)
+
+												break
+											case '6':
+												setf_Name(`Таунхаусы, ${value} м2`)
+
+												break
+											case '7':
+												setf_Name(`Земельный участок, ${value} м2`)
+
+												break
+											case '8':
+												setf_Name(`Гараж, ${value} м2`)
+
+												break
+											case '9':
+												setf_Name(`Подвал, ${value} м2`)
+
+												break
+											case '10':
+												setf_Name(`Машиноместо, ${value} м2`)
+
+												break
+											case '11':
+												setf_Name(`Погреб (овощехранилище), ${value} м2`)
+
+												break
+											case '12':
+												setf_Name(`Коммерческая недвижимость, ${value} м2`)
+
+												break
+											default:
+												setf_Name(`не выбрано, ${value} м2`)
+
+												break
+										}
+									}}
 									placeholder="Общая"
 									keyboardType="number-pad"
 									style={{
