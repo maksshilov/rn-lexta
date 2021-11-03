@@ -10,7 +10,6 @@ export default function ObjectCarousel({ imgArray }) {
 			image: `https://lexta.pro${i}`,
 		}
 	})
-	console.log(images.length)
 	const Slide = ({ data }) => {
 		return (
 			<View style={{ flex: 1 }}>

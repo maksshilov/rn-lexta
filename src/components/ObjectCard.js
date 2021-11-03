@@ -11,7 +11,6 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 		<View style={{ width: windowWidth, alignItems: 'center', paddingTop: 20 }}>
 			<TouchableOpacity
 				onPress={() => {
-					console.log(item)
 					navigation.navigate('Object', {
 						item,
 					})

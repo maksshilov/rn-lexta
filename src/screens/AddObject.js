@@ -371,11 +371,9 @@ export default function AddObject() {
 												setf_Name(
 													`Коммерческая недвижимость, ${f_TotalArea} м2`
 												)
-
 												break
 											default:
 												setf_Name(`не выбрано, ${f_TotalArea} м2`)
-
 												break
 										}
 									}}
