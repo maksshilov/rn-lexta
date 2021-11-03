@@ -21,8 +21,8 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 		if (item) {
 			const itemToJson = JSON.parse(item)
 			setUserInfo(itemToJson)
-			lextaService = new LextaService()
-			lextaService
+			const lexta = new LextaService()
+			lexta
 				.getAllObjects(itemToJson.Token, md5(itemToJson.Email))
 				.then((res) => res.json())
 				.then((json) => {

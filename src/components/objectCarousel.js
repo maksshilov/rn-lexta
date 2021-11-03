@@ -67,9 +67,19 @@ export default function ObjectCarousel({ imgArray }) {
 					return <Slide data={item} />
 				}}
 			/>
-			<Text style={{ marginTop: -30, fontFamily: 'gothampro-regular' }}>
-				{index + 1}/{imgArray.length}
-			</Text>
+			<View
+				style={{
+					marginTop: -20,
+					backgroundColor: '#fff',
+					borderRadius: 10,
+					paddingHorizontal: 7,
+					opacity: 0.7,
+				}}
+			>
+				<Text style={{ fontFamily: 'gothampro-regular', fontSize: 10 }}>
+					{index + 1}/{imgArray.length}
+				</Text>
+			</View>
 		</>
 	)
 }

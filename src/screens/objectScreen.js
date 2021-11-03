@@ -26,7 +26,7 @@ import { connect } from 'react-redux'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ObjectScreen = ({ route, navigation, state }) => {
-	// console.log(route.params.item)
+	console.log(route.params.item)
 
 	const [modal, setModal] = useState(false)
 
@@ -436,12 +436,10 @@ const ObjectScreen = ({ route, navigation, state }) => {
 						<View
 							style={{
 								alignItems: 'center',
-								justifyContent: 'space-between',
 								backgroundColor: '#fff',
 								paddingTop: 20,
-								paddingBottom: 10,
+								// paddingBottom: 10,
 								width: windowWidth * 0.9,
-								height: windowHeight * 0.36,
 								elevation: 5,
 								borderRadius: 10,
 							}}
@@ -451,11 +449,16 @@ const ObjectScreen = ({ route, navigation, state }) => {
 									style={{
 										flexDirection: 'row',
 										justifyContent: 'space-between',
+										alignItems: 'center',
 									}}
 								>
-									<Text style={{ fontFamily: 'gothampro-bold', fontSize: 25 }}>
-										{Category}, {TotalArea} м2
-									</Text>
+									<View style={{ width: '80%' }}>
+										<Text
+											style={{ fontFamily: 'gothampro-bold', fontSize: 20 }}
+										>
+											{Category}, {TotalArea} м2
+										</Text>
+									</View>
 									<View>
 										<Icon
 											name="times-circle"
@@ -484,34 +487,27 @@ const ObjectScreen = ({ route, navigation, state }) => {
 								/>
 							</View>
 
-							<View
-								style={{
-									flexDirection: 'row',
-									justifyContent: 'space-between',
-									alignItems: 'center',
-								}}
-							>
-								<Pressable onPress={() => setModal(false)}>
-									<View
+							<Pressable onPress={() => setModal(false)}>
+								<View
+									style={{
+										paddingVertical: 5,
+										paddingHorizontal: 10,
+										backgroundColor: '#912e33',
+										borderRadius: 10,
+										marginVertical: 10,
+									}}
+								>
+									<Text
 										style={{
-											paddingVertical: 5,
-											paddingHorizontal: 10,
-											backgroundColor: '#912e33',
-											borderRadius: 10,
+											fontFamily: 'gothampro-regular',
+											color: '#fff',
+											fontSize: 20,
 										}}
 									>
-										<Text
-											style={{
-												fontFamily: 'gothampro-regular',
-												color: '#fff',
-												fontSize: 20,
-											}}
-										>
-											Отправить
-										</Text>
-									</View>
-								</Pressable>
-							</View>
+										Отправить
+									</Text>
+								</View>
+							</Pressable>
 						</View>
 					</View>
 				</Modal>
