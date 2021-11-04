@@ -20,13 +20,15 @@ import PhoneShow from '../components/PhoneShow'
 import ObjectCarousel from '../components/ObjectCarousel'
 import { numSplit } from '../components/scripts'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import store from '../store'
 
 import { connect } from 'react-redux'
+import LextaService from '../services/LextaService'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ObjectScreen = ({ route, navigation, state }) => {
-	console.log(route.params.item)
+	// console.log(route.params.item)
 
 	const [modal, setModal] = useState(false)
 
@@ -46,6 +48,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 		HouseNumber,
 		Date: date,
 		Img,
+		User_ID,
 	} = route.params.item
 
 	const scrollToTop = useRef(null)
@@ -64,6 +67,32 @@ const ObjectScreen = ({ route, navigation, state }) => {
 			duration: 300,
 			useNativeDriver: true,
 		}).start()
+	}
+
+	const [message, setMessage] = useState('')
+	const messageFormData = new FormData()
+	messageFormData.append('cc', 10)
+	messageFormData.append('sub', 28)
+	messageFormData.append('catalogue', 1)
+	messageFormData.append('posting', 1)
+	messageFormData.append('f_Checked', 1)
+	messageFormData.append('uid', store.getState().reducerUser.UserId)
+	messageFormData.append('f_ToUserID', User_ID)
+	messageFormData.append('f_Subject', `${Category}, ${TotalArea} м2`)
+	messageFormData.append('f_Message', message)
+
+	const handleSendMessage = async () => {
+		console.log(messageFormData)
+		const lexta = new LextaService()
+		lexta
+			.sendMessage(message)
+			.then((res) => {
+				console.log(res.status)
+				return res.text()
+			})
+			.then((json) => console.log(json))
+			.then(() => setModal(false))
+			.catch((err) => console.log(err))
 	}
 
 	return (
@@ -473,6 +502,8 @@ const ObjectScreen = ({ route, navigation, state }) => {
 								</View>
 								<TextInput
 									multiline
+									value={message}
+									onChangeText={(input) => setMessage(input)}
 									style={{
 										fontFamily: 'gothampro-regular',
 										borderWidth: 1,
@@ -487,7 +518,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 								/>
 							</View>
 
-							<Pressable onPress={() => setModal(false)}>
+							<Pressable onPress={() => handleSendMessage()}>
 								<View
 									style={{
 										paddingVertical: 5,

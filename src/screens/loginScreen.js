@@ -46,7 +46,7 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 							const storage = JSON.stringify({
 								...data[0],
 								Token: token['Token'],
-								UserId: md5(token['UserId']),
+								UserId: token['UserId'],
 							})
 							writeItemToStorage(storage)
 
