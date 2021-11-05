@@ -26,9 +26,9 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 	const writeItemToStorage = async (newValue) => {
 		await setItem(newValue)
 	}
-	const lextaService = new LextaService()
+	const lexta = new LextaService()
 	const loginHandler = async () => {
-		lextaService
+		lexta
 			.getToken(login, md5(pass))
 			.then((res) => {
 				setLoading(true)
@@ -37,7 +37,7 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 			.then((token) => {
 				console.log(token)
 				if (token['Status']) {
-					lextaService
+					lexta
 						.getUserInfo(token['Token'], login)
 						.then((res) => {
 							return res.json()

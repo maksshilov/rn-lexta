@@ -56,10 +56,13 @@ export default function SearchScreen({ navigation }) {
 	video=${video}`
 
 	const handleSearch = async () => {
-		lextaService = new LextaService()
-		lextaService
+		const lexta = new LextaService()
+		lexta
 			.getSearchObjects(params)
-			.then((res) => res.json())
+			.then((res) => {
+				console.log(res.status)
+				return res.json()
+			})
 			.then((result) => navigation.navigate('SearchResult', { result }))
 			.catch((err) => console.log(err))
 	}

@@ -1,10 +1,24 @@
 import React, { Fragment, useState } from 'react'
-import { TouchableOpacity, Button, Dimensions, ScrollView, Text, View } from 'react-native'
+import {
+	TouchableOpacity,
+	Button,
+	Dimensions,
+	ScrollView,
+	Text,
+	View,
+	StyleSheet,
+	Image,
+} from 'react-native'
 import { connect } from 'react-redux'
 import LextaService from '../services/LextaService'
 import store from '../store'
 import md5 from 'md5'
+import { getDocumentAsync } from 'expo-document-picker'
+import * as ImagePicker from 'expo-image-picker'
+// import RNFetchBlob from 'rn-fetch-blob'
+import * as FileSystem from 'expo-file-system'
 
+const lexta = new LextaService()
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const MessageScreen = ({ state }) => {
@@ -23,9 +37,77 @@ const MessageScreen = ({ state }) => {
 			.catch((err) => console.error(err))
 	}
 
+	// FILE PICKER code start
+	const [singleFile, setSingleFile] = useState(null)
+	const [image, setImage] = useState(null)
+
+	const uploadImage = async () => {
+		FileSystem.uploadAsync('https://lexta.pro/api/LoadingProfileImage.php', image, {
+			uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+			fieldName: 'LoadProfileImg',
+			parameters: {
+				user: md5(store.getState().reducerUser.Email),
+				token: store.getState().reducerUser.Token,
+			},
+		}).then((res) => console.log(JSON.parse(res.body)))
+		// const data = new FormData()
+		// data.append('user', md5(store.getState().reducerUser.Email))
+		// data.append('token', store.getState().reducerUser.Token)
+		// data.append('LoadProfileImg', image)
+		// console.log(data)
+		// lexta
+		// .uploadUserPic(JSON.stringify(data))
+		// .then((res) => {
+		// console.log(res.status)
+		// return res.json()
+		// })
+		// .then((json) => console.log(json))
+		// .catch((err) => console.log(err))
+	}
+
+	const selectFile = async () => {
+		let result = await getDocumentAsync({})
+		alert(result.uri)
+		setSingleFile(result.uri)
+		console.log(result.type)
+	}
+
+	const pickImage = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			aspect: [1, 1],
+			quality: 1,
+			// base64: true,
+		})
+
+		let { uri, base64 } = result
+		// let filename = uri.split('/').pop()
+		// console.log('filename', filename)
+		// let match = /\.(\w+)$/.exec(filename)
+		// console.log('match', match)
+		// let type = match ? `image/${match[1]}` : `image`
+		// console.log('type', type)
+
+		// const blob = `data:${type}/${uri.split('.').pop()};base64,${base64}`
+
+		// console.log(new Blob('13123', { type: `text/${type}` }))
+
+		if (!result.cancelled) {
+			setImage(uri)
+		}
+	}
+	// FILE PICKER code end
+
 	return (
 		<Fragment>
-			<View style={{ backgroundColor: '#fff', paddingTop: 50 }}>
+			<View
+				style={{
+					backgroundColor: '#fff',
+					paddingTop: 50,
+					alignContent: 'center',
+				}}
+			>
 				<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
 					<TouchableOpacity
 						onPress={() => {
@@ -192,11 +274,35 @@ const MessageScreen = ({ state }) => {
 					</View>
 				</ScrollView>
 			</View>
+			<View
+				style={{
+					marginVertical: 50,
+					width: windowWidth,
+				}}
+			>
+				<View style={styles.mainBody}>
+					<TouchableOpacity
+						style={styles.buttonStyle}
+						activeOpacity={0.5}
+						onPress={pickImage}
+					>
+						<Text style={styles.buttonTextStyle}>Select File</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={styles.buttonStyle}
+						activeOpacity={0.5}
+						onPress={uploadImage}
+					>
+						<Text style={styles.buttonTextStyle}>Upload File</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+			{image ? (
+				<View>
+					<Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+				</View>
+			) : null}
 		</Fragment>
-		// <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-		// 	<Text>Message screen</Text>
-		// 	<Button onPress={handleGetMessages} title="Check" />
-		// </View>
 	)
 }
 
@@ -204,3 +310,36 @@ const mapStateToProps = (state) => {
 	return { state }
 }
 export default connect(mapStateToProps)(MessageScreen)
+
+const styles = StyleSheet.create({
+	mainBody: {
+		flex: 1,
+		justifyContent: 'center',
+		padding: 20,
+	},
+	buttonStyle: {
+		backgroundColor: '#307ecc',
+		borderWidth: 0,
+		color: '#FFFFFF',
+		borderColor: '#307ecc',
+		height: 40,
+		alignItems: 'center',
+		borderRadius: 30,
+		marginLeft: 35,
+		marginRight: 35,
+		marginTop: 15,
+	},
+	buttonTextStyle: {
+		color: '#FFFFFF',
+		paddingVertical: 10,
+		fontSize: 16,
+	},
+	textStyle: {
+		backgroundColor: '#fff',
+		fontSize: 15,
+		marginTop: 16,
+		marginLeft: 35,
+		marginRight: 35,
+		textAlign: 'center',
+	},
+})

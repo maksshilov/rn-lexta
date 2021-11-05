@@ -20,6 +20,19 @@ export default class LextaService {
 		})
 	}
 
+	uploadUserPic = async (data) => {
+		return await fetch(`https://lexta.pro/api/LoadingProfileImage.php`, {
+			method: 'POST',
+			mode: 'no-cors',
+			headers: {
+				Accept: 'application/json',
+				'content-type': 'multipart/form-data',
+			},
+			body: data,
+			redirect: 'follow',
+		})
+	}
+
 	getAllObjects = async (token, user) => {
 		return await fetch(`https://lexta.pro/object-api/?token=${token}&user=${user}`, {
 			mode: 'no-cors',
@@ -70,7 +83,7 @@ export default class LextaService {
 		return await fetch(`https://lexta.pro/netcat/add.php`, {
 			mode: 'no-cors',
 			method: 'POST',
-			headers: new Headers(),
+			headers: { 'Content-Type': 'multipart/form-data' },
 			body: data,
 		})
 	}

@@ -1,6 +1,14 @@
 import md5 from 'md5'
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, ImageBackground, Text, View, RefreshControl } from 'react-native'
+import {
+	FlatList,
+	Image,
+	ImageBackground,
+	Text,
+	View,
+	RefreshControl,
+	ScrollView,
+} from 'react-native'
 import ObjectCard from '../components/ObjectCard'
 import LextaService from '../services/LextaService'
 import store from '../store'
@@ -18,29 +26,35 @@ const FavScreen = ({ state, navigation }) => {
 	const getFavoritesObjects = async () => {
 		lexta
 			.getUserInfo(Token, Email)
-			.then((res) => res.json())
+			.then((res) => {
+				return res.json()
+			})
 			.then(async (json) => {
+				console.log(json)
 				let favObjectsId = JSON.parse(json[0].Favorites)
-				let favObjects = []
-				for (let i = 0; i < favObjectsId.length; i++) {
-					const objectId = favObjectsId[i]
+				if (favObjectsId.length) {
+					let favObjects = []
+					for (let i = 0; i < favObjectsId.length; i++) {
+						const objectId = favObjectsId[i]
 
-					await lexta
-						.getSearchObjects(
-							`token=${store.getState().reducerUser.Token}&
-						 user=${md5(store.getState().reducerUser.Email)}&
-						 objectId=${objectId}`
-						)
-						.then((res) => res.json())
-						.then((result) => {
-							setRefreshing(false)
-
-							favObjects.push(result)
-						})
-						.catch((err) => console.log(err))
+						await lexta
+							.getSearchObjects(
+								`token=${store.getState().reducerUser.Token}&
+							 user=${md5(store.getState().reducerUser.Email)}&
+							 objectId=${objectId}`
+							)
+							.then((res) => res.json())
+							.then((result) => {
+								setRefreshing(false)
+								favObjects.push(result)
+							})
+							.catch((err) => console.log(err))
+					}
+					setUserFavorites(favObjectsId)
+					setFavObjects(favObjects)
+				} else {
+					setRefreshing(false)
 				}
-				setUserFavorites(favObjectsId)
-				setFavObjects(favObjects)
 			})
 			.catch((err) => console.log(err))
 	}
@@ -58,7 +72,7 @@ const FavScreen = ({ state, navigation }) => {
 		<ObjectCard item={item[0]} userFavorites={userFavorites} navigation={navigation} />
 	)
 
-	return (
+	return userFavorites.length ? (
 		<View
 			style={{
 				flex: 1,
@@ -77,6 +91,18 @@ const FavScreen = ({ state, navigation }) => {
 				}}
 			/>
 		</View>
+	) : (
+		<ScrollView
+			contentContainerStyle={{
+				flex: 1,
+				alignItems: 'center',
+				justifyContent: 'center',
+				backgroundColor: '#fff',
+			}}
+			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+		>
+			<Text>Nothin in Favorites</Text>
+		</ScrollView>
 	)
 }
 
