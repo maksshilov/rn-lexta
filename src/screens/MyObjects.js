@@ -1,6 +1,16 @@
 import md5 from 'md5'
 import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+	Dimensions,
+	FlatList,
+	Pressable,
+	ScrollView,
+	StyleSheet,
+	Text,
+	View,
+	RefreshControl,
+	ActivityIndicator,
+} from 'react-native'
 import LextaService from '../services/LextaService'
 import store from '../store'
 import ObjectCard from '../components/ObjectCard'
@@ -9,9 +19,10 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function MyObjects({ navigation }) {
 	const [postsNum, setpostsNum] = useState(0)
+	const [refreshing, setRefreshing] = useState(true)
 	const [myObjects, setmyObjects] = useState([])
 
-	useEffect(() => {
+	const handleGetMyObjects = () => {
 		const lexta = new LextaService()
 		lexta
 			.getMyObjects(
@@ -20,16 +31,27 @@ export default function MyObjects({ navigation }) {
 			)
 			.then((res) => res.json())
 			.then((json) => {
+				setRefreshing(false)
 				setpostsNum(json.length)
 				setmyObjects(json)
 			})
 			.catch((err) => console.error(err))
+	}
+
+	useEffect(() => {
+		handleGetMyObjects()
 	}, [])
+
+	const onRefresh = () => {
+		setmyObjects([])
+		handleGetMyObjects()
+	}
 
 	const renderItem = ({ item }) => <ObjectCard item={item} navigation={navigation} />
 
 	return (
 		<View style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center' }}>
+			{refreshing ? <ActivityIndicator /> : null}
 			<View>
 				<Text
 					style={{
@@ -62,6 +84,9 @@ export default function MyObjects({ navigation }) {
 				}}
 			>
 				<FlatList
+					refreshControl={
+						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+					}
 					data={myObjects}
 					renderItem={renderItem}
 					keyExtractor={(item) => {

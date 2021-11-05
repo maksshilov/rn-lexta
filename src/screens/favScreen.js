@@ -1,17 +1,18 @@
 import md5 from 'md5'
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, ImageBackground, Text, View } from 'react-native'
+import { FlatList, Image, ImageBackground, Text, View, RefreshControl } from 'react-native'
 import ObjectCard from '../components/ObjectCard'
 import LextaService from '../services/LextaService'
 import store from '../store'
 import { connect } from 'react-redux'
 
 const FavScreen = ({ state, navigation }) => {
-	const { Token, Email } = store.getState().reducerUser
-
 	const lexta = new LextaService()
 
+	const { Token, Email } = store.getState().reducerUser
+
 	const [userFavorites, setUserFavorites] = useState([])
+	const [refreshing, setRefreshing] = useState(true)
 	const [favObjects, setFavObjects] = useState([])
 
 	const getFavoritesObjects = async () => {
@@ -31,7 +32,11 @@ const FavScreen = ({ state, navigation }) => {
 						 objectId=${objectId}`
 						)
 						.then((res) => res.json())
-						.then((result) => favObjects.push(result))
+						.then((result) => {
+							setRefreshing(false)
+
+							favObjects.push(result)
+						})
 						.catch((err) => console.log(err))
 				}
 				setUserFavorites(favObjectsId)
@@ -43,6 +48,11 @@ const FavScreen = ({ state, navigation }) => {
 	useEffect(() => {
 		getFavoritesObjects()
 	}, [])
+
+	const onRefresh = () => {
+		setFavObjects([])
+		getFavoritesObjects()
+	}
 
 	const renderItem = ({ item }) => (
 		<ObjectCard item={item[0]} userFavorites={userFavorites} navigation={navigation} />
@@ -59,6 +69,7 @@ const FavScreen = ({ state, navigation }) => {
 			}}
 		>
 			<FlatList
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				data={favObjects}
 				renderItem={renderItem}
 				keyExtractor={(item) => {
