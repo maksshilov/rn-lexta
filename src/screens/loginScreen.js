@@ -18,6 +18,7 @@ import LextaService from '../services/LextaService'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const LoginScreen = ({ state, setUserInfo, navigation }) => {
+	const lexta = new LextaService()
 	const [login, setLogin] = useState('')
 	const [pass, setPass] = useState('')
 	const [loading, setLoading] = useState(false)
@@ -26,7 +27,6 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 	const writeItemToStorage = async (newValue) => {
 		await setItem(newValue)
 	}
-	const lexta = new LextaService()
 	const loginHandler = async () => {
 		lexta
 			.getToken(login, md5(pass))
@@ -35,7 +35,6 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 				return res.json()
 			})
 			.then((token) => {
-				console.log(token)
 				if (token['Status']) {
 					lexta
 						.getUserInfo(token['Token'], login)
@@ -43,6 +42,7 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 							return res.json()
 						})
 						.then((data) => {
+							console.log('LOGINSCREEN.JS >>>', data)
 							const storage = JSON.stringify({
 								...data[0],
 								Token: token['Token'],

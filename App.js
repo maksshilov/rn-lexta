@@ -8,6 +8,7 @@ import updateToken from './src/services/updateToken'
 import { Provider } from 'react-redux'
 import store from './src/store'
 import LextaService from './src/services/LextaService'
+import md5 from 'md5'
 
 const App = () => {
 	const [isReady, setIsReady] = React.useState(false)
@@ -18,10 +19,10 @@ const App = () => {
 		await setItem(newValue)
 	}
 
-	React.useEffect(() => {
-		let { Email, Token, UserId } = store.getState().reducerUser
-		updateToken({ Email, Token, UserId })
-	}, [])
+	// React.useEffect(() => {
+	// let { Email, Token, UserId } = store.getState().reducerUser
+	// updateToken({ Email, Token, UserId })
+	// }, [])
 
 	let content = <AppNavigator page={session ? 'Main' : 'Start'} />
 
@@ -32,13 +33,15 @@ const App = () => {
 					startAsync={bootstrap}
 					onFinish={async () => {
 						const item = await getItem()
+						// console.log('APP.JS >>>')
 						const itemToJson = JSON.parse(item)
 						if (item) {
 							const { Email, Token, UserId } = itemToJson
+
 							const data = new FormData()
 							data.append('user', Email)
 							data.append('token', Token)
-							data.append('userId', UserId)
+							data.append('userId', md5(UserId))
 
 							await fetch(`https://lexta.pro/api/UpdateToken.php`, {
 								method: 'POST',
@@ -48,6 +51,8 @@ const App = () => {
 							})
 								.then((res) => res.json())
 								.then((updToken) => {
+									console.log('APP.JS >>> update token response >>>', updToken)
+
 									if (item && updToken.Message == 'update success') {
 										lextaService = new LextaService()
 										lextaService

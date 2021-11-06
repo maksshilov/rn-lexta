@@ -38,7 +38,6 @@ const MessageScreen = ({ state }) => {
 	}
 
 	// FILE PICKER code start
-	const [singleFile, setSingleFile] = useState(null)
 	const [image, setImage] = useState(null)
 
 	const uploadImage = async () => {
@@ -50,26 +49,6 @@ const MessageScreen = ({ state }) => {
 				token: store.getState().reducerUser.Token,
 			},
 		}).then((res) => console.log(JSON.parse(res.body)))
-		// const data = new FormData()
-		// data.append('user', md5(store.getState().reducerUser.Email))
-		// data.append('token', store.getState().reducerUser.Token)
-		// data.append('LoadProfileImg', image)
-		// console.log(data)
-		// lexta
-		// .uploadUserPic(JSON.stringify(data))
-		// .then((res) => {
-		// console.log(res.status)
-		// return res.json()
-		// })
-		// .then((json) => console.log(json))
-		// .catch((err) => console.log(err))
-	}
-
-	const selectFile = async () => {
-		let result = await getDocumentAsync({})
-		alert(result.uri)
-		setSingleFile(result.uri)
-		console.log(result.type)
 	}
 
 	const pickImage = async () => {
@@ -78,23 +57,10 @@ const MessageScreen = ({ state }) => {
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			aspect: [1, 1],
 			quality: 1,
-			// base64: true,
 		})
 
-		let { uri, base64 } = result
-		// let filename = uri.split('/').pop()
-		// console.log('filename', filename)
-		// let match = /\.(\w+)$/.exec(filename)
-		// console.log('match', match)
-		// let type = match ? `image/${match[1]}` : `image`
-		// console.log('type', type)
-
-		// const blob = `data:${type}/${uri.split('.').pop()};base64,${base64}`
-
-		// console.log(new Blob('13123', { type: `text/${type}` }))
-
 		if (!result.cancelled) {
-			setImage(uri)
+			setImage(result.uri)
 		}
 	}
 	// FILE PICKER code end

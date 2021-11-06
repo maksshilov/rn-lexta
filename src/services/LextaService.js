@@ -1,10 +1,12 @@
 export default class LextaService {
 	_apiBase = 'https://lexta.pro/api/'
+	_objectBase = 'https://lexta.pro/object-api/?'
+	_netcatBase = 'https://lexta.pro/netcat/'
 	_imgBase = ''
 
-	getToken = async (login, pass) => {
+	getToken = async (user, pass) => {
 		const data = new FormData()
-		data.append('user', login)
+		data.append('user', user)
 		data.append('password', pass)
 		return await fetch(`${this._apiBase}GetToken.php`, {
 			mode: 'no-cors',
@@ -14,14 +16,14 @@ export default class LextaService {
 		})
 	}
 
-	getUserInfo = async (token, login) => {
-		return await fetch(`${this._apiBase}GetUserInfo.php?token=${token}&user=${login}`, {
+	getUserInfo = async (token, user) => {
+		return await fetch(`${this._apiBase}GetUserInfo.php?token=${token}&user=${user}`, {
 			mode: 'no-cors',
 		})
 	}
 
 	uploadUserPic = async (data) => {
-		return await fetch(`https://lexta.pro/api/LoadingProfileImage.php`, {
+		return await fetch(`${this._apiBase}LoadingProfileImage.php`, {
 			method: 'POST',
 			mode: 'no-cors',
 			headers: {
@@ -34,23 +36,23 @@ export default class LextaService {
 	}
 
 	getAllObjects = async (token, user) => {
-		return await fetch(`https://lexta.pro/object-api/?token=${token}&user=${user}`, {
+		return await fetch(`${this._objectBase}token=${token}&user=${user}`, {
 			mode: 'no-cors',
 		})
 	}
 
 	getMyObjects = async (token, user) => {
-		return await fetch(`https://lexta.pro/object-api/?profile=1&token=${token}&user=${user}`, {
+		return await fetch(`${this._objectBase}profile=1&token=${token}&user=${user}`, {
 			mode: 'no-cors',
 		})
 	}
 
 	getSearchObjects = async (params) => {
-		return await fetch(`https://lexta.pro/object-api/?${params}`, { mode: 'no-cors' })
+		return await fetch(`${this._objectBase}${params}`, { mode: 'no-cors' })
 	}
 
 	addObject = async (data) => {
-		return await fetch(`https://lexta.pro/netcat/add.php`, {
+		return await fetch(`${this._netcatBase}add.php`, {
 			method: 'POST',
 			mode: 'no-cors',
 			headers: new Headers(),
@@ -58,12 +60,12 @@ export default class LextaService {
 		})
 	}
 
-	setLikeUnlike = async (objectId, type, token, email) => {
+	setLikeUnlike = async (objectId, type, token, user) => {
 		let data = new FormData()
 		data.append('objectId', objectId)
 		data.append('type', type)
 		data.append('token', token)
-		data.append('user', email)
+		data.append('user', user)
 		return await fetch(`${this._apiBase}LikeObject.php`, {
 			mode: 'no-cors',
 			method: 'POST',
@@ -74,13 +76,13 @@ export default class LextaService {
 
 	getMessages = async (token, user, outbox) => {
 		return await fetch(
-			`https://lexta.pro/api/GetMessages.php?token=${token}&user=${user}&outbox=${outbox}`,
+			`${this._apiBase}GetMessages.php?token=${token}&user=${user}&outbox=${outbox}`,
 			{ mode: 'no-cors' }
 		)
 	}
 
 	sendMessage = async (data) => {
-		return await fetch(`https://lexta.pro/netcat/add.php`, {
+		return await fetch(`${this._netcatBase}add.php`, {
 			mode: 'no-cors',
 			method: 'POST',
 			headers: { 'Content-Type': 'multipart/form-data' },

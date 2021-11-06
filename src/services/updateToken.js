@@ -1,4 +1,5 @@
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
+import md5 from 'md5'
 import store from '../store'
 
 const updateToken = async ({ Email, Token, UserId }) => {
@@ -7,7 +8,7 @@ const updateToken = async ({ Email, Token, UserId }) => {
 	const data = new FormData()
 	data.append('user', Email)
 	data.append('token', Token)
-	data.append('userId', UserId)
+	data.append('userId', md5(UserId))
 
 	await fetch(`https://lexta.pro/api/UpdateToken.php`, {
 		method: 'POST',
@@ -17,8 +18,6 @@ const updateToken = async ({ Email, Token, UserId }) => {
 	})
 		.then((res) => res.json())
 		.then(async (json) => {
-			// console.log('UPDTKN.JS___1 >>> json.Message: ', json.Message)
-			// console.log(json.Token)
 			return json
 		})
 		.then(async (json) => {
