@@ -42,7 +42,6 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 							return res.json()
 						})
 						.then((data) => {
-							console.log('LOGINSCREEN.JS >>>', data)
 							const storage = JSON.stringify({
 								...data[0],
 								Token: token['Token'],

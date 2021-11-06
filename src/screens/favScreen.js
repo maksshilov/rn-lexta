@@ -8,52 +8,98 @@ import {
 	View,
 	RefreshControl,
 	ScrollView,
+	ActivityIndicator,
 } from 'react-native'
 import ObjectCard from '../components/ObjectCard'
 import LextaService from '../services/LextaService'
 import store from '../store'
 import { connect } from 'react-redux'
+import updateToken from '../services/updateToken'
 
 const FavScreen = ({ state, navigation }) => {
 	const lexta = new LextaService()
-
 	const { Token, Email } = store.getState().reducerUser
+
+	const [loading, setLoading] = useState(false)
 
 	const [userFavorites, setUserFavorites] = useState([])
 	const [refreshing, setRefreshing] = useState(true)
 	const [favObjects, setFavObjects] = useState([])
 
 	const getFavoritesObjects = async () => {
+		const handlegetFavoritesObjects = async (json) => {
+			const favArray = JSON.parse(json[0].Favorites)
+			if (favArray.length) {
+				let favObjectsId = favArray
+				let favObjects = []
+				for (let i = 0; i < favObjectsId.length; i++) {
+					const objectId = favObjectsId[i]
+
+					await lexta
+						.getSearchObjects(
+							`token=${Token}&
+					 user=${md5(Email)}&
+					 objectId=${objectId}`
+						)
+						.then((res) => res.json())
+						.then((result) => {
+							setRefreshing(false)
+							favObjects.push(result)
+						})
+						.catch((err) => console.log(err))
+				}
+				setUserFavorites(favObjectsId)
+				setFavObjects(favObjects)
+				setLoading(false)
+			} else {
+				setRefreshing(false)
+				setLoading(false)
+			}
+		}
+
+		setLoading(true)
 		lexta
 			.getUserInfo(Token, Email)
 			.then((res) => {
 				return res.json()
 			})
 			.then(async (json) => {
-				console.log(json)
-				let favObjectsId = JSON.parse(json[0].Favorites)
-				if (favObjectsId.length) {
-					let favObjects = []
-					for (let i = 0; i < favObjectsId.length; i++) {
-						const objectId = favObjectsId[i]
+				console.log(json.Message)
+				if (json.Message !== 'auth error') {
+					console.log('FAVSCREEN.JS', json.Message)
+					handlegetFavoritesObjects(json)
+					// if (JSON.parse(json[0].Favorites).length) {
+					// 	let favObjectsId = JSON.parse(json[0].Favorites)
+					// 	let favObjects = []
+					// 	for (let i = 0; i < favObjectsId.length; i++) {
+					// 		const objectId = favObjectsId[i]
 
-						await lexta
-							.getSearchObjects(
-								`token=${store.getState().reducerUser.Token}&
-							 user=${md5(store.getState().reducerUser.Email)}&
-							 objectId=${objectId}`
-							)
-							.then((res) => res.json())
-							.then((result) => {
-								setRefreshing(false)
-								favObjects.push(result)
-							})
-							.catch((err) => console.log(err))
-					}
-					setUserFavorites(favObjectsId)
-					setFavObjects(favObjects)
+					// 		await lexta
+					// 			.getSearchObjects(
+					// 				`token=${Token}&
+					// 				 user=${md5(Email)}&
+					// 				 objectId=${objectId}`
+					// 			)
+					// 			.then((res) => res.json())
+					// 			.then((result) => {
+					// 				setRefreshing(false)
+					// 				favObjects.push(result)
+					// 			})
+					// 			.catch((err) => console.log(err))
+					// 	}
+					// 	setUserFavorites(favObjectsId)
+					// 	setFavObjects(favObjects)
+					// 	setLoading(false)
+					// } else {
+					// 	setRefreshing(false)
+					// 	setLoading(false)
+					// }
 				} else {
+					console.log('FAVSCREEN.JS >>> token is dead > update token')
+					updateToken()
 					setRefreshing(false)
+					setLoading(false)
+					// handlegetFavoritesObjects(json)
 				}
 			})
 			.catch((err) => console.log(err))
@@ -101,7 +147,13 @@ const FavScreen = ({ state, navigation }) => {
 			}}
 			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 		>
-			<Text>Nothin in Favorites</Text>
+			{loading ? (
+				<ActivityIndicator color="#912e33" />
+			) : (
+				<Text style={{ fontFamily: 'gothampro-bold', fontSize: 30, color: '#999' }}>
+					ТУ{'\n'}ТЬ{'\n'}НИ{'\n'}ЧА{'\n'}ВО
+				</Text>
+			)}
 		</ScrollView>
 	)
 }

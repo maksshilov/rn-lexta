@@ -11,6 +11,7 @@ import LextaService from './src/services/LextaService'
 import md5 from 'md5'
 
 const App = () => {
+	const lexta = new LextaService()
 	const [isReady, setIsReady] = React.useState(false)
 	const [session, setSession] = React.useState(false)
 	const { setItem, getItem } = useAsyncStorage('@storage_key')
@@ -18,11 +19,6 @@ const App = () => {
 	const writeItemToStorage = async (newValue) => {
 		await setItem(newValue)
 	}
-
-	// React.useEffect(() => {
-	// let { Email, Token, UserId } = store.getState().reducerUser
-	// updateToken({ Email, Token, UserId })
-	// }, [])
 
 	let content = <AppNavigator page={session ? 'Main' : 'Start'} />
 
@@ -32,30 +28,20 @@ const App = () => {
 				<AppLoading
 					startAsync={bootstrap}
 					onFinish={async () => {
+						// Get info from storage
 						const item = await getItem()
-						// console.log('APP.JS >>>')
 						const itemToJson = JSON.parse(item)
+						// Check info from storage
 						if (item) {
+							// If it there is > update token
 							const { Email, Token, UserId } = itemToJson
-
-							const data = new FormData()
-							data.append('user', Email)
-							data.append('token', Token)
-							data.append('userId', md5(UserId))
-
-							await fetch(`https://lexta.pro/api/UpdateToken.php`, {
-								method: 'POST',
-								mode: 'no-cors',
-								headers: new Headers(),
-								body: data,
-							})
+							lexta
+								.updateToken(Email, Token, md5(UserId))
 								.then((res) => res.json())
 								.then((updToken) => {
-									console.log('APP.JS >>> update token response >>>', updToken)
-
 									if (item && updToken.Message == 'update success') {
-										lextaService = new LextaService()
-										lextaService
+										// if update is success > rewrite info in storage
+										lexta
 											.getUserInfo(updToken.Token, Email)
 											.then((res) => res.json())
 											.then((userInfo) => {
@@ -71,17 +57,14 @@ const App = () => {
 												})
 												setSession(true)
 												setIsReady(true)
-												// console.log('woohoo')
 											})
 									} else {
 										setSession(false)
 										setIsReady(true)
-										// console.log('fuck')
 									}
 								})
 								.catch((e) => console.log(e))
 						} else {
-							// console.log('nothing in storage')
 							setSession(false)
 							setIsReady(true)
 						}

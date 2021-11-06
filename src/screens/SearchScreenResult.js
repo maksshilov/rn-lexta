@@ -13,7 +13,29 @@ export default function SearchScreenResult({ route, navigation }) {
 	const [userFavorites, setUserFavorites] = useState([])
 
 	const { Token, Email } = store.getState().reducerUser
-
+	const ending = (count) => {
+		switch (true) {
+			case Boolean(count % 10) && count % 10 === 1 && count !== 11 && count !== 111:
+				return 'ие'
+				break
+			case count % 10 > 1 &&
+				count % 10 < 5 &&
+				count !== 12 &&
+				count !== 13 &&
+				count !== 14 &&
+				count !== 112 &&
+				count !== 113 &&
+				count !== 114:
+				return 'ия'
+				break
+			case count > 4:
+				return 'ий'
+				break
+			default:
+				return 'default'
+				break
+		}
+	}
 	const getFavorites = async () => {
 		await lextaService
 			.getUserInfo(Token, Email)
@@ -45,7 +67,7 @@ export default function SearchScreenResult({ route, navigation }) {
 					textAlign: 'center',
 				}}
 			>
-				Найдено {DATA.length} объявление
+				Туть нашлось {DATA.length} объявлен{ending(DATA.length)}
 			</Text>
 
 			<FlatList

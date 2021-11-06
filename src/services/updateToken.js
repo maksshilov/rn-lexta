@@ -1,45 +1,52 @@
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 import md5 from 'md5'
 import store from '../store'
+import LextaService from './LextaService'
 
-const updateToken = async ({ Email, Token, UserId }) => {
+const updateToken = async () => {
+	const lexta = new LextaService()
+
 	const { setItem, getItem } = useAsyncStorage('@storage_key')
+	const writeItemToStorage = async (newValue) => {
+		await setItem(newValue)
+	}
 
-	const data = new FormData()
-	data.append('user', Email)
-	data.append('token', Token)
-	data.append('userId', md5(UserId))
+	const item = await getItem()
+	const itemToJson = JSON.parse(item)
 
-	await fetch(`https://lexta.pro/api/UpdateToken.php`, {
-		method: 'POST',
-		mode: 'no-cors',
-		headers: new Headers(),
-		body: data,
-	})
-		.then((res) => res.json())
-		.then(async (json) => {
-			return json
-		})
-		.then(async (json) => {
-			const item = await getItem()
-			const itemToJson = JSON.parse(item)
-
-			const newToken = json.Token ? json.Token : itemToJson.Token
-			const storage = JSON.stringify({
-				...itemToJson,
-				Token: newToken,
+	if (item) {
+		// If item there is > update token
+		const { Email, Token, UserId } = itemToJson
+		lexta
+			.updateToken(Email, Token, md5(UserId))
+			.then((res) => res.json())
+			.then((updToken) => {
+				if (item && updToken.Message == 'update success') {
+					// if update is success > rewrite info in storage
+					lexta
+						.getUserInfo(updToken.Token, Email)
+						.then((res) => res.json())
+						.then((userInfo) => {
+							const storage = JSON.stringify({
+								...userInfo[0],
+								Token: updToken.Token,
+								UserId: UserId,
+							})
+							writeItemToStorage(storage)
+							store.dispatch({
+								type: 'UPD_TOKEN',
+								payload: updToken.Token,
+							})
+						})
+				} else {
+					console.log('try later...')
+				}
 			})
-			store.dispatch({
-				type: 'UPD_TOKEN',
-				payload: newToken,
-			})
-			return storage
-		})
-		.then(async (storage) => {
-			await setItem(storage)
-		})
-
-		.catch((e) => console.log(e))
+			.catch((e) => console.log(e))
+	} else {
+		setSession(false)
+		setIsReady(true)
+	}
 }
 
 export default updateToken

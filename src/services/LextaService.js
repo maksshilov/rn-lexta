@@ -16,6 +16,20 @@ export default class LextaService {
 		})
 	}
 
+	updateToken = async (email, token, userid) => {
+		const data = new FormData()
+		data.append('user', email)
+		data.append('token', token)
+		data.append('userId', userid)
+
+		return await fetch(`${this._apiBase}UpdateToken.php`, {
+			method: 'POST',
+			mode: 'no-cors',
+			headers: new Headers(),
+			body: data,
+		})
+	}
+
 	getUserInfo = async (token, user) => {
 		return await fetch(`${this._apiBase}GetUserInfo.php?token=${token}&user=${user}`, {
 			mode: 'no-cors',
