@@ -68,38 +68,11 @@ const FavScreen = ({ state, navigation }) => {
 				if (json.Message !== 'auth error') {
 					console.log('FAVSCREEN.JS', json.Message)
 					handlegetFavoritesObjects(json)
-					// if (JSON.parse(json[0].Favorites).length) {
-					// 	let favObjectsId = JSON.parse(json[0].Favorites)
-					// 	let favObjects = []
-					// 	for (let i = 0; i < favObjectsId.length; i++) {
-					// 		const objectId = favObjectsId[i]
-
-					// 		await lexta
-					// 			.getSearchObjects(
-					// 				`token=${Token}&
-					// 				 user=${md5(Email)}&
-					// 				 objectId=${objectId}`
-					// 			)
-					// 			.then((res) => res.json())
-					// 			.then((result) => {
-					// 				setRefreshing(false)
-					// 				favObjects.push(result)
-					// 			})
-					// 			.catch((err) => console.log(err))
-					// 	}
-					// 	setUserFavorites(favObjectsId)
-					// 	setFavObjects(favObjects)
-					// 	setLoading(false)
-					// } else {
-					// 	setRefreshing(false)
-					// 	setLoading(false)
-					// }
 				} else {
 					console.log('FAVSCREEN.JS >>> token is dead > update token')
 					updateToken()
 					setRefreshing(false)
 					setLoading(false)
-					// handlegetFavoritesObjects(json)
 				}
 			})
 			.catch((err) => console.log(err))

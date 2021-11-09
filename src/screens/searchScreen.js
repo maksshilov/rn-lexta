@@ -94,6 +94,7 @@ export default function SearchScreen({ navigation }) {
 							}}
 						>
 							<TextInput
+								style={{ fontFamily: 'gothampro-regular', fontSize: 15 }}
 								placeholder="Укажите город или регион"
 								value={cityOrRegion}
 								onChangeText={(value) => setcityOrRegion(value)}
