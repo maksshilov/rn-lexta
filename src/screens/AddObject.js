@@ -291,6 +291,44 @@ export default function AddObject() {
 						</View>
 					</View>
 
+					{/* F_LANDAPPOINTMENT */}
+					{f_Category == 7 ? (
+						<View style={{ width: windowWidth * 0.94 }}>
+							<Text style={styles.title}>Назначение</Text>
+							<View
+								style={[
+									{
+										height: windowWidth * 0.1,
+										borderWidth: 1,
+										borderRadius: 10,
+										borderColor: '#868686',
+										marginBottom: 20,
+									},
+									f_LandAppointment !== '0'
+										? { backgroundColor: '#acacac' }
+										: { backgroundColor: '#fff' },
+								]}
+							>
+								<Picker
+									style={{
+										fontFamily: 'gothampro-regular',
+										fontWeight: 'normal',
+										height: windowWidth * 0.1,
+									}}
+									selectedValue={f_LandAppointment}
+									onValueChange={(itemValue) => setf_LandAppointment(itemValue)}
+								>
+									<Picker.Item label="-- выбрать --" value="0" />
+									<Picker.Item label="ИЖС" value="1" />
+									<Picker.Item label="СНТ (ДНТ)" value="2" />
+									<Picker.Item label="Промышленные" value="3" />
+									<Picker.Item label="Рекреационные" value="4" />
+									<Picker.Item label="Лесфонда" value="5" />
+								</Picker>
+							</View>
+						</View>
+					) : null}
+
 					{/* F_TYPE */}
 					{f_Category == 0 ? null : (
 						<View style={{ width: windowWidth * 0.94 }}>
@@ -526,8 +564,8 @@ export default function AddObject() {
 					)}
 
 					{/* F_NUMBERROOMS */}
-					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category ===
-							'1' || f_Category >= 7 ? null : (
+					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category == 1 ||
+					  f_Category >= 7 ? null : (
 						<View style={{ marginBottom: 20 }}>
 							<Text style={styles.title}>Количество комнат</Text>
 							<View
