@@ -7,6 +7,7 @@ import {
 	StyleSheet,
 	Dimensions,
 	Animated,
+	Alert,
 } from 'react-native'
 import Logo from '../components/Logo'
 import { handlePressIn, handlePressOut } from '../components/AnimatedScale'
@@ -26,36 +27,59 @@ export default function StartScreen({ navigation }) {
 				<Logo width={0.67} mt={0.2} />
 
 				<View style={{ marginTop: 180 }}>
-					<Animated.View style={{ transform: [{ scale: touchScaleLogin }] }}>
-						<TouchableOpacity
-							onPressIn={() => handlePressIn(touchScaleLogin)}
-							onPressOut={() => {
-								handlePressOut(touchScaleLogin)
-								navigation.navigate('Login')
-							}}
-							style={{ ...styles.btn, ...styles.btnLogin }}
-							activeOpacity={0.7}
-						>
-							<Text style={{ ...styles.text, color: '#fff' }}>Войти</Text>
-						</TouchableOpacity>
-					</Animated.View>
+					<TouchableOpacity
+						onPressOut={() => navigation.navigate('Login')}
+						style={{ ...styles.btn, ...styles.btnLogin }}
+						activeOpacity={0.7}
+					>
+						<Text style={{ ...styles.text, color: '#fff' }}>Войти</Text>
+					</TouchableOpacity>
 				</View>
 				<View style={{ marginTop: 50 }}>
-					<Animated.View style={{ transform: [{ scale: touchScaleReg }] }}>
-						<TouchableOpacity
-							onPressIn={() => handlePressIn(touchScaleReg)}
-							onPressOut={() => {
-								handlePressOut(touchScaleReg)
-								navigation.navigate('Registration')
-							}}
-							style={{ ...styles.btn, ...styles.btnReg }}
-							activeOpacity={0.7}
-						>
-							<Text style={{ ...styles.text, color: '#000' }}>
-								Зарегистрироваться
-							</Text>
-						</TouchableOpacity>
-					</Animated.View>
+					<TouchableOpacity
+						onPressOut={() => navigation.navigate('Registration')}
+						style={{ ...styles.btn, ...styles.btnReg }}
+						activeOpacity={0.7}
+					>
+						<Text style={{ ...styles.text, color: '#000' }}>Зарегистрироваться</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={{ width: windowWidth, alignItems: 'center' }}>
+					<TouchableOpacity
+						onPress={() => {
+							let secondAuth = new FormData()
+							secondAuth.append('AuthPhase', '1')
+							// secondAuth.append('REQUESTED_FROM', '/')
+							// secondAuth.append('REQUESTED_BY', 'GET')
+							// secondAuth.append('catalogue', '1')
+							// secondAuth.append('sub', '6')
+							// secondAuth.append('cc', '')
+							secondAuth.append('AUTH_USER', 'zxc@zxc.zxc')
+							secondAuth.append('AUTH_PW', 'zxc')
+							fetch('https://lexta.pro/netcat/modules/auth/', {
+								method: 'POST',
+								mode: 'no-cors',
+								credentials: 'omit',
+								// redirect:'manual',
+								redirect: 'follow',
+								body: secondAuth,
+							})
+								.then((res) => res.headers)
+								.then((text) =>
+									Alert.alert('Headers', JSON.stringify(text, null, '\t'))
+								)
+						}}
+						style={{
+							alignItems: 'center',
+							justifyContent: 'center',
+							borderRadius: 15,
+							width: windowWidth * 0.9,
+							height: windowWidth * 0.15,
+							backgroundColor: '#74c8b4',
+						}}
+					>
+						<Text>Cookie</Text>
+					</TouchableOpacity>
 				</View>
 			</ImageBackground>
 		</View>

@@ -44,6 +44,47 @@ const App = () => {
 										lexta
 											.getUserInfo(updToken.Token, Email)
 											.then((res) => res.json())
+											.then(async (json) => {
+												// let secondAuth = new FormData()
+												// secondAuth.append('AuthPhase', '1')
+												// secondAuth.append('REQUESTED_FROM', '/')
+												// secondAuth.append('REQUESTED_BY', 'GET')
+												// secondAuth.append('catalogue', '1')
+												// secondAuth.append('sub', '6')
+												// secondAuth.append('cc', '')
+												// secondAuth.append('AUTH_USER', 'qwe@qwe.qwe')
+												// secondAuth.append('AUTH_PW', 'qwe')
+												// let xhr = new XMLHttpRequest()
+												// xhr.open(
+												// 'POST',
+												// 'https://lexta.pro/netcat/modules/auth/'
+												// )
+												// xhr.withCredentials = true
+												// xhr.send([data])
+												// xhr.onload = function () {
+												// console.log(xhr.getAllResponseHeaders())
+												// }
+												// await fetch(
+												// 'https://lexta.pro/netcat/modules/auth/',
+												// {
+												// method: 'POST',
+												// mode: 'cors',
+												// credentials: 'omit',
+												// body: {
+												// AuthPhase: '1',
+												// AUTH_USER: 'qwe@qwe.qwe',
+												// AUTH_PW: 'qwe',
+												// },
+												// headers: {
+												// Accept: '*/*',
+												// 'Accept-Encoding': 'gzip, deflate, br',
+												// },
+												// }
+												// )
+												// .then((res) => res.headers)
+												// .then((text) => console.log(text))
+												return json
+											})
 											.then((userInfo) => {
 												const storage = JSON.stringify({
 													...userInfo[0],
