@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Dimensions, Pressable, Text, TextInput, View, Animated, StyleSheet } from 'react-native'
-
+import css from '../styles/cssSearchScreen'
 import Header from '../components/Header'
 import { Picker } from '@react-native-picker/picker'
 import CheckBox from '@react-native-community/checkbox'
@@ -73,73 +73,25 @@ export default function SearchScreen({ navigation }) {
 		<React.Fragment>
 			<Header navigation={navigation} scrollY={scrollY} />
 
-			<ScrollView
-				contentContainerStyle={{
-					paddingBottom: 25,
-					backgroundColor: '#fff',
-					alignItems: 'center',
-				}}
-				style={{ width: windowWidth }}
-			>
+			<ScrollView contentContainerStyle={css.scrollViewCcs} style={css.scrollView}>
 				<View>
-					<View>
-						<View
-							style={{
-								...styles.textInput,
-								width: windowWidth * 0.88,
-								height: windowWidth * 0.1,
-								borderTopLeftRadius: 10,
-								borderTopRightRadius: 10,
-								borderBottomWidth: 0,
-							}}
-						>
+					<View style={{ marginBottom: 20 }}>
+						<View style={css.viewCity}>
 							<TextInput
-								style={{ fontFamily: 'gothampro-regular', fontSize: 15 }}
+								style={css.inputCity}
 								placeholder="Укажите город или регион"
 								value={cityOrRegion}
 								onChangeText={(value) => setcityOrRegion(value)}
 							/>
 						</View>
-						<View
-							style={{
-								flexDirection: 'row',
-								width: windowWidth * 0.88,
-								height: windowWidth * 0.1,
-								borderWidth: 1,
-								borderColor: '#868686',
-							}}
-						>
-							<Picker
-								style={{
-									width: windowWidth * 0.88,
-									height: windowWidth * 0.1,
-								}}
-								selectedValue={catalogType}
-								onValueChange={(itemValue) => setcatalogType(itemValue)}
-							>
+						<View style={css.viewPickerBase}>
+							<Picker style={css.picker} selectedValue={catalogType} onValueChange={(itemValue) => setcatalogType(itemValue)}>
 								<Picker.Item label="Продажа" value="1" />
 								<Picker.Item label="Аренда" value="2" />
 							</Picker>
 						</View>
-						<View
-							style={{
-								flexDirection: 'row',
-								width: windowWidth * 0.88,
-								height: windowWidth * 0.1,
-								borderWidth: 1,
-								borderTopWidth: 0,
-								borderBottomWidth: 0,
-								borderColor: '#868686',
-							}}
-						>
-							<Picker
-								style={{
-									width: windowWidth * 0.88,
-									height: windowWidth * 0.1,
-								}}
-								selectedValue={f_Category}
-								onValueChange={(itemValue) => setf_Category(itemValue)}
-							>
+						<View style={[css.viewPickerBase, css.viewPickerCategory]}>
+							<Picker style={css.picker} selectedValue={f_Category} onValueChange={(itemValue) => setf_Category(itemValue)}>
 								<Picker.Item label="Категория" value="0" />
 								<Picker.Item label="Комнаты" value="1" />
 								<Picker.Item label="Квартиры" value="2" />
@@ -149,27 +101,8 @@ export default function SearchScreen({ navigation }) {
 								<Picker.Item label="Таунхаусы" value="6" />
 							</Picker>
 						</View>
-						<View
-							style={{
-								flexDirection: 'row',
-								width: windowWidth * 0.88,
-								height: windowWidth * 0.1,
-								borderWidth: 1,
-								borderBottomLeftRadius: 10,
-								borderBottomRightRadius: 10,
-
-								borderColor: '#868686',
-								marginBottom: 20,
-							}}
-						>
-							<Picker
-								style={{
-									width: windowWidth * 0.88,
-									height: windowWidth * 0.1,
-								}}
-								selectedValue={f_NumberRooms}
-								onValueChange={(itemValue) => setf_NumberRooms(itemValue)}
-							>
+						<View style={[css.viewPickerBase, css.viewPickerRooms]}>
+							<Picker style={css.picker} selectedValue={f_NumberRooms} onValueChange={(itemValue) => setf_NumberRooms(itemValue)}>
 								<Picker.Item label="Комнат" value="0" />
 								<Picker.Item label="1 комната" value="1" />
 								<Picker.Item label="2 комнаты" value="2" />
@@ -183,309 +116,142 @@ export default function SearchScreen({ navigation }) {
 					</View>
 
 					{/* OBJECT TYPE */}
-					<Text style={styles.title}>Вид объекта</Text>
-					<View style={{ flexDirection: 'row' }}>
+					<Text style={css.title}>Вид объекта</Text>
+					<View style={css.wrapperFrowMb20}>
 						<Pressable
 							onPress={() => setobjectType(1)}
-							style={[
-								styles.select,
-								{
-									width: windowWidth * 0.18,
-									height: windowWidth * 0.1,
-									borderTopLeftRadius: 10,
-									borderBottomLeftRadius: 10,
-									borderRightWidth: 0,
-								},
-								objectType === 1 ? styles.selected : null,
-							]}
+							style={[css.selectBase, css.selectObjectTypelLeft, objectType === 1 ? css.selected : null]}
 						>
-							<Text
-								style={[
-									styles.selectText,
-									objectType === 1 ? styles.selectedText : null,
-								]}
-							>
-								Все
-							</Text>
+							<Text style={[css.selectText, objectType === 1 ? css.selectedText : null]}>Все</Text>
 						</Pressable>
 						<Pressable
 							onPress={() => setobjectType(3)}
-							style={[
-								styles.select,
-								{
-									width: windowWidth * 0.38,
-									height: windowWidth * 0.1,
-									borderTopWidth: 1,
-									borderBottomWidth: 1,
-									borderRightWidth: 0,
-								},
-								objectType === 3 ? styles.selected : null,
-							]}
+							style={[css.selectBase, css.selectObjectTypelCenter, objectType === 3 ? css.selected : null]}
 						>
-							<Text
-								style={[
-									styles.selectText,
-									objectType === 3 ? styles.selectedText : null,
-								]}
-							>
-								Новостройка
-							</Text>
+							<Text style={[css.selectText, objectType === 3 ? css.selectedText : null]}>Новостройка</Text>
 						</Pressable>
 						<Pressable
 							onPress={() => setobjectType(2)}
-							style={[
-								styles.select,
-								{
-									width: windowWidth * 0.32,
-									height: windowWidth * 0.1,
-									borderTopRightRadius: 10,
-									borderBottomRightRadius: 10,
-								},
-								objectType === 2 ? styles.selected : null,
-							]}
+							style={[css.selectBase, css.selectObjectTypelRight, objectType === 2 ? css.selected : null]}
 						>
-							<Text
-								style={[
-									styles.selectText,
-									objectType === 2 ? styles.selectedText : null,
-								]}
-							>
-								Вторичка
-							</Text>
+							<Text style={[css.selectText, objectType === 2 ? css.selectedText : null]}>Вторичка</Text>
 						</Pressable>
 					</View>
 
 					{/* PRICE */}
-					<Text style={styles.title}>Цена</Text>
-					<View style={{ flexDirection: 'row' }}>
+					<Text style={css.title}>Цена</Text>
+					<View style={css.wrapperFrowMb20}>
 						<TextInput
 							value={priceFrom}
 							onChangeText={(value) => setpriceFrom(value)}
 							placeholder="от"
 							keyboardType="number-pad"
-							style={{
-								...styles.textInput,
-								width: windowWidth * 0.38,
-								height: windowWidth * 0.1,
-								borderTopLeftRadius: 10,
-								borderBottomLeftRadius: 10,
-								borderRightWidth: 0,
-							}}
+							style={css.inputPriceAreaLeft}
 						/>
 						<TextInput
 							value={priceTo}
 							onChangeText={(value) => setpriceTo(value)}
 							placeholder="до"
 							keyboardType="number-pad"
-							style={{
-								...styles.textInput,
-								width: windowWidth * 0.38,
-								height: windowWidth * 0.1,
-								borderTopWidth: 1,
-								borderBottomWidth: 1,
-								borderRightWidth: 0,
-							}}
+							style={css.inputPriceAreaRight}
 						/>
 
-						<View style={styles.units}>
-							<Text>руб.</Text>
+						<View style={css.unitsView}>
+							<Text style={css.unitsText}>руб.</Text>
 						</View>
 					</View>
 
 					{/* TOTAL AREA */}
-					<Text style={styles.title}>Общая площадь</Text>
-					<View style={{ flexDirection: 'row' }}>
+					<Text style={css.title}>Общая площадь</Text>
+					<View style={css.wrapperFrowMb20}>
 						<TextInput
 							value={totalAreaFrom}
 							onChangeText={(value) => settotalAreaFrom(value)}
 							placeholder="от"
 							keyboardType="number-pad"
-							style={{
-								...styles.textInput,
-								width: windowWidth * 0.38,
-								height: windowWidth * 0.1,
-								borderTopLeftRadius: 10,
-								borderBottomLeftRadius: 10,
-								borderRightWidth: 0,
-							}}
+							style={css.inputPriceAreaLeft}
 						/>
 						<TextInput
 							value={totalAreaTo}
 							onChangeText={(value) => settotalAreaTo(value)}
 							placeholder="до"
 							keyboardType="number-pad"
-							style={{
-								...styles.textInput,
-								width: windowWidth * 0.38,
-								height: windowWidth * 0.1,
-								borderTopWidth: 1,
-								borderBottomWidth: 1,
-								borderRightWidth: 0,
-							}}
+							style={css.inputPriceAreaRight}
 						/>
 
-						<View style={styles.units}>
-							<Text>м2</Text>
+						<View style={css.unitsView}>
+							<Text style={css.unitsText}>м2</Text>
 						</View>
 					</View>
 
 					{/* KITCHEN AREA */}
-					<Text style={styles.title}>Площадь кухни</Text>
-					<View style={{ flexDirection: 'row' }}>
+					<Text style={css.title}>Площадь кухни</Text>
+					<View style={css.wrapperFrowMb20}>
 						<TextInput
 							value={kitchenAreaFrom}
 							onChangeText={(value) => setkitchenAreaFrom(value)}
 							placeholder="от"
 							keyboardType="number-pad"
-							style={{
-								...styles.textInput,
-								width: windowWidth * 0.38,
-								height: windowWidth * 0.1,
-								borderTopLeftRadius: 10,
-								borderBottomLeftRadius: 10,
-								borderRightWidth: 0,
-							}}
+							style={css.inputPriceAreaLeft}
 						/>
 						<TextInput
 							value={kitchenAreaTo}
 							onChangeText={(value) => setkitchenAreaTo(value)}
 							placeholder="до"
 							keyboardType="number-pad"
-							style={{
-								...styles.textInput,
-								width: windowWidth * 0.38,
-								height: windowWidth * 0.1,
-								borderTopWidth: 1,
-								borderBottomWidth: 1,
-								borderRightWidth: 0,
-							}}
+							style={css.inputPriceAreaRight}
 						/>
 
-						<View style={styles.units}>
-							<Text>м2</Text>
+						<View style={css.unitsView}>
+							<Text style={css.unitsText}>м2</Text>
 						</View>
 					</View>
 
 					{/* FLOOR */}
-					<Text style={styles.title}>Этаж</Text>
-					<View style={{ flexDirection: 'row' }}>
-						<TextInput
-							value={floorFrom}
-							onChangeText={(value) => setfloorFrom(value)}
-							placeholder="от"
-							keyboardType="number-pad"
-							style={{
-								...styles.textInput,
-								width: windowWidth * 0.44,
-								height: windowWidth * 0.1,
-								borderTopLeftRadius: 10,
-							}}
-						/>
-						<TextInput
-							value={floorTo}
-							onChangeText={(value) => setfloorTo(value)}
-							placeholder="до"
-							keyboardType="number-pad"
-							style={{
-								...styles.textInput,
-								width: windowWidth * 0.44,
-								height: windowWidth * 0.1,
-								borderTopRightRadius: 10,
-								borderLeftWidth: 0,
-							}}
-						/>
-					</View>
-					<View style={{ flexDirection: 'row' }}>
-						<Pressable
-							onPress={() => setwhichFloor1(whichFloor1 ? '' : 1)}
-							style={[
-								styles.select,
-								{
-									width: windowWidth * 0.28,
-									height: windowWidth * 0.1,
-									borderBottomLeftRadius: 10,
-									borderTopWidth: 0,
-								},
-								whichFloor1 ? styles.selected : null,
-							]}
-						>
-							<Text
-								style={[
-									styles.selectText,
-									whichFloor1 ? styles.selectedText : null,
-								]}
+					<Text style={css.title}>Этаж</Text>
+					<View style={{ marginBottom: 20 }}>
+						<View style={{ flexDirection: 'row' }}>
+							<TextInput
+								value={floorFrom}
+								onChangeText={(value) => setfloorFrom(value)}
+								placeholder="от"
+								keyboardType="number-pad"
+								style={[css.inputFloorBase, css.inputFloorLeft]}
+							/>
+							<TextInput
+								value={floorTo}
+								onChangeText={(value) => setfloorTo(value)}
+								placeholder="до"
+								keyboardType="number-pad"
+								style={[css.inputFloorBase, css.inputFloorRight]}
+							/>
+						</View>
+						<View style={{ flexDirection: 'row' }}>
+							<Pressable
+								onPress={() => setwhichFloor1(whichFloor1 ? '' : 1)}
+								style={[css.selectBase, css.selectFloorLeft, whichFloor1 ? css.selected : null]}
 							>
-								Не первый
-							</Text>
-						</Pressable>
-						<Pressable
-							onPress={() => setwhichFloor2(whichFloor2 ? '' : 1)}
-							style={[
-								styles.select,
-								{
-									width: windowWidth * 0.33,
-									height: windowWidth * 0.1,
-									borderTopWidth: 0,
-									borderLeftWidth: 0,
-									borderRightWidth: 0,
-								},
-								whichFloor2 ? styles.selected : null,
-							]}
-						>
-							<Text
-								style={[
-									styles.selectText,
-									whichFloor2 ? styles.selectedText : null,
-								]}
+								<Text style={[css.selectText, whichFloor1 ? css.selectedText : null]}>Не первый</Text>
+							</Pressable>
+							<Pressable
+								onPress={() => setwhichFloor2(whichFloor2 ? '' : 1)}
+								style={[css.selectBase, css.selectFloorCenter, whichFloor2 ? css.selected : null]}
 							>
-								Не последний
-							</Text>
-						</Pressable>
-						<Pressable
-							onPress={() => setwhichFloor3(whichFloor3 ? '' : 1)}
-							style={[
-								styles.select,
-								{
-									width: windowWidth * 0.27,
-									height: windowWidth * 0.1,
-									borderBottomRightRadius: 10,
-									borderTopWidth: 0,
-								},
-								whichFloor3 ? styles.selected : null,
-							]}
-						>
-							<Text
-								style={[
-									styles.selectText,
-									whichFloor3 ? styles.selectedText : null,
-								]}
+								<Text style={[css.selectText, whichFloor2 ? css.selectedText : null]}>Не последний</Text>
+							</Pressable>
+							<Pressable
+								onPress={() => setwhichFloor3(whichFloor3 ? '' : 1)}
+								style={[css.selectBase, css.selectFloorRight, whichFloor3 ? css.selected : null]}
 							>
-								Последний
-							</Text>
-						</Pressable>
+								<Text style={[css.selectText, whichFloor3 ? css.selectedText : null]}>Последний</Text>
+							</Pressable>
+						</View>
 					</View>
 
 					{/* HOUSE TYPE */}
-					<Text style={styles.title}>Тип дома</Text>
-					<View
-						style={{
-							flexDirection: 'row',
-							width: windowWidth * 0.88,
-							height: windowWidth * 0.1,
-							borderRadius: 10,
-							borderWidth: 1,
-							borderColor: '#868686',
-							marginBottom: 20,
-						}}
-					>
-						<Picker
-							style={{
-								width: windowWidth * 0.88,
-								height: windowWidth * 0.1,
-							}}
-							selectedValue={f_HouseType}
-							onValueChange={(itemValue) => setf_HouseType(itemValue)}
-						>
+					<Text style={css.title}>Тип дома</Text>
+					<View style={[css.viewPickerBase, css.viewPickerHouseType]}>
+						<Picker style={css.picker} selectedValue={f_HouseType} onValueChange={(itemValue) => setf_HouseType(itemValue)}>
 							<Picker.Item label="-- выбрать --" value="0" />
 							<Picker.Item label="Кирпичный" value="1" />
 							<Picker.Item label="Панельный" value="2" />
@@ -495,26 +261,15 @@ export default function SearchScreen({ navigation }) {
 					</View>
 
 					{/* MORTGAGE CHECKBOX */}
-					<Pressable
-						style={styles.checkBox}
-						onPress={() => setmortgage(mortgage ? '' : 1)}
-					>
-						<CheckBox
-							disabled={false}
-							value={Boolean(mortgage)}
-							onValueChange={(newValue) => setmortgage(mortgage ? '' : '1')}
-						/>
-						<Text style={styles.checkBoxText}>Подходит под ипотеку</Text>
+					<Pressable style={css.checkBox} onPress={() => setmortgage(mortgage ? '' : 1)}>
+						<CheckBox disabled={false} value={Boolean(mortgage)} onValueChange={(newValue) => setmortgage(mortgage ? '' : '1')} />
+						<Text style={css.checkBoxText}>Подходит под ипотеку</Text>
 					</Pressable>
 
 					{/* VIDEO CHECKBOX */}
-					<Pressable style={styles.checkBox} onPress={() => setvideo(video ? '' : '1')}>
-						<CheckBox
-							disabled={false}
-							value={Boolean(video)}
-							onValueChange={() => setvideo(video ? '' : '1')}
-						/>
-						<Text style={styles.checkBoxText}>С видео</Text>
+					<Pressable style={css.checkBox} onPress={() => setvideo(video ? '' : '1')}>
+						<CheckBox disabled={false} value={Boolean(video)} onValueChange={() => setvideo(video ? '' : '1')} />
+						<Text style={css.checkBoxText}>С видео</Text>
 					</Pressable>
 					<View
 						style={{
@@ -550,57 +305,57 @@ export default function SearchScreen({ navigation }) {
 	)
 }
 
-const styles = StyleSheet.create({
-	title: {
-		fontFamily: 'gothampro-regular',
-		fontSize: 18,
-		color: '#000',
-		marginBottom: 10,
-	},
-	select: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		borderWidth: 1,
-		borderColor: '#868686',
-		marginBottom: 20,
-	},
-	selected: {
-		backgroundColor: '#acacac',
-	},
-	selectText: {
-		fontFamily: 'gothampro-regular',
-		fontSize: 15,
-		color: '#000',
-	},
-	selectedText: {
-		color: '#fff',
-	},
-	checkBox: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginBottom: 20,
-	},
-	checkBoxText: {
-		fontFamily: 'gothampro-regular',
-		fontSize: 15,
-	},
-	textInput: {
-		justifyContent: 'center',
-		paddingLeft: 10,
-		paddingRight: 10,
-		borderWidth: 1,
-		borderColor: '#868686',
-	},
-	units: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		width: windowWidth * 0.12,
-		height: windowWidth * 0.1,
-		borderTopRightRadius: 10,
-		borderBottomRightRadius: 10,
-		borderWidth: 1,
-		borderLeftWidth: 0,
-		borderColor: '#868686',
-		marginBottom: 20,
-	},
-})
+// const styles = StyleSheet.create({
+// 	title: {
+// 		fontFamily: 'gothampro-regular',
+// 		fontSize: 18,
+// 		color: '#000',
+// 		marginBottom: 10,
+// 	},
+// 	select: {
+// 		justifyContent: 'center',
+// 		alignItems: 'center',
+// 		borderWidth: 1,
+// 		borderColor: '#868686',
+// 		marginBottom: 20,
+// 	},
+// 	selected: {
+// 		backgroundColor: '#acacac',
+// 	},
+// 	selectText: {
+// 		fontFamily: 'gothampro-regular',
+// 		fontSize: 15,
+// 		color: '#000',
+// 	},
+// 	selectedText: {
+// 		color: '#fff',
+// 	},
+// 	checkBox: {
+// 		flexDirection: 'row',
+// 		alignItems: 'center',
+// 		marginBottom: 20,
+// 	},
+// 	checkBoxText: {
+// 		fontFamily: 'gothampro-regular',
+// 		fontSize: 15,
+// 	},
+// 	textInput: {
+// 		justifyContent: 'center',
+// 		paddingLeft: 10,
+// 		paddingRight: 10,
+// 		borderWidth: 1,
+// 		borderColor: '#868686',
+// 	},
+// 	units: {
+// 		justifyContent: 'center',
+// 		alignItems: 'center',
+// 		width: windowWidth * 0.12,
+// 		height: windowWidth * 0.1,
+// 		borderTopRightRadius: 10,
+// 		borderBottomRightRadius: 10,
+// 		borderWidth: 1,
+// 		borderLeftWidth: 0,
+// 		borderColor: '#868686',
+// 		marginBottom: 20,
+// 	},
+// })

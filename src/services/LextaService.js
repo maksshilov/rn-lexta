@@ -1,3 +1,5 @@
+import { useAsyncStorage } from '@react-native-async-storage/async-storage'
+
 export default class LextaService {
 	_apiBase = 'https://lexta.pro/api/'
 	_objectBase = 'https://lexta.pro/object-api/?'
@@ -89,10 +91,7 @@ export default class LextaService {
 	}
 
 	getMessages = async (token, user, outbox) => {
-		return await fetch(
-			`${this._apiBase}GetMessages.php?token=${token}&user=${user}&outbox=${outbox}`,
-			{ mode: 'no-cors' }
-		)
+		return await fetch(`${this._apiBase}GetMessages.php?token=${token}&user=${user}&outbox=${outbox}`, { mode: 'no-cors' })
 	}
 
 	sendMessage = async (data) => {
@@ -102,5 +101,49 @@ export default class LextaService {
 			headers: { 'Content-Type': 'multipart/form-data' },
 			body: data,
 		})
+	}
+
+	loginHandler = async () => {
+		let loginFormat = login.toLowerCase().replace(' ', '')
+		lexta
+			.getToken(loginFormat, md5(pass))
+			.then((res) => {
+				setLoading(true)
+				return res.json()
+			})
+			.then((token) => {
+				if (token['Status']) {
+					lexta
+						.getUserInfo(token['Token'], loginFormat)
+						.then((res) => {
+							return res.json()
+						})
+						.then((data) => {
+							const storage = JSON.stringify({
+								...data[0],
+								Token: token['Token'],
+								UserId: token['UserId'],
+							})
+							writeItemToStorage(storage)
+
+							return data
+						})
+						.then((data) => {
+							setUserInfo({ ...data[0], Token: token['Token'] })
+						})
+						.then(() => {
+							setLoading(false)
+							navigation.navigate('Main')
+						})
+						.catch((e) => console.log(e))
+				} else {
+					setLoading(false)
+					Alert.alert('Ошибка', 'Вы ввели неверные логин и/или пароль.')
+				}
+			})
+
+			.catch((e) => {
+				console.log(e)
+			})
 	}
 }

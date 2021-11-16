@@ -83,6 +83,7 @@ const App = () => {
 												// )
 												// .then((res) => res.headers)
 												// .then((text) => console.log(text))
+
 												return json
 											})
 											.then((userInfo) => {

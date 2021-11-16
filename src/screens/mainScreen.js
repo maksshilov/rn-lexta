@@ -1,14 +1,5 @@
 import React, { useEffect } from 'react'
-import {
-	Image,
-	View,
-	Dimensions,
-	Animated,
-	Pressable,
-	StyleSheet,
-	TouchableOpacity,
-	Text,
-} from 'react-native'
+import { Image, View, Dimensions, Animated, Pressable, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Carousel from '../components/Carousel'
 import ObjectMini from '../components/ObjectMini'
@@ -65,7 +56,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				style={{ backgroundColor: '#fff' }}
 			>
 				{/* ЖИЛЬЁ НА ЛЮБОЙ ВКУС */}
-				<View style={{ width: windowWidth, alignItems: 'center' }}>
+				{/* <View style={{ width: windowWidth, alignItems: 'center' }}>
 					<TouchableOpacity
 						onPress={() => {
 							let secondAuth = new FormData()
@@ -102,18 +93,14 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 					>
 						<Text>Cookie</Text>
 					</TouchableOpacity>
-				</View>
+				</View> */}
 				<View>
 					<SubHeader title="Жильё на любой вкус" />
 					<Carousel />
 				</View>
 				{/* MAP */}
 				<View style={{ alignItems: 'center' }}>
-					<Image
-						source={require('../../assets/map.png')}
-						style={{ width: windowWidth * 0.95, height: 200 }}
-						resizeMode="contain"
-					/>
+					<Image source={require('../../assets/map.png')} style={{ width: windowWidth * 0.95, height: 200 }} resizeMode="contain" />
 				</View>
 				{/* ПОПУЛЯРНО В ВАШЕМ ГОРОДЕ */}
 				<View style={{ marginBottom: 40 }}>
@@ -121,14 +108,8 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 					<View style={styles.popularAndNewsView}>
 						{Boolean(state.reducerObjects) && (
 							<React.Fragment>
-								<ObjectMini
-									item={state.reducerObjects[0]}
-									navigation={navigation}
-								/>
-								<ObjectMini
-									item={state.reducerObjects[1]}
-									navigation={navigation}
-								/>
+								<ObjectMini item={state.reducerObjects[0]} navigation={navigation} />
+								<ObjectMini item={state.reducerObjects[1]} navigation={navigation} />
 							</React.Fragment>
 						)}
 					</View>
@@ -137,16 +118,10 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				<View>
 					<SubHeader title="Новости" />
 					<View style={styles.popularAndNewsView}>
-						<News
-							date="30.02.2036"
-							title="Lorem, ipsum dolor sit amet consectetur adipisicing elit."
-						/>
+						<News date="30.02.2036" title="Lorem, ipsum dolor sit amet consectetur adipisicing elit." />
 
 						<View style={{ width: 1, backgroundColor: 'grey' }}></View>
-						<News
-							date="31.02.2036"
-							title="Lorem, ipsum dolor sit amet consectetur adipisicing elit."
-						/>
+						<News date="31.02.2036" title="Lorem, ipsum dolor sit amet consectetur adipisicing elit." />
 					</View>
 				</View>
 			</ScrollView>

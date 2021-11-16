@@ -44,13 +44,13 @@ export default function StartScreen({ navigation }) {
 						<Text style={{ ...styles.text, color: '#000' }}>Зарегистрироваться</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={{ width: windowWidth, alignItems: 'center' }}>
+				{/* <View style={{ width: windowWidth, alignItems: 'center' }}>
 					<TouchableOpacity
 						onPress={() => {
 							let secondAuth = new FormData()
 							secondAuth.append('AuthPhase', '1')
-							// secondAuth.append('REQUESTED_FROM', '/')
-							// secondAuth.append('REQUESTED_BY', 'GET')
+							secondAuth.append('REQUESTED_FROM', '/netcat/modules/auth/')
+							secondAuth.append('REQUESTED_BY', 'POST')
 							// secondAuth.append('catalogue', '1')
 							// secondAuth.append('sub', '6')
 							// secondAuth.append('cc', '')
@@ -80,7 +80,7 @@ export default function StartScreen({ navigation }) {
 					>
 						<Text>Cookie</Text>
 					</TouchableOpacity>
-				</View>
+				</View> */}
 			</ImageBackground>
 		</View>
 	)

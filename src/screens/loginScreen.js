@@ -1,15 +1,6 @@
 import React, { useState } from 'react'
-import {
-	Text,
-	View,
-	Dimensions,
-	ScrollView,
-	StyleSheet,
-	Pressable,
-	TextInput,
-	Alert,
-	ActivityIndicator,
-} from 'react-native'
+import { Text, View, Dimensions, ScrollView, StyleSheet, Pressable, TextInput, Alert, ActivityIndicator } from 'react-native'
+import style from '../styles/cssLoginScreen'
 import md5 from 'md5'
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 import { connect } from 'react-redux'
@@ -27,9 +18,11 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 	const writeItemToStorage = async (newValue) => {
 		await setItem(newValue)
 	}
+
 	const loginHandler = async () => {
+		let loginFormat = login.toLowerCase().replace(' ', '')
 		lexta
-			.getToken(login, md5(pass))
+			.getToken(loginFormat, md5(pass))
 			.then((res) => {
 				setLoading(true)
 				return res.json()
@@ -37,11 +30,12 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 			.then((token) => {
 				if (token['Status']) {
 					lexta
-						.getUserInfo(token['Token'], login)
+						.getUserInfo(token['Token'], loginFormat)
 						.then((res) => {
 							return res.json()
 						})
 						.then((data) => {
+							console.log(data)
 							const storage = JSON.stringify({
 								...data[0],
 								Token: token['Token'],
@@ -61,7 +55,7 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 						.catch((e) => console.log(e))
 				} else {
 					setLoading(false)
-					Alert.alert('Ошибка', JSON.stringify(token))
+					Alert.alert('Ошибка', 'Вы ввели неверные логин и/или пароль.')
 				}
 			})
 
@@ -74,25 +68,13 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 		<React.Fragment>
 			{/* {loading && <Loader />} */}
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
-				<ScrollView
-					contentContainerStyle={{ marginTop: windowHeight * 0.1, alignItems: 'center' }}
-				>
-					<Text style={styles.header}>Вход</Text>
-					<View style={styles.inputView}>
-						<TextInput
-							placeholder="Телефон или электронная почта"
-							onChangeText={setLogin}
-							style={styles.inputText}
-						/>
+				<ScrollView contentContainerStyle={style.scrollView}>
+					<Text style={style.header}>Вход</Text>
+					<View style={style.inputView}>
+						<TextInput placeholder="Электронная почта" onChangeText={setLogin} value={login} style={style.inputText} />
 					</View>
-					<View style={styles.inputView}>
-						<TextInput
-							placeholder="Пароль"
-							textContentType="password"
-							secureTextEntry
-							onChangeText={setPass}
-							style={styles.inputText}
-						/>
+					<View style={style.inputView}>
+						<TextInput placeholder="Пароль" textContentType="password" secureTextEntry onChangeText={setPass} style={style.inputText} />
 					</View>
 
 					<Pressable
@@ -101,58 +83,18 @@ const LoginScreen = ({ state, setUserInfo, navigation }) => {
 							if (login && pass) {
 								loginHandler()
 							} else {
-								console.log('err')
+								Alert.alert('Ошибка', 'Вы не ввели логин и/или пароль.')
 							}
 						}}
-						style={{ ...styles.btn, ...styles.btnLogin }}
+						style={{ ...style.btn, ...style.btnLogin }}
 					>
-						<Text style={{ ...styles.text, color: '#fff' }}>
-							{loading ? <ActivityIndicator color="#fff" /> : 'Войти'}
-						</Text>
+						<Text style={{ ...style.text, color: '#fff' }}>{loading ? <ActivityIndicator color="#fff" /> : 'Войти'}</Text>
 					</Pressable>
 				</ScrollView>
 			</View>
 		</React.Fragment>
 	)
 }
-
-const styles = StyleSheet.create({
-	header: {
-		fontFamily: 'gothampro-bold',
-		fontSize: 20,
-		marginBottom: 20,
-	},
-	inputView: {
-		paddingLeft: 15,
-		justifyContent: 'center',
-		width: windowWidth * 0.8,
-		height: windowWidth * 0.12,
-		borderRadius: 5,
-		borderWidth: 1,
-		borderColor: '#868686',
-		marginBottom: 20,
-	},
-	inputText: {
-		color: '#fdfffc',
-		fontFamily: 'gothampro-regular',
-		fontSize: 15,
-		color: '#868686',
-	},
-	btn: {
-		width: windowWidth * 0.8,
-		height: 50,
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderRadius: 6,
-	},
-	btnLogin: {
-		backgroundColor: '#912e33',
-	},
-	text: {
-		fontFamily: 'gothampro-regular',
-		fontSize: 18,
-	},
-})
 
 // export default LoginScreen
 
