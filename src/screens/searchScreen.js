@@ -271,32 +271,9 @@ export default function SearchScreen({ navigation }) {
 						<CheckBox disabled={false} value={Boolean(video)} onValueChange={() => setvideo(video ? '' : '1')} />
 						<Text style={css.checkBoxText}>С видео</Text>
 					</Pressable>
-					<View
-						style={{
-							alignItems: 'center',
-						}}
-					>
-						<Pressable
-							android_ripple={{ color: '#fff' }}
-							style={{
-								backgroundColor: '#912e33',
-								width: windowWidth * 0.88,
-								height: windowWidth * 0.1,
-								borderRadius: 10,
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-							onPress={() => handleSearch()}
-						>
-							<Text
-								style={{
-									color: '#fdfffc',
-									fontFamily: 'gothampro-regular',
-									fontSize: 18,
-								}}
-							>
-								Показать
-							</Text>
+					<View style={{ alignItems: 'center' }}>
+						<Pressable android_ripple={{ color: '#fff' }} style={css.btnView} onPress={() => handleSearch()}>
+							<Text style={css.btnText}>Найти</Text>
 						</Pressable>
 					</View>
 				</View>

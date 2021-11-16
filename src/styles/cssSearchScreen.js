@@ -177,16 +177,17 @@ export default StyleSheet.create({
 		fontFamily: 'gothampro-regular',
 		fontSize: 15,
 	},
-	// OLD
-
-	selectedText: {
-		color: '#fff',
-	},
-	textInput: {
+	btnView: {
+		backgroundColor: '#912e33',
+		width: windowWidth * 0.94,
+		height: windowWidth * 0.1,
+		borderRadius: 10,
+		alignItems: 'center',
 		justifyContent: 'center',
-		paddingLeft: 10,
-		paddingRight: 10,
-		borderWidth: 1,
-		borderColor: '#868686',
+	},
+	btnText: {
+		color: '#fdfffc',
+		fontFamily: 'gothampro-regular',
+		fontSize: 18,
 	},
 })
