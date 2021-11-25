@@ -4,13 +4,13 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import ProfileMenuItem from '../components/ProfileMenuItem'
 import ProfileMenuSection from '../components/ProfileMenuSection'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ProfileScreen = ({ navigation, state, clearState }) => {
-	const { FirstName, LastName } = state.reducerUser
+	const { FirstName, LastName } = useSelector((state) => state.profile)
 	const { removeItem } = useAsyncStorage('@storage_key')
 
 	const removeItemFromStorage = async () => {
@@ -18,9 +18,7 @@ const ProfileScreen = ({ navigation, state, clearState }) => {
 	}
 
 	return (
-		<ScrollView
-			contentContainerStyle={{ flex: 0, paddingHorizontal: 10, backgroundColor: '#fff' }}
-		>
+		<ScrollView contentContainerStyle={{ flex: 0, paddingHorizontal: 10, backgroundColor: '#fff' }}>
 			<View style={{ paddingTop: windowHeight * 0.05, alignItems: 'center' }}>
 				<View style={{ paddingVertical: 10 }}>
 					<MaterialCommunityIcons name="account-circle" size={80} color="grey" />
@@ -29,30 +27,23 @@ const ProfileScreen = ({ navigation, state, clearState }) => {
 					{FirstName} {LastName}
 				</Text>
 			</View>
-			<View
-				style={{
-					height: 3,
-					width: '100%',
-					backgroundColor: '#d0d0d0',
-					marginTop: 20,
-				}}
-			/>
+			<View style={{ height: 3, width: '100%', backgroundColor: '#d0d0d0', marginTop: 20 }} />
 			<ProfileMenuSection title="НАСТРОЙКИ АККАУНТА" />
-			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileDetails')}>
+			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileMenu', { screen: 'ProfileDetails' })}>
 				<ProfileMenuItem title="Персональные данные" icon="account-outline" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<TouchableOpacity android_ripple onPress={() => navigation.navigate('PassChange')}>
+			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileMenu', { screen: 'PassChange' })}>
 				<ProfileMenuItem title="Изменить пароль" icon="lock-outline" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<TouchableOpacity android_ripple onPress={() => navigation.navigate('MyObjects')}>
+			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileMenu', { screen: 'MyObjects' })}>
 				<ProfileMenuItem title="Мои объявления" icon="format-list-bulleted-square" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<ProfileMenuItem title="Мои подписки" icon="email-newsletter" />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<TouchableOpacity android_ripple onPress={() => navigation.navigate('FavScreen')}>
+			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileMenu', { screen: 'FavScreen' })}>
 				<ProfileMenuItem title="Избранное" icon="heart-outline" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />

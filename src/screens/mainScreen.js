@@ -35,7 +35,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				})
 				.catch((e) => console.log(e))
 		} else {
-			console.log('MainScreen error')
+			// console.log('MAINSCREEN.JS > MainScreen error')
 		}
 	}
 

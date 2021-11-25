@@ -49,7 +49,7 @@ export default function Header({ navigation, scrollY }) {
 						onPressIn={() => handlePressIn(touchScaleAva)}
 						onPressOut={() => {
 							handlePressOut(touchScaleAva)
-							navigation.navigate('Profile')
+							navigation.navigate('ProfileMenu', { screen: 'Profile' })
 						}}
 						activeOpacity={0.7}
 					>

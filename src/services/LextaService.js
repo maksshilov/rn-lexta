@@ -1,5 +1,3 @@
-import { useAsyncStorage } from '@react-native-async-storage/async-storage'
-
 export default class LextaService {
 	_apiBase = 'https://lexta.pro/api/'
 	_objectBase = 'https://lexta.pro/object-api/?'
