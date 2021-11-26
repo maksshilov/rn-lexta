@@ -20,7 +20,7 @@ export default class LextaService {
 		const data = new FormData()
 		data.append('user', email)
 		data.append('token', token)
-		data.append('userId', userid)
+		data.append('userId', userid) // convert into md5
 
 		return await fetch(`${this._apiBase}UpdateToken.php`, {
 			method: 'POST',
@@ -30,8 +30,8 @@ export default class LextaService {
 		})
 	}
 
-	getUserInfo = async (token, user) => {
-		return await fetch(`${this._apiBase}GetUserInfo.php?token=${token}&user=${user}`, {
+	getUserInfo = async (token, email) => {
+		return await fetch(`${this._apiBase}GetUserInfo.php?token=${token}&user=${email}`, {
 			mode: 'no-cors',
 		})
 	}
@@ -49,14 +49,14 @@ export default class LextaService {
 		})
 	}
 
-	getAllObjects = async (token, user) => {
-		return await fetch(`${this._objectBase}token=${token}&user=${user}`, {
+	getAllObjects = async (token, email) => {
+		return await fetch(`${this._objectBase}token=${token}&user=${email}`, {
 			mode: 'no-cors',
 		})
 	}
 
-	getMyObjects = async (token, user) => {
-		return await fetch(`${this._objectBase}profile=1&token=${token}&user=${user}`, {
+	getMyObjects = async (token, email) => {
+		return await fetch(`${this._objectBase}profile=1&token=${token}&user=${email}`, {
 			mode: 'no-cors',
 		})
 	}
@@ -74,12 +74,12 @@ export default class LextaService {
 		})
 	}
 
-	setLikeUnlike = async (objectId, type, token, user) => {
+	setLikeUnlike = async (objectId, type, token, email) => {
 		let data = new FormData()
 		data.append('objectId', objectId)
 		data.append('type', type)
 		data.append('token', token)
-		data.append('user', user)
+		data.append('user', email)
 		return await fetch(`${this._apiBase}LikeObject.php`, {
 			mode: 'no-cors',
 			method: 'POST',
@@ -88,8 +88,8 @@ export default class LextaService {
 		})
 	}
 
-	getMessages = async (token, user, outbox) => {
-		return await fetch(`${this._apiBase}GetMessages.php?token=${token}&user=${user}&outbox=${outbox}`, { mode: 'no-cors' })
+	getMessages = async (token, email, outbox) => {
+		return await fetch(`${this._apiBase}GetMessages.php?token=${token}&user=${email}&outbox=${outbox}`, { mode: 'no-cors' })
 	}
 
 	sendMessage = async (data) => {

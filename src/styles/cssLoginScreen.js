@@ -1,6 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native'
-
-const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
+import { StyleSheet } from 'react-native'
+import { colors, fonts, windowWidth, windowHeight } from './constants'
 
 export default StyleSheet.create({
 	scrollView: {
@@ -8,7 +7,7 @@ export default StyleSheet.create({
 		alignItems: 'center',
 	},
 	header: {
-		fontFamily: 'gothampro-bold',
+		fontFamily: fonts.bold,
 		fontSize: 20,
 		marginBottom: 20,
 	},
@@ -19,14 +18,14 @@ export default StyleSheet.create({
 		height: windowWidth * 0.12,
 		borderRadius: 5,
 		borderWidth: 1,
-		borderColor: '#868686',
+		borderColor: colors.grey,
 		marginBottom: 20,
 	},
 	inputText: {
 		color: '#fdfffc',
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 15,
-		color: '#868686',
+		color: colors.grey,
 	},
 	btn: {
 		width: windowWidth * 0.8,
@@ -36,10 +35,10 @@ export default StyleSheet.create({
 		borderRadius: 6,
 	},
 	btnLogin: {
-		backgroundColor: '#912e33',
+		backgroundColor: colors.red,
 	},
 	text: {
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 18,
 	},
 })

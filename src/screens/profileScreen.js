@@ -1,21 +1,17 @@
 import React from 'react'
-import { Text, View, Dimensions } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { Text, View, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { useDispatch, useSelector } from 'react-redux'
+
 import ProfileMenuItem from '../components/ProfileMenuItem'
 import ProfileMenuSection from '../components/ProfileMenuSection'
-import { connect, useSelector } from 'react-redux'
-import { useAsyncStorage } from '@react-native-async-storage/async-storage'
+import { logout } from '../store/actions/auth'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const ProfileScreen = ({ navigation, state, clearState }) => {
+export default function ProfileScreen({ navigation }) {
+	const dispatch = useDispatch()
 	const { FirstName, LastName } = useSelector((state) => state.profile)
-	const { removeItem } = useAsyncStorage('@storage_key')
-
-	const removeItemFromStorage = async () => {
-		await removeItem()
-	}
 
 	return (
 		<ScrollView contentContainerStyle={{ flex: 0, paddingHorizontal: 10, backgroundColor: '#fff' }}>
@@ -60,9 +56,7 @@ const ProfileScreen = ({ navigation, state, clearState }) => {
 			<TouchableOpacity
 				android_ripple
 				onPress={() => {
-					removeItemFromStorage()
-					clearState()
-					navigation.navigate('Start')
+					dispatch(logout())
 				}}
 			>
 				<ProfileMenuItem title="Выйти" icon="logout" last />
@@ -70,13 +64,3 @@ const ProfileScreen = ({ navigation, state, clearState }) => {
 		</ScrollView>
 	)
 }
-
-const mapStateToProps = (state) => {
-	return { state }
-}
-const mapDispathToProps = (dispatch) => {
-	return {
-		clearState: () => dispatch({ type: 'CLEAR' }),
-	}
-}
-export default connect(mapStateToProps, mapDispathToProps)(ProfileScreen)

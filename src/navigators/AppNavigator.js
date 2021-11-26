@@ -4,17 +4,17 @@ import { useSelector } from 'react-redux'
 
 import { MainNavigator } from './MainNavigator'
 import { AuthNavigator } from './AuthNavigator'
+import LaunchScreen from '../screens/LaunchScreen'
 
 export default function AppNavigator() {
 	const isAuth = useSelector((state) => state.auth.token)
+	const didTryAutoLogin = useSelector((state) => state.auth.didTryAutoLogin)
+
 	return (
 		<NavigationContainer>
-			{!isAuth && <AuthNavigator />}
 			{isAuth && <MainNavigator />}
-			{/* <AppStack.Navigator> */}
-			{/* <AppStack.Screen name="Object" component={ObjectScreen} options={{ headerShown: false }} /> */}
-			{/* <AppStack.Screen name="SearchResult" component={SearchScreenResult} options={{ headerShown: false }} /> */}
-			{/* </AppStack.Navigator> */}
+			{!isAuth && didTryAutoLogin && <AuthNavigator />}
+			{!isAuth && !didTryAutoLogin && <LaunchScreen />}
 		</NavigationContainer>
 	)
 }

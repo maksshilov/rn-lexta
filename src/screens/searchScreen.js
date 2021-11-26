@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
-import { Dimensions, Pressable, Text, TextInput, View, Animated, StyleSheet } from 'react-native'
-import css from '../styles/cssSearchScreen'
-import Header from '../components/Header'
+import { ScrollView, Pressable, Text, TextInput, View, Animated } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import CheckBox from '@react-native-community/checkbox'
-import { ScrollView } from 'react-native-gesture-handler'
-import store from '../store'
 import md5 from 'md5'
+
+import Header from '../components/Header'
+import css from '../styles/cssSearchScreen'
 import LextaService from '../services/LextaService'
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
+const lexta = new LextaService()
 
 export default function SearchScreen({ navigation }) {
 	const [cityOrRegion, setcityOrRegion] = useState('')
@@ -32,31 +31,30 @@ export default function SearchScreen({ navigation }) {
 	const [mortgage, setmortgage] = useState('')
 	const [video, setvideo] = useState('')
 
-	let params = `
-	token=${store.getState().reducerUser.Token}&
-	user=${md5(store.getState().reducerUser.Email)}&
-	cityOrRegion=${cityOrRegion}&
-	catalogType=${catalogType}&
-	f_Category=${f_Category}&
-	f_NumberRooms=${f_NumberRooms}&
-	objectType=${objectType}&
-	priceFrom=${priceFrom}&
-	priceTo=${priceTo}&
-	totalAreaFrom=${totalAreaFrom}&
-	totalAreaTo=${totalAreaTo}&
-	kitchenAreaFrom=${kitchenAreaFrom}&
-	kitchenAreaTo=${kitchenAreaTo}&
-	floorFrom=${floorFrom}&
-	floorTo=${floorTo}&
-	whichFloor1=${whichFloor1}&
-	whichFloor2=${whichFloor2}&
-	whichFloor3=${whichFloor3}&
-	f_HouseType=${f_HouseType}&
-	mortgage=${mortgage}&
-	video=${video}`
+	// let params = `
+	// token=${store.getState().reducerUser.Token}&
+	// user=${md5(store.getState().reducerUser.Email)}&
+	// cityOrRegion=${cityOrRegion}&
+	// catalogType=${catalogType}&
+	// f_Category=${f_Category}&
+	// f_NumberRooms=${f_NumberRooms}&
+	// objectType=${objectType}&
+	// priceFrom=${priceFrom}&
+	// priceTo=${priceTo}&
+	// totalAreaFrom=${totalAreaFrom}&
+	// totalAreaTo=${totalAreaTo}&
+	// kitchenAreaFrom=${kitchenAreaFrom}&
+	// kitchenAreaTo=${kitchenAreaTo}&
+	// floorFrom=${floorFrom}&
+	// floorTo=${floorTo}&
+	// whichFloor1=${whichFloor1}&
+	// whichFloor2=${whichFloor2}&
+	// whichFloor3=${whichFloor3}&
+	// f_HouseType=${f_HouseType}&
+	// mortgage=${mortgage}&
+	// video=${video}`
 
 	const handleSearch = async () => {
-		const lexta = new LextaService()
 		lexta
 			.getSearchObjects(params)
 			.then((res) => {
@@ -73,7 +71,7 @@ export default function SearchScreen({ navigation }) {
 		<React.Fragment>
 			<Header navigation={navigation} scrollY={scrollY} />
 
-			<ScrollView contentContainerStyle={css.scrollViewCcs} style={css.scrollView}>
+			<ScrollView contentContainerStyle={css.scrollViewCCS} style={css.scrollView}>
 				<View>
 					<View style={{ marginBottom: 20 }}>
 						<View style={css.viewCity}>

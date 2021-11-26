@@ -1,5 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native'
-const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
+import { StyleSheet } from 'react-native'
+import { colors, fonts, windowWidth, windowHeight } from './constants'
 
 export default StyleSheet.create({
 	wrapperFrowMb20: {
@@ -7,12 +7,12 @@ export default StyleSheet.create({
 		marginBottom: 20,
 	},
 	title: {
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 18,
 		color: '#000',
 		marginBottom: 10,
 	},
-	scrollViewCcs: {
+	scrollViewCCS: {
 		paddingBottom: 25,
 		backgroundColor: '#fff',
 		alignItems: 'center',
@@ -29,11 +29,11 @@ export default StyleSheet.create({
 		borderBottomWidth: 0,
 		borderTopLeftRadius: 10,
 		borderTopRightRadius: 10,
-		borderColor: '#868686',
+		borderColor: colors.grey,
 		justifyContent: 'center',
 	},
 	inputCity: {
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 15,
 	},
 	viewPickerBase: {
@@ -41,7 +41,7 @@ export default StyleSheet.create({
 		width: windowWidth * 0.94,
 		height: windowWidth * 0.1,
 		borderWidth: 1,
-		borderColor: '#868686',
+		borderColor: colors.grey,
 	},
 	viewPickerCategory: {
 		borderTopWidth: 0,
@@ -59,7 +59,7 @@ export default StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderWidth: 1,
-		borderColor: '#868686',
+		borderColor: colors.grey,
 	},
 	selectObjectTypelLeft: {
 		width: windowWidth * 0.18,
@@ -83,7 +83,7 @@ export default StyleSheet.create({
 		backgroundColor: '#acacac',
 	},
 	selectText: {
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 15,
 		color: '#000',
 	},
@@ -95,9 +95,9 @@ export default StyleSheet.create({
 		borderWidth: 1,
 		borderTopLeftRadius: 10,
 		borderBottomLeftRadius: 10,
-		borderColor: '#868686',
+		borderColor: colors.grey,
 		justifyContent: 'center',
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 15,
 	},
 	inputPriceAreaRight: {
@@ -107,9 +107,9 @@ export default StyleSheet.create({
 		height: windowWidth * 0.1,
 		borderTopWidth: 1,
 		borderBottomWidth: 1,
-		borderColor: '#868686',
+		borderColor: colors.grey,
 		justifyContent: 'center',
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 15,
 	},
 	unitsView: {
@@ -121,10 +121,10 @@ export default StyleSheet.create({
 		borderBottomRightRadius: 10,
 		borderWidth: 1,
 		borderLeftWidth: 0,
-		borderColor: '#868686',
+		borderColor: colors.grey,
 	},
 	unitsText: {
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 15,
 	},
 	inputFloorBase: {
@@ -133,9 +133,9 @@ export default StyleSheet.create({
 		width: windowWidth * 0.47,
 		height: windowWidth * 0.1,
 		borderWidth: 1,
-		borderColor: '#868686',
+		borderColor: colors.grey,
 		justifyContent: 'center',
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 15,
 	},
 	inputFloorLeft: {
@@ -174,7 +174,7 @@ export default StyleSheet.create({
 		marginBottom: 20,
 	},
 	checkBoxText: {
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 15,
 	},
 	btnView: {
@@ -187,7 +187,7 @@ export default StyleSheet.create({
 	},
 	btnText: {
 		color: '#fdfffc',
-		fontFamily: 'gothampro-regular',
+		fontFamily: fonts.regular,
 		fontSize: 18,
 	},
 })

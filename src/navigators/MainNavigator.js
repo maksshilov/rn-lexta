@@ -13,6 +13,8 @@ import PassChangeScreen from '../screens/PassChangeScreen'
 import MyObjects from '../screens/MyObjects'
 import AddObject from '../screens/AddObject'
 import ProfileScreen from '../screens/ProfileScreen'
+import ObjectScreen from '../screens/ObjectScreen'
+import SearchScreenResult from '../screens/SearchScreenResult'
 
 const MainStack = createStackNavigator()
 export const MainNavigator = () => {
@@ -20,6 +22,7 @@ export const MainNavigator = () => {
 		<MainStack.Navigator screenOptions={{ headerShown: false }}>
 			<MainStack.Screen name="Tab" component={TabNavigator} />
 			<MainStack.Screen name="ProfileMenu" component={ProfileMenuNavigator} />
+			<MainStack.Screen name="Elements" component={ElementsStackNavigator} />
 		</MainStack.Navigator>
 	)
 }
@@ -136,5 +139,15 @@ export const ProfileMenuNavigator = () => {
 			/>
 			{/* PROFILE MENU end */}
 		</ProfileMenuStack.Navigator>
+	)
+}
+
+const ElementsStack = createStackNavigator()
+export const ElementsStackNavigator = () => {
+	return (
+		<ElementsStack.Navigator>
+			<ElementsStack.Screen name="Object" component={ObjectScreen} options={{ headerShown: false }} />
+			<ElementsStack.Screen name="SearchResult" component={SearchScreenResult} options={{ headerShown: false }} />
+		</ElementsStack.Navigator>
 	)
 }
