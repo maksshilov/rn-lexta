@@ -2,6 +2,10 @@ import { StyleSheet } from 'react-native'
 import { colors, fonts, windowWidth, windowHeight } from './constants'
 
 export default StyleSheet.create({
+	view: {
+		flex: 1,
+		backgroundColor: '#fff',
+	},
 	scrollView: {
 		marginTop: windowHeight * 0.1,
 		alignItems: 'center',

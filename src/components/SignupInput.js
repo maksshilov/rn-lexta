@@ -4,10 +4,10 @@ import { RadioButton } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 
-import css from '../styles/cssRegField'
+import css from '../styles/cssSignupField'
 import { colors } from '../styles/constants'
 
-export default function SignupInput({ label, value = true, setValue, pass, gender = false, phone, birthDate }) {
+export default function SignupInput({ label, value, setValue, pass, gender = false, phone, birthDate }) {
 	const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
 
 	const handleConfirm = (date) => {

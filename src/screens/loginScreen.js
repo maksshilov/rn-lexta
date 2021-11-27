@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux'
 import * as authActions from '../store/actions/auth'
 import css from '../styles/cssLoginScreen'
 
-const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
+const LOGIN_FORM_UPDATE = 'LOGIN_FORM_UPDATE'
 const formReducer = (state, action) => {
-	if (action.type === FORM_INPUT_UPDATE) {
+	if (action.type === LOGIN_FORM_UPDATE) {
 		const updatedValues = {
 			...state.inputValues,
 			[action.input]: action.value,
@@ -62,29 +62,38 @@ export default LoginScreen = () => {
 		}
 	}
 
-	const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {
-		dispatchFormState({
-			type: FORM_INPUT_UPDATE,
-			value: inputValue,
-			isValid: inputValidity,
-			input: inputIdentifier,
-		})
-	})
+	const inputChangeHandler = useCallback(
+		(inputIdentifier, inputValue, inputValidity) => {
+			dispatchFormState({
+				type: LOGIN_FORM_UPDATE,
+				value: inputValue,
+				isValid: inputValidity,
+				input: inputIdentifier,
+			})
+		},
+		[dispatchFormState]
+	)
 
 	return (
 		<React.Fragment>
-			<View style={{ flex: 1, backgroundColor: '#fff' }}>
+			<View style={css.view}>
 				<ScrollView contentContainerStyle={css.scrollView}>
 					<Text style={css.header}>Вход</Text>
 					<View style={css.inputView}>
-						<TextInput placeholder="Электронная почта" onChangeText={inputChangeHandler.bind(this, 'email')} style={css.inputText} />
+						<TextInput
+							placeholder="Электронная почта"
+							onChangeText={inputChangeHandler.bind(this, 'email')} // the same as beneath
+							// onChangeText={(value) => inputChangeHandler('email', value)}
+							style={css.inputText}
+						/>
 					</View>
 					<View style={css.inputView}>
 						<TextInput
 							placeholder="Пароль"
 							textContentType="password"
 							secureTextEntry
-							onChangeText={inputChangeHandler.bind(this, 'password')}
+							onChangeText={inputChangeHandler.bind(this, 'password')} // the same as beneath
+							// onChangeText={(value) => inputChangeHandler('password', value)}
 							style={css.inputText}
 						/>
 					</View>

@@ -1,24 +1,61 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { Text, View, ScrollView, Pressable, Alert, ActivityIndicator } from 'react-native'
 import Loader from '../components/Loader'
 import SignupInput from '../components/SignupInput'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import css from '../styles/cssSignupScreen'
 import LextaService from '../services/LextaService'
+import { useDispatch } from 'react-redux'
 const lexta = new LextaService()
+
+const SIGNUP_FORM_UPDATE = 'SIGNUP_FORM_UPDATE'
+const formReducer = (state, action) => {
+	if (action.type === SIGNUP_FORM_UPDATE) {
+		const updatedValues = {
+			...state.inputValues,
+			[action.input]: action.value,
+		}
+		const updatedValidities = {
+			...state.inputValidities,
+			[action.input]: action.isValid,
+		}
+		let updatedFormIsValid = true
+		for (const key in updatedValidities) {
+			updatedFormIsValid = updatedFormIsValid && updatedValidities[key]
+		}
+		return {
+			inputValues: updatedValues,
+			inputValidities: updatedValidities,
+			formIsValid: updatedFormIsValid,
+		}
+	}
+	return state
+}
 
 export default function SignupScreen({ navigation }) {
 	const [loading, setLoading] = useState(false)
+	const dispatch = useDispatch()
 
-	const [signupInputs, setsignupInputs] = useState({ firstName: '', lastName: '', phone: '', email: '', gender: null, pass: '', rpass: '' })
-	const [errors, setErrors] = useState({
-		firstName: { value: signupInputs.firstName, error: false },
-		lastName: { value: signupInputs.lastName, error: false },
-		phone: { value: signupInputs.phone, error: false },
-		email: { value: signupInputs.email, error: false },
-		gender: { value: signupInputs.gender, error: false },
-		pass: { value: signupInputs.pass, error: false },
-		rpass: { value: signupInputs.rpass, error: false },
+	const [formState, dispatchFormState] = useReducer(formReducer, {
+		inputValues: {
+			firstName: '',
+			lastName: '',
+			phone: '',
+			email: '',
+			gender: '',
+			pass: '',
+			rpass: '',
+		},
+		inputValidities: {
+			firstName: false,
+			lastName: false,
+			phone: false,
+			email: false,
+			gender: false,
+			pass: false,
+			rpass: false,
+		},
+		formIsValid: false,
 	})
 
 	const regHandler = async () => {
@@ -61,6 +98,15 @@ export default function SignupScreen({ navigation }) {
 			.then(() => setLoading(false))
 	}
 
+	const inputChangeHandler = (inputIdentifier, inputValue, inputValidity) => {
+		dispatchFormState({
+			type: SIGNUP_FORM_UPDATE,
+			value: inputValue,
+			isValid: inputValidity,
+			input: inputIdentifier,
+		})
+	}
+
 	return (
 		<React.Fragment>
 			{/* {loading && <Loader />} */}
@@ -69,57 +115,52 @@ export default function SignupScreen({ navigation }) {
 				<ScrollView contentContainerStyle={css.scrollView}>
 					<Text style={css.header}>Регистрация</Text>
 					<SignupInput
-						error={errors.firstName.error}
+						// error={errors.firstName.error}
 						label="Имя*"
-						value={signupInputs.firstName}
-						setValue={(input) => setsignupInputs({ ...signupInputs, firstName: input })}
+						value={formState.firstName}
+						setValue={inputChangeHandler.bind(this, 'firstName')}
 					/>
 					<SignupInput
-						error={errors.lastName.error}
+						// error={errors.lastName.error}
 						label="Фамилия*"
-						value={signupInputs.lastName}
-						setValue={(input) => setsignupInputs({ ...signupInputs, lastName: input })}
+						value={formState.lastName}
+						setValue={inputChangeHandler.bind(this, 'lastName')}
 					/>
 					<SignupInput
-						error={errors.phone.error}
+						// error={errors.phone.error}
 						phone
 						label="Телефон*"
-						value={signupInputs.phone}
-						setValue={(input) => setsignupInputs({ ...signupInputs, phone: input })}
+						value={formState.phone}
+						setValue={inputChangeHandler.bind(this, 'phone')}
 					/>
 					<SignupInput
-						error={errors.email.error}
+						// error={errors.email.error}
 						label="E-mail*"
-						value={signupInputs.email}
-						setValue={(input) => setsignupInputs({ ...signupInputs, email: input })}
+						value={formState.email}
+						setValue={inputChangeHandler.bind(this, 'email')}
 					/>
+					<SignupInput birthDate label="Дата рождения" value={formState.birthDate} setValue={inputChangeHandler.bind(this, 'birthDate')} />
 					<SignupInput
-						birthDate
-						label="Дата рождения"
-						value={signupInputs.birthDate}
-						setValue={(input) => setsignupInputs({ ...signupInputs, birthDate: input })}
-					/>
-					<SignupInput
-						error={errors.gender.error}
+						// error={errors.gender.error}
 						gender
-						value={signupInputs.gender}
-						setValue={(input) => setsignupInputs({ ...signupInputs, gender: input })}
+						value={formState.gender}
+						setValue={inputChangeHandler.bind(this, 'gender')}
 					/>
 					<SignupInput
-						error={errors.pass.error}
+						// error={errors.pass.error}
 						pass
 						label="Пароль*"
-						value={signupInputs.pass}
-						setValue={(input) => setsignupInputs({ ...signupInputs, pass: input })}
+						value={formState.pass}
+						setValue={inputChangeHandler.bind(this, 'pass')}
 					/>
 					<SignupInput
-						error={errors.rpass.error}
+						// error={errors.rpass.error}
 						pass
 						label="Подтверждение пароля*"
-						value={signupInputs.rpass}
-						setValue={(input) => setsignupInputs({ ...signupInputs, rpass: input })}
+						value={formState.rpass}
+						setValue={inputChangeHandler.bind(this, 'rpass')}
 					/>
-					<Pressable android_ripple onPress={regHandler} style={[css.btn, css.btnLogin]}>
+					<Pressable android_ripple onPress={() => console.log('SUBMIT > ', formState)} style={[css.btn, css.btnLogin]}>
 						<Text style={css.text}>{loading ? <ActivityIndicator color="#fff" /> : 'Зарегистрироваться'}</Text>
 					</Pressable>
 					<Text style={css.textBtm}>* отмечены поля обязательные для заполнения</Text>
