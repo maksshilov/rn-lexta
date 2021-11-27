@@ -3,7 +3,7 @@ import { Text, View, ScrollView, Pressable, TextInput, Alert, ActivityIndicator 
 import { useDispatch } from 'react-redux'
 
 import * as authActions from '../store/actions/auth'
-import style from '../styles/cssLoginScreen'
+import css from '../styles/cssLoginScreen'
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
 const formReducer = (state, action) => {
@@ -74,23 +74,23 @@ export default LoginScreen = () => {
 	return (
 		<React.Fragment>
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
-				<ScrollView contentContainerStyle={style.scrollView}>
-					<Text style={style.header}>Вход</Text>
-					<View style={style.inputView}>
-						<TextInput placeholder="Электронная почта" onChangeText={inputChangeHandler.bind(this, 'email')} style={style.inputText} />
+				<ScrollView contentContainerStyle={css.scrollView}>
+					<Text style={css.header}>Вход</Text>
+					<View style={css.inputView}>
+						<TextInput placeholder="Электронная почта" onChangeText={inputChangeHandler.bind(this, 'email')} style={css.inputText} />
 					</View>
-					<View style={style.inputView}>
+					<View style={css.inputView}>
 						<TextInput
 							placeholder="Пароль"
 							textContentType="password"
 							secureTextEntry
 							onChangeText={inputChangeHandler.bind(this, 'password')}
-							style={style.inputText}
+							style={css.inputText}
 						/>
 					</View>
 
-					<Pressable android_ripple onPress={loginHandler} style={{ ...style.btn, ...style.btnLogin }}>
-						<Text style={{ ...style.text, color: '#fff' }}>{loading ? <ActivityIndicator color="#fff" /> : 'Войти'}</Text>
+					<Pressable android_ripple onPress={loginHandler} style={[css.btn, css.btnLogin]}>
+						<Text style={css.text}>{loading ? <ActivityIndicator color="#fff" /> : 'Войти'}</Text>
 					</Pressable>
 				</ScrollView>
 			</View>

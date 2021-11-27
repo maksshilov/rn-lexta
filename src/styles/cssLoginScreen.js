@@ -40,5 +40,6 @@ export default StyleSheet.create({
 	text: {
 		fontFamily: fonts.regular,
 		fontSize: 18,
+		color: '#fff',
 	},
 })
