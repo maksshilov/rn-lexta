@@ -2,6 +2,7 @@ import React from 'react'
 import { ImageBackground, Text, View, TouchableOpacity, StyleSheet, Dimensions, Animated, Alert } from 'react-native'
 import Logo from '../components/Logo'
 import { handlePressIn, handlePressOut } from '../components/AnimatedScale'
+import css from '../styles/cssStartScreen'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -15,45 +16,16 @@ export default function StartScreen({ navigation }) {
 				<Logo width={0.67} mt={0.2} />
 
 				<View style={{ marginTop: 180 }}>
-					<TouchableOpacity
-						onPressOut={() => navigation.navigate('Login')}
-						style={{ ...styles.btn, ...styles.btnLogin }}
-						activeOpacity={0.7}
-					>
-						<Text style={{ ...styles.text, color: '#fff' }}>Войти</Text>
+					<TouchableOpacity onPressOut={() => navigation.navigate('Login')} style={[css.btn, css.btnLogin]} activeOpacity={0.7}>
+						<Text style={css.text}>Войти</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={{ marginTop: 50 }}>
-					<TouchableOpacity
-						onPressOut={() => navigation.navigate('Registration')}
-						style={{ ...styles.btn, ...styles.btnReg }}
-						activeOpacity={0.7}
-					>
-						<Text style={{ ...styles.text, color: '#000' }}>Зарегистрироваться</Text>
+					<TouchableOpacity onPressOut={() => navigation.navigate('Registration')} style={[css.btn, css.btnReg]} activeOpacity={0.7}>
+						<Text style={[css.text, { color: '#000' }]}>Зарегистрироваться</Text>
 					</TouchableOpacity>
 				</View>
 			</ImageBackground>
 		</View>
 	)
 }
-
-const styles = StyleSheet.create({
-	btn: {
-		width: 270,
-		height: 50,
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderRadius: 6,
-	},
-	btnLogin: {
-		backgroundColor: '#912e33',
-	},
-	btnReg: {
-		borderWidth: 2,
-		borderColor: '#912e33',
-	},
-	text: {
-		fontFamily: 'gothampro-regular',
-		fontSize: 18,
-	},
-})

@@ -4,15 +4,44 @@ export default class LextaService {
 	_netcatBase = 'https://lexta.pro/netcat/'
 	_imgBase = ''
 
+	checkLogin = async (email) => {
+		return await fetch(`${this._apiBase}CheckLogin.php?user=${email}`, { mode: 'no-cors' })
+	}
+
+	signup = async (signupInputs) => {
+		const { firstName, lastName, phone, email, birthDate, pass, rpass, gender } = signupInputs
+		const signupData = new FormData()
+		signupData.append('catalogue', 1)
+		signupData.append('cc', 7)
+		signupData.append('sub', 22)
+		signupData.append('posting', 1)
+		signupData.append('curPos', 0)
+		signupData.append('f_FirstName', firstName)
+		signupData.append('f_LastName', lastName)
+		signupData.append('f_Phone', phone)
+		signupData.append('f_Email', email)
+		signupData.append('f_BirthDate', birthDate)
+		signupData.append('f_Gender', gender)
+		signupData.append('Password1', pass)
+		signupData.append('Password2', rpass)
+
+		return await fetch(`${this._netcatBase}add.php`, {
+			method: 'POST',
+			mode: 'no-cors',
+			headers: new Headers(),
+			body: signupData,
+		})
+	}
+
 	getToken = async (user, pass) => {
-		const data = new FormData()
-		data.append('user', user)
-		data.append('password', pass)
+		const tokenData = new FormData()
+		tokenData.append('user', user)
+		tokenData.append('password', pass)
 		return await fetch(`${this._apiBase}GetToken.php`, {
 			mode: 'no-cors',
 			method: 'POST',
 			headers: new Headers(),
-			body: data,
+			body: tokenData,
 		})
 	}
 
