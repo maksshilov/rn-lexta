@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { Text, View, ScrollView, Pressable, Alert, ActivityIndicator } from 'react-native'
-import Loader from '../components/Loader'
 import SignupInput from '../components/SignupInput'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import css from '../styles/cssSignupScreen'
-import LextaService from '../services/LextaService'
 import { useDispatch } from 'react-redux'
-const lexta = new LextaService()
+import { signup } from '../store/actions/auth'
 
 const SIGNUP_FORM_UPDATE = 'SIGNUP_FORM_UPDATE'
 const formReducer = (state, action) => {
@@ -15,6 +12,7 @@ const formReducer = (state, action) => {
 			...state.inputValues,
 			[action.input]: action.value,
 		}
+		action.input !== 'birthDate' ? action.isValid : (action.isValid = true)
 		const updatedValidities = {
 			...state.inputValidities,
 			[action.input]: action.isValid,
@@ -34,6 +32,8 @@ const formReducer = (state, action) => {
 
 export default function SignupScreen({ navigation }) {
 	const [loading, setLoading] = useState(false)
+	const [error, setError] = useState(null)
+
 	const dispatch = useDispatch()
 
 	const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -45,6 +45,7 @@ export default function SignupScreen({ navigation }) {
 			gender: '',
 			pass: '',
 			rpass: '',
+			birthDate: '',
 		},
 		inputValidities: {
 			firstName: false,
@@ -54,119 +55,139 @@ export default function SignupScreen({ navigation }) {
 			gender: false,
 			pass: false,
 			rpass: false,
+			birthDate: true,
 		},
 		formIsValid: false,
 	})
 
-	const regHandler = async () => {
-		if (!signupInputs.firstName) return Alert.alert('Ошибка', 'Вы не ввели имя')
-		if (!signupInputs.lastName) return Alert.alert('Ошибка', 'Вы не ввели фамилию')
-		if (!signupInputs.phone) return Alert.alert('Ошибка', 'Вы не ввели телефон')
-		if (!signupInputs.email) return Alert.alert('Ошибка', 'Вы не ввели почту')
-		if (!signupInputs.gender) return Alert.alert('Ошибка', 'Вы не указали пол')
-		if (!signupInputs.pass) return Alert.alert('Ошибка', 'Вы не ввели пароль')
-		if (!signupInputs.rpass) return Alert.alert('Ошибка', 'Вы не ввели подтверждение пароля')
-		if (signupInputs.pass !== signupInputs.rpass) return Alert.alert('Ошибка', 'Пароли не совпадают')
+	useEffect(() => {
+		if (error) Alert.alert('Ошибка', error, [{ text: 'Ещё раз' }])
+	}, [error])
 
+	const submitHandler = async () => {
+		const { firstName, lastName, phone, email, gender, pass, rpass } = formState.inputValidities
+		if (pass !== rpass) return Alert.alert('Ошибка', 'Пароли не совпадают')
+		if (!firstName) return Alert.alert('Ошибка', 'Введите Ваше имя')
+		if (!lastName) return Alert.alert('Ошибка', 'Введите Вашу фамилию')
+		if (!phone) return Alert.alert('Ошибка', 'Введите Ваш номер телефона')
+		if (!email) return Alert.alert('Ошибка', 'Введите Вашу почту')
+		if (!gender) return Alert.alert('Ошибка', 'Укажите Ваш пол')
+		if (!pass) return Alert.alert('Ошибка', 'Введите пароль')
+		if (!rpass) return Alert.alert('Ошибка', 'Введите подтверждённый пароль')
+		if (formState.inputValues.pass !== formState.inputValues.rpass)
+			return Alert.alert('Ошибка', 'Пароли не совпадают')
+
+		setError(null)
 		setLoading(true)
-		lexta
-			.checkLogin(signupInputs.email)
-			.then((res) => res.json())
-			.then(async (exist) => {
-				if (!exist.status) {
-					lexta
-						.signup(signupInputs)
-						.then((response) => {
-							response.text()
-						})
-						.then(() => {
-							setLoading(false)
-							Alert.alert('Регистрация', 'Регистрация прошла успешно!', [
-								{
-									text: 'Войти',
-									onPress: () => {
-										navigation.navigate('Login')
-									},
-								},
-							])
-						})
-						.catch((err) => console.log(err))
-				} else {
-					Alert.alert('Ошибка', `Пользователь с почтой ${email} уже существует.`)
-				}
+		try {
+			await dispatch(signup(formState.inputValues, navigation))
+		} catch (err) {
+			setError(err.message)
+			setLoading(false)
+		}
+	}
+	console.log(error)
+	const inputChangeHandler = useCallback(
+		(inputIdentifier, inputValue, inputValidity) => {
+			dispatchFormState({
+				type: SIGNUP_FORM_UPDATE,
+				value: inputValue,
+				isValid: inputValidity,
+				input: inputIdentifier,
 			})
-			.then(() => setLoading(false))
-	}
+		},
+		[dispatchFormState]
+	)
 
-	const inputChangeHandler = (inputIdentifier, inputValue, inputValidity) => {
-		dispatchFormState({
-			type: SIGNUP_FORM_UPDATE,
-			value: inputValue,
-			isValid: inputValidity,
-			input: inputIdentifier,
-		})
-	}
+	useEffect(() => {
+		console.log('formState', formState)
+	}, [formState])
 
 	return (
 		<React.Fragment>
-			{/* {loading && <Loader />} */}
-
 			<View style={css.view}>
 				<ScrollView contentContainerStyle={css.scrollView}>
 					<Text style={css.header}>Регистрация</Text>
 					<SignupInput
-						// error={errors.firstName.error}
+						id="firstName"
 						label="Имя*"
 						value={formState.firstName}
-						setValue={inputChangeHandler.bind(this, 'firstName')}
+						returnKeyType="next"
+						onInputChange={inputChangeHandler}
+						required
 					/>
 					<SignupInput
-						// error={errors.lastName.error}
+						id="lastName"
 						label="Фамилия*"
 						value={formState.lastName}
-						setValue={inputChangeHandler.bind(this, 'lastName')}
+						returnKeyType="next"
+						onInputChange={inputChangeHandler}
+						required
 					/>
 					<SignupInput
-						// error={errors.phone.error}
+						id="phone"
 						phone
 						label="Телефон*"
 						value={formState.phone}
-						setValue={inputChangeHandler.bind(this, 'phone')}
+						keyboardType="phone-pad"
+						returnKeyType="next"
+						onInputChange={inputChangeHandler}
+						required
 					/>
 					<SignupInput
-						// error={errors.email.error}
+						email
+						id="email"
 						label="E-mail*"
 						value={formState.email}
-						setValue={inputChangeHandler.bind(this, 'email')}
+						returnKeyType="next"
+						onInputChange={inputChangeHandler}
+						required
 					/>
-					<SignupInput birthDate label="Дата рождения" value={formState.birthDate} setValue={inputChangeHandler.bind(this, 'birthDate')} />
 					<SignupInput
-						// error={errors.gender.error}
-						gender
+						id="birthDate"
+						birthDate
+						label="Дата рождения"
+						value={formState.birthDate}
+						onInputChange={inputChangeHandler}
+					/>
+					<SignupInput
+						id="gender"
 						value={formState.gender}
-						setValue={inputChangeHandler.bind(this, 'gender')}
+						onInputChange={inputChangeHandler}
 					/>
 					<SignupInput
-						// error={errors.pass.error}
-						pass
+						id="pass"
 						label="Пароль*"
 						value={formState.pass}
-						setValue={inputChangeHandler.bind(this, 'pass')}
+						secureTextEntry={true}
+						textContentType="password"
+						returnKeyType="next"
+						onInputChange={inputChangeHandler}
+						required
 					/>
 					<SignupInput
-						// error={errors.rpass.error}
-						pass
+						id="rpass"
 						label="Подтверждение пароля*"
 						value={formState.rpass}
-						setValue={inputChangeHandler.bind(this, 'rpass')}
+						secureTextEntry={true}
+						returnKeyType="next"
+						textContentType="password"
+						onInputChange={inputChangeHandler}
+						required
 					/>
-					<Pressable android_ripple onPress={() => console.log('SUBMIT > ', formState)} style={[css.btn, css.btnLogin]}>
-						<Text style={css.text}>{loading ? <ActivityIndicator color="#fff" /> : 'Зарегистрироваться'}</Text>
+					<Pressable
+						android_ripple
+						onPress={submitHandler}
+						style={[css.btn, css.btnLogin]}
+					>
+						<Text style={css.text}>
+							{loading ? <ActivityIndicator color="#fff" /> : 'Зарегистрироваться'}
+						</Text>
 					</Pressable>
 					<Text style={css.textBtm}>* отмечены поля обязательные для заполнения</Text>
 					<Text style={css.textBtm}>
-						Нажимая кнопку «Зарегистрироваться», вы подтверждаете согласие с условиями использования ЛЕХТА и политикой о данных
-						пользователей.
+						Нажимая кнопку «Зарегистрироваться», вы подтверждаете согласие с условиями
+						использования ЛЕХТА и политикой о данных пользователей.
 					</Text>
 				</ScrollView>
 			</View>

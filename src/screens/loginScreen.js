@@ -1,8 +1,16 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react'
-import { Text, View, ScrollView, Pressable, TextInput, Alert, ActivityIndicator } from 'react-native'
+import {
+	Text,
+	View,
+	ScrollView,
+	Pressable,
+	TextInput,
+	Alert,
+	ActivityIndicator,
+} from 'react-native'
 import { useDispatch } from 'react-redux'
 
-import * as authActions from '../store/actions/auth'
+import { login } from '../store/actions/auth'
 import css from '../styles/cssLoginScreen'
 
 const LOGIN_FORM_UPDATE = 'LOGIN_FORM_UPDATE'
@@ -55,7 +63,7 @@ export default LoginScreen = () => {
 		setLoading(true)
 		try {
 			let { email, password } = formState.inputValues
-			await dispatch(authActions.login(email, password))
+			await dispatch(login(email, password))
 		} catch (err) {
 			setError(err.message)
 			setLoading(false)
@@ -98,8 +106,14 @@ export default LoginScreen = () => {
 						/>
 					</View>
 
-					<Pressable android_ripple onPress={loginHandler} style={[css.btn, css.btnLogin]}>
-						<Text style={css.text}>{loading ? <ActivityIndicator color="#fff" /> : 'Войти'}</Text>
+					<Pressable
+						android_ripple
+						onPress={loginHandler}
+						style={[css.btn, css.btnLogin]}
+					>
+						<Text style={css.text}>
+							{loading ? <ActivityIndicator color="#fff" /> : 'Войти'}
+						</Text>
 					</Pressable>
 				</ScrollView>
 			</View>

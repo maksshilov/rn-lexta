@@ -1,15 +1,44 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import md5 from 'md5'
-import { useSelector } from 'react-redux'
+import { Alert } from 'react-native'
 
 import LextaService from '../../services/LextaService'
 import { SET_PROFILE } from './profile'
 const lexta = new LextaService()
 
+export const SIGNUP = 'SIGNUP'
 export const LOGIN = 'LOGIN'
 export const SET_DID_TRY_AL = 'SET_DID_TRY_AL'
 export const UPDATE_TOKEN = 'UPDATE_TOKEN'
 export const LOGOUT = 'LOGOUT'
+
+export const signup = (signupData, navigation) => {
+	const { email } = signupData
+	return async () => {
+		const responseCheckEmail = await lexta.checkLogin(email)
+		if (responseCheckEmail.ok) {
+			const exist = await responseCheckEmail.json()
+			// console.log(exist)
+			if (!exist.status) {
+				const responseSignup = await lexta.signup(signupData)
+				if (responseSignup.ok) {
+					Alert.alert('Регистрация', 'Регистрация прошла успешно!', [
+						{
+							text: 'Войти',
+							onPress: () => navigation.navigate('Login'),
+						},
+					])
+				} else {
+					throw new Error('Проблемы с регистрацией')
+				}
+			} else {
+				throw new Error('Пользователь с таким email уже существует')
+			}
+		} else {
+			throw new Error('Проблемы с проверкой почты')
+		}
+	}
+}
 
 export const login = (email, password) => {
 	return async (dispatch) => {
@@ -64,7 +93,9 @@ export const updateTokenAction = (email, token, userid, userData) => {
 					token: updatedToken,
 				})
 				let updatedUserData = JSON.parse(userData)
-				const updatedExpirationDate = new Date(new Date().getTime() + 60000 * 5).toISOString()
+				const updatedExpirationDate = new Date(
+					new Date().getTime() + 60000 * 5
+				).toISOString()
 				updatedUserData = {
 					...updatedUserData,
 					Token: updatedToken,
@@ -86,6 +117,5 @@ export const logout = () => {
 }
 
 const saveDataToStorage = (userData) => {
-	console.log(userData)
 	AsyncStorage.setItem('userData', JSON.stringify(userData))
 }
