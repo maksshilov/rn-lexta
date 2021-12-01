@@ -27,7 +27,7 @@ export default class LextaService {
 
 		return await fetch(`${this._netcatBase}add.php`, {
 			method: 'POST',
-			mode: 'no-cors',
+			// mode: 'no-cors',
 			headers: new Headers(),
 			body: signupData,
 		})
@@ -38,7 +38,7 @@ export default class LextaService {
 		tokenData.append('user', user)
 		tokenData.append('password', pass)
 		return await fetch(`${this._apiBase}GetToken.php`, {
-			mode: 'no-cors',
+			// mode: 'no-cors',
 			method: 'POST',
 			headers: new Headers(),
 			body: tokenData,
@@ -53,7 +53,7 @@ export default class LextaService {
 
 		return await fetch(`${this._apiBase}UpdateToken.php`, {
 			method: 'POST',
-			mode: 'no-cors',
+			// mode: 'no-cors',
 			headers: new Headers(),
 			body: data,
 		})
@@ -61,14 +61,14 @@ export default class LextaService {
 
 	getUserInfo = async (token, email) => {
 		return await fetch(`${this._apiBase}GetUserInfo.php?token=${token}&user=${email}`, {
-			mode: 'no-cors',
+			// mode: 'no-cors',
 		})
 	}
 
 	uploadUserPic = async (data) => {
 		return await fetch(`${this._apiBase}LoadingProfileImage.php`, {
 			method: 'POST',
-			mode: 'no-cors',
+			// mode: 'no-cors',
 			headers: {
 				Accept: 'application/json',
 				'content-type': 'multipart/form-data',
@@ -80,13 +80,13 @@ export default class LextaService {
 
 	getAllObjects = async (token, email) => {
 		return await fetch(`${this._objectBase}token=${token}&user=${email}`, {
-			mode: 'no-cors',
+			// mode: 'no-cors',
 		})
 	}
 
 	getMyObjects = async (token, email) => {
 		return await fetch(`${this._objectBase}profile=1&token=${token}&user=${email}`, {
-			mode: 'no-cors',
+			// mode: 'no-cors',
 		})
 	}
 
@@ -97,7 +97,7 @@ export default class LextaService {
 	addObject = async (data) => {
 		return await fetch(`${this._netcatBase}add.php`, {
 			method: 'POST',
-			mode: 'no-cors',
+			// mode: 'no-cors',
 			headers: new Headers(),
 			body: data,
 		})
@@ -110,7 +110,7 @@ export default class LextaService {
 		data.append('token', token)
 		data.append('user', email)
 		return await fetch(`${this._apiBase}LikeObject.php`, {
-			mode: 'no-cors',
+			// mode: 'no-cors',
 			method: 'POST',
 			headers: new Headers(),
 			body: data,
@@ -126,7 +126,7 @@ export default class LextaService {
 
 	sendMessage = async (data) => {
 		return await fetch(`${this._netcatBase}add.php`, {
-			mode: 'no-cors',
+			// mode: 'no-cors',
 			method: 'POST',
 			headers: { 'Content-Type': 'multipart/form-data' },
 			body: data,

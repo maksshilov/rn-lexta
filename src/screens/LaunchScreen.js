@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react'
-import { View, ActivityIndicator, TouchableOpacity, Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, ActivityIndicator, TouchableOpacity, Text, Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useDispatch } from 'react-redux'
 
 import * as authActions from '../store/actions/auth'
 
-export default function LaunchScreen() {
+export default function LaunchScreen(navigation) {
+	const [error, setError] = useState()
 	const dispatch = useDispatch()
 	const tryLogin = async () => {
 		const userData = await AsyncStorage.getItem('userData')
@@ -22,7 +23,14 @@ export default function LaunchScreen() {
 
 		if (expirationDate <= new Date()) {
 			console.log('LaunchScreen.js > if (expirationDate <= new Date())')
-			dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
+			try {
+				await dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
+			} catch (err) {
+				Alert.alert('Ошибка', 'Войти ещё раз', [
+					{ text: 'Ok', onPress: () => authActions.logout() },
+				])
+				// setError(err.message)
+			}
 		}
 
 		console.log('LaunchScreen.js > OK')
@@ -31,6 +39,7 @@ export default function LaunchScreen() {
 	useEffect(() => {
 		tryLogin()
 	})
+
 	return (
 		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 			<ActivityIndicator size="large" color="red" />
