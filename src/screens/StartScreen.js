@@ -49,7 +49,7 @@ export default function StartScreen({ navigation }) {
 					</TouchableOpacity>
 				</View>
 
-				<View
+				{/* <View
 					style={{
 						flexDirection: 'row',
 						marginTop: 20,
@@ -88,8 +88,8 @@ export default function StartScreen({ navigation }) {
 							<Text>ZXC</Text>
 						</TouchableOpacity>
 					</View>
-				</View>
-				<View style={{ width: windowWidth, alignItems: 'center', marginTop: 20 }}>
+				</View> */}
+				{/* <View style={{ width: windowWidth, alignItems: 'center', marginTop: 20 }}>
 					<TouchableOpacity
 						onPress={() => {
 							ncAuthAddObj(count)
@@ -106,7 +106,7 @@ export default function StartScreen({ navigation }) {
 					>
 						<Text>Object</Text>
 					</TouchableOpacity>
-				</View>
+				</View> */}
 			</ImageBackground>
 		</View>
 	)

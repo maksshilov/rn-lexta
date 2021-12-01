@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useReducer, useRef, useState } from 'react'
 import CheckBox from '@react-native-community/checkbox'
 import { Picker } from '@react-native-picker/picker'
 import {
@@ -10,15 +10,29 @@ import {
 	Text,
 	View,
 	Animated,
-	TouchableOpacity,
 } from 'react-native'
-import store from '../store'
-import md5 from 'md5'
-import LextaService from '../services/LextaService'
-import { ncAuthFetch } from '../ncAuth'
-// import { TextInput } from 'react-native-paper'
+import { useDispatch } from 'react-redux'
+import css from '../styles/cssAddObject'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
+
+const ADD_OBJECT_FORM_UPDATE = 'ADD_OBJECT_FORM_UPDATE'
+const formReducer = (state, action) => {
+	if ((action.type = ADD_OBJECT_FORM_UPDATE)) {
+		const updatedValues = {}
+		const updatedValidities = {}
+		let updatedFormIsValid = true
+		for (const key in updatedValidities) {
+			updatedFormIsValid = updatedFormIsValid && updatedValidities[key]
+		}
+		return {
+			inputValues: updatedValues,
+			inputValidities: updatedValidities,
+			formIsValid: updatedFormIsValid,
+		}
+	}
+	return state
+}
 
 export default function AddObject() {
 	const [f_Name, setf_Name] = useState('')
@@ -149,23 +163,27 @@ export default function AddObject() {
 	data.append('f_ObjectRejected', f_ObjectRejected)
 	data.append('f_ObjectRejectedComment', f_ObjectRejectedComment)
 
+	const dispatch = useDispatch()
+	const [formState, dispatchFormState] = useReducer(formReducer, {
+		inputValues: {},
+		inputValidities: {},
+		formIsValid: false,
+	})
+
 	const handleAddObject = async () => {
 		console.log('handleAddObject')
 
 		await fetch('https://lexta.pro/netcat/add.php', {
 			method: 'post',
+			mode: 'no-cors',
+			headers: new Headers(),
 			body: data,
-			credentials: 'include',
-			headers: new Headers({
-				'content-type': 'multipart/form-data',
-				'access-control-allow-credentials': true,
-				// 'access-control-allow-headers': 'set-cookie',
-			}),
 		})
 			.then((res) => {
-				console.log(res.headers)
+				console.log(res.status)
+				return res.text()
 			})
-			// .then((json) => console.log('json', json))
+			.then((json) => console.log('json', json))
 			.catch((err) => console.log(err))
 	}
 
@@ -187,20 +205,12 @@ export default function AddObject() {
 	}, [f_Type])
 
 	return (
-		<View style={{ flex: 1, backgroundColor: '#fff' }}>
-			<ScrollView
-				contentContainerStyle={{
-					paddingTop: 10,
-					paddingBottom: 25,
-					backgroundColor: '#fff',
-					alignItems: 'center',
-				}}
-				style={{ width: windowWidth }}
-			>
-				<View style={{ alignItems: 'center' }}>
+		<View style={css.mainViewWrapper}>
+			<ScrollView contentContainerStyle={css.scrollViewCCS} style={css.scrollView}>
+				<View>
 					{/* F_CATEGORY */}
 					<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-						<Text style={styles.title}>Категория</Text>
+						<Text style={css.title}>Категория</Text>
 						<View
 							style={[
 								{
@@ -297,9 +307,9 @@ export default function AddObject() {
 					</View>
 
 					{/* F_LANDAPPOINTMENT */}
-					{
+					{f_Category == 7 ? (
 						<View style={{ width: windowWidth * 0.94 }}>
-							<Text style={styles.title}>Назначение</Text>
+							<Text style={css.title}>Назначение</Text>
 							<View
 								style={[
 									{
@@ -332,12 +342,12 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_TYPE */}
-					{
+					{f_Category == 0 ? null : (
 						<View style={{ width: windowWidth * 0.94 }}>
-							<Text style={styles.title}>Тип сделки</Text>
+							<Text style={css.title}>Тип сделки</Text>
 							<View
 								style={[
 									{
@@ -367,16 +377,12 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_LEASETYPE */}
-					{
-						<View
-							style={{
-								width: windowWidth * 0.94,
-							}}
-						>
-							<Text style={styles.title}>Тип аренды</Text>
+					{f_Category == 0 ? null : f_Category >= 7 ? null : f_Type === '1' ? (
+						<View style={{ width: windowWidth * 0.94 }}>
+							<Text style={css.title}>Тип аренды</Text>
 							<View
 								style={[
 									{
@@ -406,12 +412,12 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_COMMERCIALPROPERTYTYPE */}
-					{
+					{f_Category == 0 && !f_Type ? null : f_Category == 12 ? (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Тип коммерческой недвижимости</Text>
+							<Text style={css.title}>Тип коммерческой недвижимости</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -444,12 +450,12 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_LOCATIONCOMMERCIAL */}
-					{
+					{f_Category == 0 ? null : f_Category == 12 ? (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Расположение ком. недвижимости</Text>
+							<Text style={css.title}>Расположение ком. недвижимости</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -476,15 +482,15 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_OBJECTTYPE */}
-					{
+					{f_Category == 0 || f_Type == 0 ? null : f_Category >= 7 ? null : (
 						<View style={{ flexDirection: 'row' }}>
 							<Pressable
 								onPress={() => setf_ObjectType(1)}
 								style={[
-									styles.select,
+									css.select,
 									{
 										width: windowWidth * 0.47,
 										height: windowWidth * 0.1,
@@ -493,13 +499,13 @@ export default function AddObject() {
 										borderTopWidth: 1,
 										borderBottomWidth: 1,
 									},
-									f_ObjectType === 1 ? styles.selected : null,
+									f_ObjectType === 1 ? css.selected : null,
 								]}
 							>
 								<Text
 									style={[
-										styles.selectText,
-										f_ObjectType === 1 ? styles.selectedText : null,
+										css.selectText,
+										f_ObjectType === 1 ? css.selectedText : null,
 									]}
 								>
 									Новостройка
@@ -508,7 +514,7 @@ export default function AddObject() {
 							<Pressable
 								onPress={() => setf_ObjectType(2)}
 								style={[
-									styles.select,
+									css.select,
 									{
 										width: windowWidth * 0.47,
 										height: windowWidth * 0.1,
@@ -516,25 +522,26 @@ export default function AddObject() {
 										borderBottomRightRadius: 10,
 										borderStartWidth: 0,
 									},
-									f_ObjectType === 2 ? styles.selected : null,
+									f_ObjectType === 2 ? css.selected : null,
 								]}
 							>
 								<Text
 									style={[
-										styles.selectText,
-										f_ObjectType === 2 ? styles.selectedText : null,
+										css.selectText,
+										f_ObjectType === 2 ? css.selectedText : null,
 									]}
 								>
 									Вторичка
 								</Text>
 							</Pressable>
 						</View>
-					}
+					)}
 
 					{/* F_TRAVELTYPE */}
-					{
+					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category >=
+					  7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Тип туристического объекта</Text>
+							<Text style={css.title}>Тип туристического объекта</Text>
 							<View
 								style={[
 									{
@@ -565,12 +572,13 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_NUMBERROOMS */}
-					{
+					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category == 1 ||
+					  f_Category >= 7 ? null : (
 						<View style={{ marginBottom: 20 }}>
-							<Text style={styles.title}>Количество комнат</Text>
+							<Text style={css.title}>Количество комнат</Text>
 							<View
 								style={[
 									{
@@ -606,21 +614,24 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* REGION & CITY */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ? null : (
 						<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 							<View style={{ width: windowWidth * 0.47 }}>
-								<Text style={styles.title}>Регион</Text>
+								<Text style={css.title}>Регион</Text>
 								<TextInput
 									value={f_Region}
 									onChangeText={(value) => setf_Region(value)}
 									placeholder="Регион"
 									keyboardType="default"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.47,
 										height: windowWidth * 0.1,
 										borderRadius: 10,
@@ -630,15 +641,15 @@ export default function AddObject() {
 								/>
 							</View>
 							<View style={{ width: windowWidth * 0.47 }}>
-								<Text style={styles.title}>Город</Text>
+								<Text style={css.title}>Город</Text>
 								<TextInput
 									value={f_City}
 									onChangeText={(value) => setf_City(value)}
 									placeholder="Город"
 									keyboardType="default"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.47,
 										height: windowWidth * 0.1,
 										borderRadius: 10,
@@ -649,21 +660,26 @@ export default function AddObject() {
 								/>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_STREET, F_HOUSENUMBER */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ? null : (
 						<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 							<View style={{ width: windowWidth * 0.47 }}>
-								<Text style={styles.title}>Улица</Text>
+								<Text style={css.title}>Улица</Text>
 								<TextInput
 									value={f_Street}
 									onChangeText={(value) => setf_Street(value)}
 									placeholder="Улица"
 									keyboardType="default"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.47,
 										height: windowWidth * 0.1,
 										borderRadius: 10,
@@ -673,15 +689,15 @@ export default function AddObject() {
 								/>
 							</View>
 							<View style={{ width: windowWidth * 0.47 }}>
-								<Text style={styles.title}>Номер дома</Text>
+								<Text style={css.title}>Номер дома</Text>
 								<TextInput
 									value={f_HouseNumber}
 									onChangeText={(value) => setf_HouseNumber(value)}
 									placeholder="Номер дома"
 									keyboardType="number-pad"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.47,
 										height: windowWidth * 0.1,
 										borderRadius: 10,
@@ -692,20 +708,20 @@ export default function AddObject() {
 								/>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* PROPERTY TYPE */}
 					{/* <View style={{ flexDirection: 'row', marginBottom: 20 }}>
 						<View style={{ width: windowWidth * 0.94 }}>
-							<Text style={styles.title}>Тип недвижимости</Text>
+							<Text style={css.title}>Тип недвижимости</Text>
 							<TextInput
 								value={f_TypeProperty}
 								onChangeText={(value) => setf_TypeProperty(value)}
 								placeholder="Тип недвижимости"
 								keyboardType="default"
 								style={{
-									...styles.textInput,
-									...styles.textInputInput,
+									...css.textInput,
+									...css.textInputInput,
 									width: windowWidth * 0.94,
 									height: windowWidth * 0.1,
 									borderRadius: 10,
@@ -715,9 +731,16 @@ export default function AddObject() {
 					</View> */}
 
 					{/* LOCATION */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ? null : (
 						<View>
-							<Text style={styles.title}>Метка на карте</Text>
+							<Text style={css.title}>Метка на карте</Text>
 							<View
 								style={{
 									width: windowWidth * 0.94,
@@ -732,8 +755,8 @@ export default function AddObject() {
 									placeholder="Широта, долгота"
 									keyboardType="number-pad"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.8,
 										height: windowWidth * 0.1,
 										borderRadius: 10,
@@ -763,12 +786,19 @@ export default function AddObject() {
 								</Pressable>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_HOUSETYPE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Тип дома</Text>
+							<Text style={css.title}>Тип дома</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -798,12 +828,20 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* YEAR */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ? null : (
 						<Fragment>
-							<Text style={styles.title}>Год постройки</Text>
+							<Text style={css.title}>Год постройки</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 								<TextInput
 									value={f_YearBuilt}
@@ -811,8 +849,8 @@ export default function AddObject() {
 									placeholder="Год постройки"
 									keyboardType="number-pad"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.94,
 										height: windowWidth * 0.1,
 										borderRadius: 10,
@@ -820,52 +858,82 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/*  F_FLOOR */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					f_YearBuilt ? null : f_Category >= 3 && f_Category <= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Этаж</Text>
+							<Text style={css.title}>Этаж</Text>
 							<TextInput
 								value={f_Floor}
 								onChangeText={(value) => setf_Floor(value)}
 								placeholder="Этаж"
 								keyboardType="number-pad"
 								style={{
-									...styles.textInput,
-									...styles.textInputInput,
+									...css.textInput,
+									...css.textInputInput,
 									width: windowWidth * 0.94,
 									height: windowWidth * 0.1,
 									borderRadius: 10,
 								}}
 							/>
 						</View>
-					}
+					)}
 
 					{/* F_FLOORSINHOUSE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Этажей в доме</Text>
+							<Text style={css.title}>Этажей в доме</Text>
 							<TextInput
 								value={f_FloorsInHouse}
 								onChangeText={(value) => setf_FloorsInHouse(value)}
 								placeholder="Этажей в доме"
 								keyboardType="number-pad"
 								style={{
-									...styles.textInput,
-									...styles.textInputInput,
+									...css.textInput,
+									...css.textInputInput,
 									width: windowWidth * 0.94,
 									height: windowWidth * 0.1,
 									borderRadius: 10,
 								}}
 							/>
 						</View>
-					}
+					)}
 
 					{/* F_FIRSTFLOORTYPE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Тип первого этаж</Text>
+							<Text style={css.title}>Тип первого этаж</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -890,15 +958,28 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* AREA */}
-					{f_Category >= 8 ? (
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ? null : f_Category == 7 ? null : f_Category == 1 ||
+					  f_Category >= 8 ? (
 						<View>
-							<Text style={{ ...styles.title, marginBottom: 5 }}>Площадь</Text>
+							<Text style={{ ...css.title, marginBottom: 5 }}>Площадь</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 								<View style={{ width: windowWidth * 0.47 }}>
-									<Text style={styles.title}>Общая</Text>
+									<Text style={css.title}>Общая</Text>
 									<TextInput
 										value={f_TotalArea}
 										onChangeText={(value) => {
@@ -965,8 +1046,8 @@ export default function AddObject() {
 										placeholder="Общая"
 										keyboardType="number-pad"
 										style={{
-											...styles.textInput,
-											...styles.textInputInput,
+											...css.textInput,
+											...css.textInputInput,
 											width: windowWidth * 0.47,
 											height: windowWidth * 0.1,
 											borderTopLeftRadius: 10,
@@ -976,15 +1057,15 @@ export default function AddObject() {
 								</View>
 
 								<View style={{ width: windowWidth * 0.47 }}>
-									<Text style={styles.title}>Жилая</Text>
+									<Text style={css.title}>Жилая</Text>
 									<TextInput
 										value={f_LivingArea}
 										onChangeText={(value) => setf_LivingArea(value)}
 										placeholder="Жилая"
 										keyboardType="number-pad"
 										style={{
-											...styles.textInput,
-											...styles.textInputInput,
+											...css.textInput,
+											...css.textInputInput,
 											width: windowWidth * 0.47,
 											height: windowWidth * 0.1,
 											borderTopRightRadius: 10,
@@ -997,10 +1078,10 @@ export default function AddObject() {
 						</View>
 					) : (
 						<View>
-							<Text style={{ ...styles.title, marginBottom: 5 }}>Площадь</Text>
+							<Text style={{ ...css.title, marginBottom: 5 }}>Площадь</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 								<View style={{ width: windowWidth * 0.31 }}>
-									<Text style={styles.title}>Общая</Text>
+									<Text style={css.title}>Общая</Text>
 									<TextInput
 										value={f_TotalArea}
 										onChangeText={(value) => {
@@ -1067,8 +1148,8 @@ export default function AddObject() {
 										placeholder="Общая"
 										keyboardType="number-pad"
 										style={{
-											...styles.textInput,
-											...styles.textInputInput,
+											...css.textInput,
+											...css.textInputInput,
 											width: windowWidth * 0.31,
 											height: windowWidth * 0.1,
 											borderTopLeftRadius: 10,
@@ -1077,15 +1158,15 @@ export default function AddObject() {
 									/>
 								</View>
 								<View style={{ width: windowWidth * 0.32 }}>
-									<Text style={styles.title}>Кухни</Text>
+									<Text style={css.title}>Кухни</Text>
 									<TextInput
 										value={f_KitchenArea}
 										onChangeText={(value) => setf_KitchenArea(value)}
 										placeholder="Кухни"
 										keyboardType="number-pad"
 										style={{
-											...styles.textInput,
-											...styles.textInputInput,
+											...css.textInput,
+											...css.textInputInput,
 											width: windowWidth * 0.32,
 											height: windowWidth * 0.1,
 											borderWidth: 0,
@@ -1095,15 +1176,15 @@ export default function AddObject() {
 									/>
 								</View>
 								<View style={{ width: windowWidth * 0.31 }}>
-									<Text style={styles.title}>Жилая</Text>
+									<Text style={css.title}>Жилая</Text>
 									<TextInput
 										value={f_LivingArea}
 										onChangeText={(value) => setf_LivingArea(value)}
 										placeholder="Жилая"
 										keyboardType="number-pad"
 										style={{
-											...styles.textInput,
-											...styles.textInputInput,
+											...css.textInput,
+											...css.textInputInput,
 											width: windowWidth * 0.31,
 											height: windowWidth * 0.1,
 											borderTopRightRadius: 10,
@@ -1116,10 +1197,25 @@ export default function AddObject() {
 					)}
 
 					{/* F_FINISHING */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ? null : f_Category >= 7 ? null : (
 						<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 							<View style={{ width: windowWidth * 0.94, paddingRight: 3 }}>
-								<Text style={styles.title}>Отделка</Text>
+								<Text style={css.title}>Отделка</Text>
 								<View
 									style={{
 										height: windowWidth * 0.1,
@@ -1146,13 +1242,29 @@ export default function AddObject() {
 								</View>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_BATHROOM  */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ? null : f_Category === '1' || f_Category >= 7 ? null : (
 						<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 							<View style={{ width: windowWidth * 0.94 }}>
-								<Text style={styles.title}>Санузел</Text>
+								<Text style={css.title}>Санузел</Text>
 								<View
 									style={{
 										height: windowWidth * 0.1,
@@ -1180,14 +1292,31 @@ export default function AddObject() {
 								</View>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_WINDOW */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ? null : f_Category >= 7 ? null : (
 						<View
 							style={{ width: windowWidth * 0.94, paddingRight: 3, marginBottom: 20 }}
 						>
-							<Text style={styles.title}>Окна</Text>
+							<Text style={css.title}>Окна</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -1211,12 +1340,30 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_BALCONYTYPE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Тип балкона</Text>
+							<Text style={css.title}>Тип балкона</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -1240,12 +1387,30 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_ELEVATOR */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Лифт</Text>
+							<Text style={css.title}>Лифт</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -1270,12 +1435,30 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_PARKING */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Парковка</Text>
+							<Text style={css.title}>Парковка</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -1299,12 +1482,30 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_FACILITIES */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category === '1' ? (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Удобства</Text>
+							<Text style={css.title}>Удобства</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -1329,13 +1530,31 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_LANDELECTRICITY, F_LANDGAS, F_LANDWATER, F_LANDSEWERAGE, F_LANDAREA, F_CARPORT, F_PARKINGLOT, F_GARAGE, F_BATH, F_GARDENHOUSE, F_HOUSEHOLDBUILDING */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 3 && f_Category <= 7 ? (
 						<Fragment>
 							<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-								<Text style={styles.title}>Электричество</Text>
+								<Text style={css.title}>Электричество</Text>
 								<View
 									style={{
 										height: windowWidth * 0.1,
@@ -1364,7 +1583,7 @@ export default function AddObject() {
 							</View>
 
 							<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-								<Text style={styles.title}>Газ</Text>
+								<Text style={css.title}>Газ</Text>
 								<View
 									style={{
 										height: windowWidth * 0.1,
@@ -1391,7 +1610,7 @@ export default function AddObject() {
 							</View>
 
 							<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-								<Text style={styles.title}>Водоснабжение</Text>
+								<Text style={css.title}>Водоснабжение</Text>
 								<View
 									style={{
 										height: windowWidth * 0.1,
@@ -1418,7 +1637,7 @@ export default function AddObject() {
 							</View>
 
 							<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-								<Text style={styles.title}>Канализация</Text>
+								<Text style={css.title}>Канализация</Text>
 								<View
 									style={{
 										height: windowWidth * 0.1,
@@ -1447,15 +1666,15 @@ export default function AddObject() {
 							{f_Category >= 3 && f_Category <= 6 ? (
 								<Fragment>
 									<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-										<Text style={styles.title}>Площадь участка (соток)</Text>
+										<Text style={css.title}>Площадь участка (соток)</Text>
 										<TextInput
 											value={f_LandArea}
 											onChangeText={(value) => setf_LandArea(value)}
 											placeholder="Площадь участка (соток)"
 											keyboardType="number-pad"
 											style={{
-												...styles.textInput,
-												...styles.textInputInput,
+												...css.textInput,
+												...css.textInputInput,
 												width: windowWidth * 0.94,
 												height: windowWidth * 0.1,
 												borderRadius: 10,
@@ -1476,21 +1695,21 @@ export default function AddObject() {
 													: setf_Carport('0')
 											}
 											style={[
-												styles.select,
+												css.select,
 												{
 													width: windowWidth * 0.25,
 													height: windowWidth * 0.15,
 													borderWidth: 1,
 													borderRadius: 10,
 												},
-												f_Carport === '1' ? styles.selected : null,
+												f_Carport === '1' ? css.selected : null,
 											]}
 										>
 											<Text
 												style={[
-													styles.selectText,
+													css.selectText,
 													{ textAlign: 'center', lineHeight: 20 },
-													f_Carport === '1' ? styles.selectedText : null,
+													f_Carport === '1' ? css.selectedText : null,
 												]}
 											>
 												Навес{'\n'}для авто
@@ -1503,23 +1722,21 @@ export default function AddObject() {
 													: setf_ParkingLot('0')
 											}
 											style={[
-												styles.select,
+												css.select,
 												{
 													width: windowWidth * 0.35,
 													height: windowWidth * 0.15,
 													borderWidth: 1,
 													borderRadius: 10,
 												},
-												f_ParkingLot === '1' ? styles.selected : null,
+												f_ParkingLot === '1' ? css.selected : null,
 											]}
 										>
 											<Text
 												style={[
-													styles.selectText,
+													css.selectText,
 													{ textAlign: 'center', lineHeight: 20 },
-													f_ParkingLot === '1'
-														? styles.selectedText
-														: null,
+													f_ParkingLot === '1' ? css.selectedText : null,
 												]}
 											>
 												Парковочное{'\n'}место
@@ -1532,21 +1749,21 @@ export default function AddObject() {
 													: setf_Garage('0')
 											}
 											style={[
-												styles.select,
+												css.select,
 												{
 													width: windowWidth * 0.25,
 													height: windowWidth * 0.15,
 													borderWidth: 1,
 													borderRadius: 10,
 												},
-												f_Garage === '1' ? styles.selected : null,
+												f_Garage === '1' ? css.selected : null,
 											]}
 										>
 											<Text
 												style={[
-													styles.selectText,
+													css.selectText,
 													{ textAlign: 'center', lineHeight: 20 },
-													f_Garage === '1' ? styles.selectedText : null,
+													f_Garage === '1' ? css.selectedText : null,
 												]}
 											>
 												Гараж
@@ -1565,21 +1782,21 @@ export default function AddObject() {
 												f_Bath === '0' ? setf_Bath('1') : setf_Bath('0')
 											}
 											style={[
-												styles.select,
+												css.select,
 												{
 													width: windowWidth * 0.25,
 													height: windowWidth * 0.15,
 													borderWidth: 1,
 													borderRadius: 10,
 												},
-												f_Bath === '1' ? styles.selected : null,
+												f_Bath === '1' ? css.selected : null,
 											]}
 										>
 											<Text
 												style={[
-													styles.selectText,
+													css.selectText,
 													{ textAlign: 'center', lineHeight: 20 },
-													f_Bath === '1' ? styles.selectedText : null,
+													f_Bath === '1' ? css.selectedText : null,
 												]}
 											>
 												Баня
@@ -1592,23 +1809,21 @@ export default function AddObject() {
 													: setf_GardenHouse('0')
 											}
 											style={[
-												styles.select,
+												css.select,
 												{
 													width: windowWidth * 0.25,
 													height: windowWidth * 0.15,
 													borderWidth: 1,
 													borderRadius: 10,
 												},
-												f_GardenHouse === '1' ? styles.selected : null,
+												f_GardenHouse === '1' ? css.selected : null,
 											]}
 										>
 											<Text
 												style={[
-													styles.selectText,
+													css.selectText,
 													{ textAlign: 'center', lineHeight: 20 },
-													f_GardenHouse === '1'
-														? styles.selectedText
-														: null,
+													f_GardenHouse === '1' ? css.selectedText : null,
 												]}
 											>
 												Беседка
@@ -1621,24 +1836,22 @@ export default function AddObject() {
 													: setf_HouseholdBuilding('0')
 											}
 											style={[
-												styles.select,
+												css.select,
 												{
 													width: windowWidth * 0.35,
 													height: windowWidth * 0.15,
 													borderWidth: 1,
 													borderRadius: 10,
 												},
-												f_HouseholdBuilding === '1'
-													? styles.selected
-													: null,
+												f_HouseholdBuilding === '1' ? css.selected : null,
 											]}
 										>
 											<Text
 												style={[
-													styles.selectText,
+													css.selectText,
 													{ textAlign: 'center', lineHeight: 20 },
 													f_HouseholdBuilding === '1'
-														? styles.selectedText
+														? css.selectedText
 														: null,
 												]}
 											>
@@ -1649,12 +1862,30 @@ export default function AddObject() {
 								</Fragment>
 							) : null}
 						</Fragment>
-					}
+					) : null}
 
 					{/* KADASTR */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : (
 						<Fragment>
-							<Text style={styles.title}>Кадастровый номер</Text>
+							<Text style={css.title}>Кадастровый номер</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 								<TextInput
 									value={f_CadastralNumber}
@@ -1662,8 +1893,8 @@ export default function AddObject() {
 									placeholder="Кадастровый номер"
 									keyboardType="number-pad"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.94,
 										height: windowWidth * 0.1,
 										borderRadius: 10,
@@ -1671,12 +1902,31 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* F_TYPESALE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Тип продажи</Text>
+							<Text style={css.title}>Тип продажи</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -1699,12 +1949,31 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_OFFERFROM */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
-							<Text style={styles.title}>Предложение от</Text>
+							<Text style={css.title}>Предложение от</Text>
 							<View
 								style={{
 									height: windowWidth * 0.1,
@@ -1730,12 +1999,32 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* PRICE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ? null : (
 						<Fragment>
-							<Text style={styles.title}>Цена</Text>
+							<Text style={css.title}>Цена</Text>
 							<View style={{ flexDirection: 'row' }}>
 								<TextInput
 									value={f_Price}
@@ -1743,8 +2032,8 @@ export default function AddObject() {
 									placeholder="от"
 									keyboardType="number-pad"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.82,
 										height: windowWidth * 0.1,
 										borderTopLeftRadius: 10,
@@ -1753,17 +2042,38 @@ export default function AddObject() {
 									}}
 								/>
 
-								<View style={styles.units}>
+								<View style={css.units}>
 									<Text style={{ fontFamily: 'gothampro-regular' }}>руб.</Text>
 								</View>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* MORTGAGE CHECKBOX */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ? null : (
 						<Pressable
-							style={styles.checkBox}
+							style={css.checkBox}
 							onPress={() => setf_Mortgage(f_Mortgage ? '' : '1')}
 						>
 							<CheckBox
@@ -1771,14 +2081,35 @@ export default function AddObject() {
 								value={Boolean(f_Mortgage)}
 								onValueChange={(newValue) => setf_Mortgage(f_Mortgage ? '' : '1')}
 							/>
-							<Text style={styles.checkBoxText}>Подходит под ипотеку</Text>
+							<Text style={css.checkBoxText}>Подходит под ипотеку</Text>
 						</Pressable>
-					}
+					)}
 
 					{/* `PHONE` */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ? null : (
 						<Fragment>
-							<Text style={styles.title}>Телефон</Text>
+							<Text style={css.title}>Телефон</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 								<TextInput
 									value={f_Phone}
@@ -1786,8 +2117,8 @@ export default function AddObject() {
 									placeholder="Телефон"
 									keyboardType="number-pad"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.94,
 										height: windowWidth * 0.1,
 										borderRadius: 10,
@@ -1795,12 +2126,33 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* DESCRIPTION */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ? null : (
 						<Fragment>
-							<Text style={styles.title}>Описание</Text>
+							<Text style={css.title}>Описание</Text>
 							<View style={{ marginBottom: 20 }}>
 								<TextInput
 									multiline
@@ -1809,8 +2161,8 @@ export default function AddObject() {
 									placeholder="Описание"
 									keyboardType="default"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										paddingVertical: 5,
 										textAlignVertical: 'top',
 										width: windowWidth * 0.94,
@@ -1821,12 +2173,33 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* YOUTUBE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ? null : (
 						<Fragment>
-							<Text style={styles.title}>Ссылка на видео youtube</Text>
+							<Text style={css.title}>Ссылка на видео youtube</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 								<TextInput
 									value={f_Video}
@@ -1834,8 +2207,8 @@ export default function AddObject() {
 									placeholder="Ссылка на видео youtube"
 									keyboardType="number-pad"
 									style={{
-										...styles.textInput,
-										...styles.textInputInput,
+										...css.textInput,
+										...css.textInputInput,
 										width: windowWidth * 0.94,
 										height: windowWidth * 0.1,
 										borderRadius: 10,
@@ -1843,118 +2216,66 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* Button ADD */}
-
-					<View
-						style={{
-							alignItems: 'center',
-						}}
-					>
-						<Pressable
-							android_ripple={{ color: '#fff' }}
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ||
+					!f_Phone ? null : (
+						<View
 							style={{
-								backgroundColor: '#912e33',
-								width: windowWidth * 0.88,
-								height: windowWidth * 0.1,
-								borderRadius: 10,
 								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-							onPress={() => {
-								handleAddObject()
 							}}
 						>
-							<Text
+							<Pressable
+								android_ripple={{ color: '#fff' }}
 								style={{
-									color: '#fdfffc',
-									fontFamily: 'gothampro-regular',
-									fontSize: 18,
+									backgroundColor: '#912e33',
+									width: windowWidth * 0.88,
+									height: windowWidth * 0.1,
+									borderRadius: 10,
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}
+								onPress={() => {
+									console.log('Button ДОБАВИТЬ')
+									handleAddObject()
 								}}
 							>
-								Добавить
-							</Text>
-						</Pressable>
-					</View>
-
-					<View style={{ width: windowWidth, alignItems: 'center' }}>
-						<TouchableOpacity
-							onPress={ncAuthFetch}
-							style={{
-								alignItems: 'center',
-								justifyContent: 'center',
-								borderRadius: 15,
-								width: windowWidth * 0.7,
-								height: windowWidth * 0.15,
-								backgroundColor: '#74c8b4',
-							}}
-						>
-							<Text>Cookie</Text>
-						</TouchableOpacity>
-					</View>
+								<Text
+									style={{
+										color: '#fdfffc',
+										fontFamily: 'gothampro-regular',
+										fontSize: 18,
+									}}
+								>
+									Добавить
+								</Text>
+							</Pressable>
+						</View>
+					)}
 				</View>
 			</ScrollView>
 		</View>
 	)
 }
-
-const styles = StyleSheet.create({
-	title: {
-		fontFamily: 'gothampro-regular',
-		fontSize: 18,
-		color: '#000',
-		marginBottom: 10,
-	},
-	select: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		borderWidth: 1,
-		borderColor: '#868686',
-		marginBottom: 20,
-	},
-	selected: {
-		backgroundColor: '#acacac',
-	},
-	selectText: {
-		fontFamily: 'gothampro-regular',
-		fontSize: 15,
-		color: '#000',
-	},
-	selectedText: {
-		color: '#fff',
-	},
-	checkBox: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginBottom: 20,
-	},
-	checkBoxText: {
-		fontFamily: 'gothampro-regular',
-		fontSize: 15,
-	},
-	textInput: {
-		justifyContent: 'center',
-		paddingLeft: 10,
-		paddingRight: 10,
-		borderWidth: 1,
-		borderColor: '#868686',
-	},
-	textInputInput: {
-		fontSize: 15,
-		fontFamily: 'gothampro-regular',
-		fontWeight: 'normal',
-	},
-	units: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		width: windowWidth * 0.12,
-		height: windowWidth * 0.1,
-		borderTopRightRadius: 10,
-		borderBottomRightRadius: 10,
-		borderWidth: 1,
-		borderLeftWidth: 0,
-		borderColor: '#868686',
-		marginBottom: 20,
-	},
-})
