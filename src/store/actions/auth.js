@@ -87,6 +87,7 @@ export const updateTokenAction = (email, token, userid, userData) => {
 		if (responseUpdateToken.ok) {
 			const resUpdateTokenData = await responseUpdateToken.json()
 			if (resUpdateTokenData.Status) {
+				console.log('auth.js > resUpdateTokenData.Status > ', resUpdateTokenData.Status)
 				let updatedToken = resUpdateTokenData.Token
 				dispatch({
 					type: UPDATE_TOKEN,

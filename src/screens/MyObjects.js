@@ -38,9 +38,9 @@ export default function MyObjects({ navigation }) {
 			.catch((err) => console.error(err))
 	}
 
-	useEffect(() => {
-		handleGetMyObjects()
-	}, [])
+	// useEffect(() => {
+	// handleGetMyObjects()
+	// }, [])
 
 	const onRefresh = () => {
 		setmyObjects([])

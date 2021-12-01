@@ -37,7 +37,7 @@ const formReducer = (state, action) => {
 	return state
 }
 
-export default LoginScreen = () => {
+export default function LoginScreen() {
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState()
 	const dispatch = useDispatch()

@@ -10,12 +10,10 @@ import {
 	Text,
 	View,
 	Animated,
-	TouchableOpacity,
 } from 'react-native'
 import store from '../store'
 import md5 from 'md5'
 import LextaService from '../services/LextaService'
-import { ncAuthFetch } from '../ncAuth'
 // import { TextInput } from 'react-native-paper'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
@@ -154,18 +152,15 @@ export default function AddObject() {
 
 		await fetch('https://lexta.pro/netcat/add.php', {
 			method: 'post',
+			mode: 'no-cors',
+			headers: new Headers(),
 			body: data,
-			credentials: 'include',
-			headers: new Headers({
-				'content-type': 'multipart/form-data',
-				'access-control-allow-credentials': true,
-				// 'access-control-allow-headers': 'set-cookie',
-			}),
 		})
 			.then((res) => {
-				console.log(res.headers)
+				console.log(res.status)
+				return res.text()
 			})
-			// .then((json) => console.log('json', json))
+			.then((json) => console.log('json', json))
 			.catch((err) => console.log(err))
 	}
 
@@ -197,7 +192,7 @@ export default function AddObject() {
 				}}
 				style={{ width: windowWidth }}
 			>
-				<View style={{ alignItems: 'center' }}>
+				<View>
 					{/* F_CATEGORY */}
 					<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 						<Text style={styles.title}>Категория</Text>
@@ -297,7 +292,7 @@ export default function AddObject() {
 					</View>
 
 					{/* F_LANDAPPOINTMENT */}
-					{
+					{f_Category == 7 ? (
 						<View style={{ width: windowWidth * 0.94 }}>
 							<Text style={styles.title}>Назначение</Text>
 							<View
@@ -332,10 +327,10 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_TYPE */}
-					{
+					{f_Category == 0 ? null : (
 						<View style={{ width: windowWidth * 0.94 }}>
 							<Text style={styles.title}>Тип сделки</Text>
 							<View
@@ -367,10 +362,10 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_LEASETYPE */}
-					{
+					{f_Category == 0 ? null : f_Category >= 7 ? null : f_Type === '1' ? (
 						<View
 							style={{
 								width: windowWidth * 0.94,
@@ -406,10 +401,10 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_COMMERCIALPROPERTYTYPE */}
-					{
+					{f_Category == 0 && !f_Type ? null : f_Category == 12 ? (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Тип коммерческой недвижимости</Text>
 							<View
@@ -444,10 +439,10 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_LOCATIONCOMMERCIAL */}
-					{
+					{f_Category == 0 ? null : f_Category == 12 ? (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Расположение ком. недвижимости</Text>
 							<View
@@ -476,10 +471,10 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_OBJECTTYPE */}
-					{
+					{f_Category == 0 || f_Type == 0 ? null : f_Category >= 7 ? null : (
 						<View style={{ flexDirection: 'row' }}>
 							<Pressable
 								onPress={() => setf_ObjectType(1)}
@@ -529,10 +524,11 @@ export default function AddObject() {
 								</Text>
 							</Pressable>
 						</View>
-					}
+					)}
 
 					{/* F_TRAVELTYPE */}
-					{
+					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category >=
+					  7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Тип туристического объекта</Text>
 							<View
@@ -565,10 +561,11 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_NUMBERROOMS */}
-					{
+					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category == 1 ||
+					  f_Category >= 7 ? null : (
 						<View style={{ marginBottom: 20 }}>
 							<Text style={styles.title}>Количество комнат</Text>
 							<View
@@ -606,10 +603,13 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* REGION & CITY */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ? null : (
 						<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 							<View style={{ width: windowWidth * 0.47 }}>
 								<Text style={styles.title}>Регион</Text>
@@ -649,10 +649,15 @@ export default function AddObject() {
 								/>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_STREET, F_HOUSENUMBER */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ? null : (
 						<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 							<View style={{ width: windowWidth * 0.47 }}>
 								<Text style={styles.title}>Улица</Text>
@@ -692,7 +697,7 @@ export default function AddObject() {
 								/>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* PROPERTY TYPE */}
 					{/* <View style={{ flexDirection: 'row', marginBottom: 20 }}>
@@ -715,7 +720,14 @@ export default function AddObject() {
 					</View> */}
 
 					{/* LOCATION */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ? null : (
 						<View>
 							<Text style={styles.title}>Метка на карте</Text>
 							<View
@@ -763,10 +775,17 @@ export default function AddObject() {
 								</Pressable>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_HOUSETYPE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Тип дома</Text>
 							<View
@@ -798,10 +817,18 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* YEAR */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ? null : (
 						<Fragment>
 							<Text style={styles.title}>Год постройки</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
@@ -820,10 +847,19 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/*  F_FLOOR */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					f_YearBuilt ? null : f_Category >= 3 && f_Category <= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Этаж</Text>
 							<TextInput
@@ -840,10 +876,20 @@ export default function AddObject() {
 								}}
 							/>
 						</View>
-					}
+					)}
 
 					{/* F_FLOORSINHOUSE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Этажей в доме</Text>
 							<TextInput
@@ -860,10 +906,21 @@ export default function AddObject() {
 								}}
 							/>
 						</View>
-					}
+					)}
 
 					{/* F_FIRSTFLOORTYPE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Тип первого этаж</Text>
 							<View
@@ -890,10 +947,23 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* AREA */}
-					{f_Category >= 8 ? (
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ? null : f_Category == 7 ? null : f_Category == 1 ||
+					  f_Category >= 8 ? (
 						<View>
 							<Text style={{ ...styles.title, marginBottom: 5 }}>Площадь</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
@@ -1116,7 +1186,22 @@ export default function AddObject() {
 					)}
 
 					{/* F_FINISHING */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ? null : f_Category >= 7 ? null : (
 						<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 							<View style={{ width: windowWidth * 0.94, paddingRight: 3 }}>
 								<Text style={styles.title}>Отделка</Text>
@@ -1146,10 +1231,26 @@ export default function AddObject() {
 								</View>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_BATHROOM  */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ? null : f_Category === '1' || f_Category >= 7 ? null : (
 						<View style={{ flexDirection: 'row', marginBottom: 20 }}>
 							<View style={{ width: windowWidth * 0.94 }}>
 								<Text style={styles.title}>Санузел</Text>
@@ -1180,10 +1281,27 @@ export default function AddObject() {
 								</View>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_WINDOW */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ? null : f_Category >= 7 ? null : (
 						<View
 							style={{ width: windowWidth * 0.94, paddingRight: 3, marginBottom: 20 }}
 						>
@@ -1211,10 +1329,28 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_BALCONYTYPE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Тип балкона</Text>
 							<View
@@ -1240,10 +1376,28 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_ELEVATOR */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Лифт</Text>
 							<View
@@ -1270,10 +1424,28 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_PARKING */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 7 ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Парковка</Text>
 							<View
@@ -1299,10 +1471,28 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_FACILITIES */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category === '1' ? (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Удобства</Text>
 							<View
@@ -1329,10 +1519,28 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					) : null}
 
 					{/* F_LANDELECTRICITY, F_LANDGAS, F_LANDWATER, F_LANDSEWERAGE, F_LANDAREA, F_CARPORT, F_PARKINGLOT, F_GARAGE, F_BATH, F_GARDENHOUSE, F_HOUSEHOLDBUILDING */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 3 && f_Category <= 7 ? (
 						<Fragment>
 							<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 								<Text style={styles.title}>Электричество</Text>
@@ -1649,10 +1857,28 @@ export default function AddObject() {
 								</Fragment>
 							) : null}
 						</Fragment>
-					}
+					) : null}
 
 					{/* KADASTR */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ? null : (
 						<Fragment>
 							<Text style={styles.title}>Кадастровый номер</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
@@ -1671,10 +1897,29 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* F_TYPESALE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Тип продажи</Text>
 							<View
@@ -1699,10 +1944,29 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* F_OFFERFROM */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ? null : (
 						<View style={{ width: windowWidth * 0.94, marginBottom: 20 }}>
 							<Text style={styles.title}>Предложение от</Text>
 							<View
@@ -1730,10 +1994,30 @@ export default function AddObject() {
 								</Picker>
 							</View>
 						</View>
-					}
+					)}
 
 					{/* PRICE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ? null : (
 						<Fragment>
 							<Text style={styles.title}>Цена</Text>
 							<View style={{ flexDirection: 'row' }}>
@@ -1758,10 +2042,31 @@ export default function AddObject() {
 								</View>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* MORTGAGE CHECKBOX */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ? null : (
 						<Pressable
 							style={styles.checkBox}
 							onPress={() => setf_Mortgage(f_Mortgage ? '' : '1')}
@@ -1773,10 +2078,31 @@ export default function AddObject() {
 							/>
 							<Text style={styles.checkBoxText}>Подходит под ипотеку</Text>
 						</Pressable>
-					}
+					)}
 
 					{/* `PHONE` */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ? null : (
 						<Fragment>
 							<Text style={styles.title}>Телефон</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
@@ -1795,10 +2121,31 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* DESCRIPTION */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ? null : (
 						<Fragment>
 							<Text style={styles.title}>Описание</Text>
 							<View style={{ marginBottom: 20 }}>
@@ -1821,10 +2168,31 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* YOUTUBE */}
-					{
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ? null : (
 						<Fragment>
 							<Text style={styles.title}>Ссылка на видео youtube</Text>
 							<View style={{ flexDirection: 'row', marginBottom: 20 }}>
@@ -1843,56 +2211,64 @@ export default function AddObject() {
 								/>
 							</View>
 						</Fragment>
-					}
+					)}
 
 					{/* Button ADD */}
-
-					<View
-						style={{
-							alignItems: 'center',
-						}}
-					>
-						<Pressable
-							android_ripple={{ color: '#fff' }}
+					{f_Category == 0 ||
+					f_Type == 0 ||
+					f_ObjectType == 0 ||
+					f_NumberRooms == 0 ||
+					!f_Region ||
+					!f_City ||
+					!f_Street ||
+					!f_HouseNumber ||
+					f_HouseType == 0 ||
+					!f_YearBuilt ||
+					!f_Floor ||
+					!f_FloorsInHouse ||
+					f_FirstFloorType == 0 ||
+					!f_TotalArea ||
+					!f_KitchenArea ||
+					!f_LivingArea ||
+					f_Finishing == 0 ||
+					f_Bathroom == 0 ||
+					f_Window == 0 ||
+					!f_CadastralNumber ||
+					f_OfferFrom == 0 ||
+					!f_Price ||
+					!f_Phone ? null : (
+						<View
 							style={{
-								backgroundColor: '#912e33',
-								width: windowWidth * 0.88,
-								height: windowWidth * 0.1,
-								borderRadius: 10,
 								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-							onPress={() => {
-								handleAddObject()
 							}}
 						>
-							<Text
+							<Pressable
+								android_ripple={{ color: '#fff' }}
 								style={{
-									color: '#fdfffc',
-									fontFamily: 'gothampro-regular',
-									fontSize: 18,
+									backgroundColor: '#912e33',
+									width: windowWidth * 0.88,
+									height: windowWidth * 0.1,
+									borderRadius: 10,
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}
+								onPress={() => {
+									console.log('Button ДОБАВИТЬ')
+									handleAddObject()
 								}}
 							>
-								Добавить
-							</Text>
-						</Pressable>
-					</View>
-
-					<View style={{ width: windowWidth, alignItems: 'center' }}>
-						<TouchableOpacity
-							onPress={ncAuthFetch}
-							style={{
-								alignItems: 'center',
-								justifyContent: 'center',
-								borderRadius: 15,
-								width: windowWidth * 0.7,
-								height: windowWidth * 0.15,
-								backgroundColor: '#74c8b4',
-							}}
-						>
-							<Text>Cookie</Text>
-						</TouchableOpacity>
-					</View>
+								<Text
+									style={{
+										color: '#fdfffc',
+										fontFamily: 'gothampro-regular',
+										fontSize: 18,
+									}}
+								>
+									Добавить
+								</Text>
+							</Pressable>
+						</View>
+					)}
 				</View>
 			</ScrollView>
 		</View>

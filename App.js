@@ -26,7 +26,11 @@ const App = () => {
 	if (!isReady) {
 		return (
 			<React.Fragment>
-				<AppLoading startAsync={bootstrap} onFinish={() => setIsReady(true)} onError={(err) => console.log(err)} />
+				<AppLoading
+					startAsync={bootstrap}
+					onFinish={() => setIsReady(true)}
+					onError={(err) => console.log(err)}
+				/>
 			</React.Fragment>
 		)
 	}
