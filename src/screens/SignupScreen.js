@@ -74,8 +74,7 @@ export default function SignupScreen({ navigation }) {
 		if (!gender) return Alert.alert('Ошибка', 'Укажите Ваш пол')
 		if (!pass) return Alert.alert('Ошибка', 'Введите пароль')
 		if (!rpass) return Alert.alert('Ошибка', 'Введите подтверждённый пароль')
-		if (formState.inputValues.pass !== formState.inputValues.rpass)
-			return Alert.alert('Ошибка', 'Пароли не совпадают')
+		if (formState.inputValues.pass !== formState.inputValues.rpass) return Alert.alert('Ошибка', 'Пароли не совпадают')
 
 		setError(null)
 		setLoading(true)
@@ -99,9 +98,9 @@ export default function SignupScreen({ navigation }) {
 		[dispatchFormState]
 	)
 
-	useEffect(() => {
-		console.log('formState', formState)
-	}, [formState])
+	// useEffect(() => {
+	// console.log('formState', formState)
+	// }, [formState])
 
 	return (
 		<React.Fragment>
@@ -143,18 +142,8 @@ export default function SignupScreen({ navigation }) {
 						onInputChange={inputChangeHandler}
 						required
 					/>
-					<SignupInput
-						id="birthDate"
-						birthDate
-						label="Дата рождения"
-						value={formState.birthDate}
-						onInputChange={inputChangeHandler}
-					/>
-					<SignupInput
-						id="gender"
-						value={formState.gender}
-						onInputChange={inputChangeHandler}
-					/>
+					<SignupInput id="birthDate" birthDate label="Дата рождения" value={formState.birthDate} onInputChange={inputChangeHandler} />
+					<SignupInput id="gender" value={formState.gender} onInputChange={inputChangeHandler} />
 					<SignupInput
 						id="pass"
 						label="Пароль*"
@@ -175,19 +164,13 @@ export default function SignupScreen({ navigation }) {
 						onInputChange={inputChangeHandler}
 						required
 					/>
-					<Pressable
-						android_ripple
-						onPress={submitHandler}
-						style={[css.btn, css.btnLogin]}
-					>
-						<Text style={css.text}>
-							{loading ? <ActivityIndicator color="#fff" /> : 'Зарегистрироваться'}
-						</Text>
+					<Pressable android_ripple onPress={submitHandler} style={[css.btn, css.btnLogin]}>
+						<Text style={css.text}>{loading ? <ActivityIndicator color="#fff" /> : 'Зарегистрироваться'}</Text>
 					</Pressable>
 					<Text style={css.textBtm}>* отмечены поля обязательные для заполнения</Text>
 					<Text style={css.textBtm}>
-						Нажимая кнопку «Зарегистрироваться», вы подтверждаете согласие с условиями
-						использования ЛЕХТА и политикой о данных пользователей.
+						Нажимая кнопку «Зарегистрироваться», вы подтверждаете согласие с условиями использования ЛЕХТА и политикой о данных
+						пользователей.
 					</Text>
 				</ScrollView>
 			</View>

@@ -11,8 +11,14 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 const ADD_OBJECT_FORM_UPDATE = 'ADD_OBJECT_FORM_UPDATE'
 const formReducer = (state, action) => {
 	if ((action.type = ADD_OBJECT_FORM_UPDATE)) {
-		const updatedValues = {}
-		const updatedValidities = {}
+		const updatedValues = {
+			...state.inputValues,
+			[action.input]: action.value,
+		}
+		const updatedValidities = {
+			...state.inputValidities,
+			[action.input]: action.isValid,
+		}
 		let updatedFormIsValid = true
 		for (const key in updatedValidities) {
 			updatedFormIsValid = updatedFormIsValid && updatedValidities[key]
@@ -27,7 +33,7 @@ const formReducer = (state, action) => {
 }
 
 export default function AddObject() {
-	const [f_Name, setf_Name] = useState('')
+	// const [f_Name, setf_Name] = useState('')
 	const [f_Description, setf_Description] = useState('')
 	const [f_Type, setf_Type] = useState('0')
 	const [f_LeaseType, setf_LeaseType] = useState('0')
@@ -35,7 +41,7 @@ export default function AddObject() {
 	const [f_Region, setf_Region] = useState('')
 	const [f_City, setf_City] = useState('')
 	const [f_ObjectType, setf_ObjectType] = useState('0')
-	const [f_Category, setf_Category] = useState('0')
+	// const [f_Category, setf_Category] = useState('0')
 	const [f_NumberRooms, setf_NumberRooms] = useState('0')
 	const [f_TypeProperty, setf_TypeProperty] = useState('')
 	const [f_SubwayStation, setf_SubwayStation] = useState('')
@@ -44,7 +50,7 @@ export default function AddObject() {
 	const [f_Price, setf_Price] = useState('')
 	const [f_PriceHistory, setf_PriceHistory] = useState('')
 	const [f_Finishing, setf_Finishing] = useState('0')
-	const [f_TotalArea, setf_TotalArea] = useState('')
+	// const [f_TotalArea, setf_TotalArea] = useState('')
 	const [f_KitchenArea, setf_KitchenArea] = useState('')
 	const [f_LivingArea, setf_LivingArea] = useState()
 	const [f_Floor, setf_Floor] = useState('')
@@ -66,7 +72,7 @@ export default function AddObject() {
 	const [f_Img, setf_Img] = useState('')
 	const [f_Latitude, setf_Latitude] = useState('0')
 	const [f_Longitude, setf_Longitude] = useState('0')
-	const [f_LandAppointment, setf_LandAppointment] = useState('0')
+	// const [f_LandAppointment, setf_LandAppointment] = useState('0')
 	const [f_LandElectricity, setf_LandElectricity] = useState('0')
 	const [f_LandGas, setf_LandGas] = useState('0')
 	const [f_LandWater, setf_LandWater] = useState('0')
@@ -82,85 +88,84 @@ export default function AddObject() {
 	const [f_CommercialPropertyType, setf_CommercialPropertyType] = useState('0')
 	const [f_LocationCommercial, setf_LocationCommercial] = useState('0')
 	const [f_LeasePricePeriod, setf_LeasePricePeriod] = useState('0')
-	// f_ViewsNum - DON'T SEND
-	// f_ObjectChecked - DON'T SEND
-	// f_ObjectRejected - DON'T SEND
-	// f_ObjectRejectedComment - DON'T SEND
-	const [f_ViewsNum, setf_ViewsNum] = useState(0)
-	const [f_ObjectChecked, setf_ObjectChecked] = useState(0)
-	const [f_ObjectRejected, setf_ObjectRejected] = useState(0)
-	const [f_ObjectRejectedComment, setf_ObjectRejectedComment] = useState('')
-
-	let data = new FormData()
-	data.append('cc', 6)
-	data.append('sub', 10)
-	data.append('posting', 1)
-	data.append('f_Name', f_Name)
-	data.append('f_Description', f_Description)
-	data.append('f_Type', f_Type)
-	data.append('f_LeaseType', f_LeaseType)
-	data.append('f_TravelType', f_TravelType)
-	data.append('f_Region', f_Region)
-	data.append('f_City', f_City)
-	data.append('f_ObjectType', f_ObjectType)
-	data.append('f_Category', f_Category)
-	data.append('f_NumberRooms', f_NumberRooms)
-	data.append('f_TypeProperty', f_TypeProperty)
-	data.append('f_SubwayStation', f_SubwayStation)
-	data.append('f_Street', f_Street)
-	data.append('f_HouseNumber', f_HouseNumber)
-	data.append('f_Price', f_Price)
-	data.append('f_PriceHistory', f_PriceHistory)
-	data.append('f_Finishing', f_Finishing)
-	data.append('f_TotalArea', f_TotalArea)
-	data.append('f_KitchenArea', f_KitchenArea)
-	data.append('f_LivingArea', f_LivingArea)
-	data.append('f_Floor', f_Floor)
-	data.append('f_FloorsInHouse', f_FloorsInHouse)
-	data.append('f_FirstFloorType', f_FirstFloorType)
-	data.append('f_HouseType', f_HouseType)
-	data.append('f_Bathroom', f_Bathroom)
-	data.append('f_Window', f_Window)
-	data.append('f_BalconyType', f_BalconyType)
-	data.append('f_Elevator', f_Elevator)
-	data.append('f_Parking', f_Parking)
-	data.append('f_TypeSale', f_TypeSale)
-	data.append('f_OfferFrom', f_OfferFrom)
-	data.append('f_YearBuilt', f_YearBuilt)
-	data.append('f_Mortgage', f_Mortgage)
-	data.append('f_Video', f_Video)
-	data.append('f_Phone', f_Phone)
-	data.append('f_CadastralNumber', f_CadastralNumber)
-	// data.append('f_Img', f_Img)
-	data.append('f_Latitude', f_Latitude)
-	data.append('f_Longitude', f_Longitude)
-	data.append('f_LandAppointment', f_LandAppointment)
-	data.append('f_LandElectricity', f_LandElectricity)
-	data.append('f_LandGas', f_LandGas)
-	data.append('f_LandWater', f_LandWater)
-	data.append('f_LandSewerage', f_LandSewerage)
-	data.append('f_LandArea', f_LandArea)
-	data.append('f_Carport', f_Carport)
-	data.append('f_ParkingLot', f_ParkingLot)
-	data.append('f_Garage', f_Garage)
-	data.append('f_Bath', f_Bath)
-	data.append('f_GardenHouse', f_GardenHouse)
-	data.append('f_HouseholdBuilding', f_HouseholdBuilding)
-	data.append('f_Facilities', f_Facilities)
-	data.append('f_CommercialPropertyType', f_CommercialPropertyType)
-	data.append('f_LocationCommercial', f_LocationCommercial)
-	data.append('f_LeasePricePeriod', f_LeasePricePeriod)
-	data.append('f_ViewsNum', f_ViewsNum)
-	data.append('f_ObjectChecked', f_ObjectChecked)
-	data.append('f_ObjectRejected', f_ObjectRejected)
-	data.append('f_ObjectRejectedComment', f_ObjectRejectedComment)
+	const [f_ViewsNum, setf_ViewsNum] = useState(0) // — DON'T SEND
+	const [f_ObjectChecked, setf_ObjectChecked] = useState(0) // — DON'T SEND
+	const [f_ObjectRejected, setf_ObjectRejected] = useState(0) // — DON'T SEND
+	const [f_ObjectRejectedComment, setf_ObjectRejectedComment] = useState('') // — DON'T SEND
 
 	const dispatch = useDispatch()
 	const [formState, dispatchFormState] = useReducer(formReducer, {
-		inputValues: {},
+		inputValues: {
+			f_Name: '',
+			f_Description: '',
+			f_Type: '',
+			f_LeaseType: '',
+			f_TravelType: '',
+			f_Region: '',
+			f_City: '',
+			f_ObjectType: '',
+			f_Category: '0',
+			f_NumberRooms: '',
+			f_TypeProperty: '',
+			f_SubwayStation: '',
+			f_Street: '',
+			f_HouseNumber: '',
+			f_Price: '',
+			f_PriceHistory: '',
+			f_Finishing: '',
+			f_TotalArea: '',
+			f_KitchenArea: '',
+			f_LivingArea: '',
+			f_Floor: '',
+			f_FloorsInHouse: '',
+			f_FirstFloorType: '',
+			f_HouseType: '',
+			f_Bathroom: '',
+			f_Window: '',
+			f_BalconyType: '',
+			f_Elevator: '',
+			f_Parking: '',
+			f_TypeSale: '',
+			f_OfferFrom: '',
+			f_YearBuilt: '',
+			f_Mortgage: '',
+			f_Video: '',
+			f_Phone: '',
+			f_CadastralNumber: '',
+			f_Img: '',
+			f_Latitude: '',
+			f_Longitude: '',
+			f_LandAppointment: '',
+			f_LandElectricity: '',
+			f_LandGas: '',
+			f_LandWater: '',
+			f_LandSewerage: '',
+			f_LandArea: '',
+			f_Carport: '',
+			f_ParkingLot: '',
+			f_Garage: '',
+			f_Bath: '',
+			f_GardenHouse: '',
+			f_HouseholdBuilding: '',
+			f_Facilities: '',
+			f_CommercialPropertyType: '',
+			f_LocationCommercial: '',
+			f_LeasePricePeriod: '',
+		},
 		inputValidities: {},
 		formIsValid: false,
 	})
+
+	let { f_Category, f_TotalArea, f_LandAppointment } = formState.inputValues
+
+	let formData = new FormData()
+	formData.append('cc', 6)
+	formData.append('sub', 10)
+	formData.append('posting', 1)
+
+	for (let key in formState.inputValues) {
+		formData.append(key, formState.inputValues[key])
+	}
 
 	const handleAddObject = async () => {
 		console.log('handleAddObject')
@@ -169,7 +174,7 @@ export default function AddObject() {
 			method: 'post',
 			mode: 'no-cors',
 			headers: new Headers(),
-			body: data,
+			body: OLD_data,
 		})
 			.then((res) => {
 				console.log(res.status)
@@ -179,22 +184,14 @@ export default function AddObject() {
 			.catch((err) => console.log(err))
 	}
 
-	const fadeLeaseType = useRef(new Animated.Value(0)).current
-	useEffect(() => {
-		if (f_Category <= 6 && f_Type === '1') {
-			Animated.timing(fadeLeaseType, {
-				toValue: 1,
-				duration: 500,
-				useNativeDriver: true,
-			}).start()
-		} else {
-			Animated.timing(fadeLeaseType, {
-				toValue: 0,
-				duration: 500,
-				useNativeDriver: true,
-			}).start()
-		}
-	}, [f_Type])
+	const inputChangeHandler = (inputIdentifier, inputValue) => {
+		dispatchFormState({
+			type: ADD_OBJECT_FORM_UPDATE,
+			input: inputIdentifier,
+			value: inputValue,
+		})
+	}
+	console.log(formState.inputValues)
 
 	return (
 		<View style={css.mainViewWrapper}>
@@ -207,57 +204,57 @@ export default function AddObject() {
 							<Picker
 								selectedValue={f_Category}
 								onValueChange={(value) => {
-									setf_Category(value)
+									inputChangeHandler('f_Category', value)
 									switch (value) {
 										case '1':
-											setf_Name(`Комнаты, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Комнаты, ${f_TotalArea} м2`)
 
 											break
 										case '2':
-											setf_Name(`Квартиры, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Квартиры, ${f_TotalArea} м2`)
 
 											break
 										case '3':
-											setf_Name(`Дачи, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Дачи, ${f_TotalArea} м2`)
 
 											break
 										case '4':
-											setf_Name(`Дома, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Дома, ${f_TotalArea} м2`)
 
 											break
 										case '5':
-											setf_Name(`Коттеджи, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Коттеджи, ${f_TotalArea} м2`)
 
 											break
 										case '6':
-											setf_Name(`Таунхаусы, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Таунхаусы, ${f_TotalArea} м2`)
 
 											break
 										case '7':
-											setf_Name(`Земельный участок, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Земельный участок, ${f_TotalArea} м2`)
 
 											break
 										case '8':
-											setf_Name(`Гараж, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Гараж, ${f_TotalArea} м2`)
 
 											break
 										case '9':
-											setf_Name(`Подвал, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Подвал, ${f_TotalArea} м2`)
 
 											break
 										case '10':
-											setf_Name(`Машиноместо, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Машиноместо, ${f_TotalArea} м2`)
 
 											break
 										case '11':
-											setf_Name(`Погреб (овощехранилище), ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Погреб (овощехранилище), ${f_TotalArea} м2`)
 
 											break
 										case '12':
-											setf_Name(`Коммерческая недвижимость, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `Коммерческая недвижимость, ${f_TotalArea} м2`)
 											break
 										default:
-											setf_Name(`не выбрано, ${f_TotalArea} м2`)
+											inputChangeHandler('f_Name', `не выбрано, ${f_TotalArea} м2`)
 											break
 									}
 								}}
@@ -278,12 +275,13 @@ export default function AddObject() {
 							</Picker>
 						</View>
 					</View>
+
 					{/* F_LANDAPPOINTMENT */}
 					{f_Category == 7 ? (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Назначение</Text>
 							<View style={[css.viewSelector, f_LandAppointment !== '0' ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
-								<Picker selectedValue={f_LandAppointment} onValueChange={(itemValue) => setf_LandAppointment(itemValue)}>
+								<Picker selectedValue={f_LandAppointment} onValueChange={(value) => inputChangeHandler('f_LandAppointment', value)}>
 									<Picker.Item label="-- выбрать --" value="0" />
 									<Picker.Item label="ИЖС" value="1" />
 									<Picker.Item label="СНТ (ДНТ)" value="2" />
@@ -294,6 +292,7 @@ export default function AddObject() {
 							</View>
 						</View>
 					) : null}
+
 					{/* F_TYPE */}
 					{f_Category == 0 ? null : (
 						<View style={css.viewSelectorWrapper}>
@@ -307,6 +306,7 @@ export default function AddObject() {
 							</View>
 						</View>
 					)}
+
 					{/* F_LEASETYPE */}
 					{f_Category == 0 ? null : f_Category >= 7 ? null : f_Type === '1' ? (
 						<View style={css.viewSelectorWrapper}>
@@ -408,7 +408,7 @@ export default function AddObject() {
 						</View>
 					)}
 					{/* REGION & CITY */}
-					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 || f_NumberRooms == 0 ? null : (
+					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
 						<View style={css.viewRow}>
 							<View>
 								<Text style={css.title}>Регион</Text>
@@ -433,7 +433,8 @@ export default function AddObject() {
 						</View>
 					)}
 					{/* F_STREET, F_HOUSENUMBER */}
-					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 || f_NumberRooms == 0 || !f_Region || !f_City ? null : (
+					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 || !f_Region || !f_City ? null : f_Category >= 2 &&
+					  f_NumberRooms == 0 ? null : (
 						<View style={css.viewRow}>
 							<View>
 								<Text style={css.title}>Улица</Text>
@@ -473,14 +474,8 @@ export default function AddObject() {
 					</View> */}
 
 					{/* LOCATION */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ? null : (
+					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 || !f_Region || !f_City || !f_Street || !f_HouseNumber ? null : f_Category >=
+							2 && f_NumberRooms == 0 ? null : (
 						<View>
 							<Text style={css.title}>Метка на карте</Text>
 							<View style={css.viewLocation}>
@@ -498,14 +493,8 @@ export default function AddObject() {
 						</View>
 					)}
 					{/* F_HOUSETYPE */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ? null : f_Category >= 7 ? null : (
+					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 || !f_Region || !f_City || !f_Street || !f_HouseNumber ? null : f_Category >=
+					  7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Тип дома</Text>
 							<View style={css.viewSelector}>
@@ -527,12 +516,11 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
 					!f_HouseNumber ||
-					f_HouseType == 0 ? null : (
+					f_HouseType == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
 						<Fragment>
 							<Text style={css.title}>Год постройки</Text>
 							<View style={css.viewRow}>
@@ -547,16 +535,16 @@ export default function AddObject() {
 						</Fragment>
 					)}
 					{/*  F_FLOOR */}
+
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
 					!f_HouseNumber ||
 					f_HouseType == 0 ||
-					f_YearBuilt ? null : f_Category >= 3 && f_Category <= 7 ? null : (
+					!f_YearBuilt ? null : f_Category >= 3 && f_Category <= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Этаж</Text>
 							<TextInput
@@ -572,14 +560,13 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
 					!f_HouseNumber ||
 					f_HouseType == 0 ||
 					!f_YearBuilt ||
-					!f_Floor ? null : f_Category >= 7 ? null : (
+					!f_Floor ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Этажей в доме</Text>
 							<TextInput
@@ -595,7 +582,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -603,7 +589,7 @@ export default function AddObject() {
 					f_HouseType == 0 ||
 					!f_YearBuilt ||
 					!f_Floor ||
-					!f_FloorsInHouse ? null : f_Category >= 7 ? null : (
+					!f_FloorsInHouse ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Тип первого этаж</Text>
 							<View style={css.viewSelector}>
@@ -620,7 +606,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -629,7 +614,8 @@ export default function AddObject() {
 					!f_YearBuilt ||
 					!f_Floor ||
 					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ? null : f_Category == 7 ? null : f_Category == 1 || f_Category >= 8 ? (
+					f_FirstFloorType == 0 ? null : f_Category == 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : f_Category == 1 ||
+					  f_Category >= 8 ? (
 						<View>
 							<Text style={{ ...css.title, marginBottom: 5 }}>Площадь</Text>
 							<View style={css.viewRow}>
@@ -809,7 +795,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -820,8 +805,9 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
-					!f_LivingArea ? null : f_Category >= 7 ? null : (
+					// !f_KitchenArea ||
+					!f_LivingArea ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
+					  !f_KitchenArea ? null : (
 						<View style={css.viewRow}>
 							<View style={{ width: windowWidth * 0.94, paddingRight: 3 }}>
 								<Text style={css.title}>Отделка</Text>
@@ -854,7 +840,7 @@ export default function AddObject() {
 					!f_TotalArea ||
 					!f_KitchenArea ||
 					!f_LivingArea ||
-					f_Finishing == 0 ? null : f_Category === '1' || f_Category >= 7 ? null : (
+					f_Finishing == 0 ? null : f_Category == 1 || f_Category >= 7 ? null : (
 						<View style={css.viewRow}>
 							<View style={css.viewSelectorWrapper}>
 								<Text style={css.title}>Санузел</Text>
@@ -875,7 +861,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -886,10 +871,11 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
-					f_Finishing == 0 ||
-					f_Bathroom == 0 ? null : f_Category >= 7 ? null : (
+					// f_Bathroom == 0 ||
+
+					f_Finishing == 0 ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
+					  !f_KitchenArea ? null : (
 						<View style={{ width: windowWidth * 0.94, paddingRight: 3, marginBottom: 20 }}>
 							<Text style={css.title}>Окна</Text>
 							<View style={css.viewSelector}>
@@ -905,7 +891,7 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
+					// f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -916,11 +902,12 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
+					// !f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category >= 7 ? null : (
+					// f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
+					  !f_KitchenArea ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Тип балкона</Text>
 							<View style={css.viewSelector}>
@@ -936,7 +923,7 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
+					// f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -947,11 +934,12 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
+					// !f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category >= 7 ? null : (
+					// f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
+					  !f_KitchenArea ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Лифт</Text>
 							<View style={css.viewSelector}>
@@ -968,7 +956,7 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
+					// f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -979,11 +967,12 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
+					// !f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category >= 7 ? null : (
+					// f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
+					  !f_KitchenArea ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Парковка</Text>
 							<View style={css.viewSelector}>
@@ -999,7 +988,7 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
+					// f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1010,11 +999,12 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
+					// !f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category === '1' ? (
+					// f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : f_Category ==
+					  1 ? (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Удобства</Text>
 							<View style={css.viewSelector}>
@@ -1168,7 +1158,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1179,11 +1168,10 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
-					f_Window == 0 ? null : (
+					// f_Bathroom == 0 ||
+					f_Window == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
 						<Fragment>
 							<Text style={css.title}>Кадастровый номер</Text>
 							<View style={css.viewRow}>
@@ -1202,7 +1190,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1213,12 +1200,11 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
+					// f_Bathroom == 0 ||
 					f_Window == 0 ||
-					!f_CadastralNumber ? null : (
+					!f_CadastralNumber ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Тип продажи</Text>
 							<View style={css.viewSelector}>
@@ -1234,7 +1220,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1245,12 +1230,11 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
+					// f_Bathroom == 0 ||
 					f_Window == 0 ||
-					!f_CadastralNumber ? null : (
+					!f_CadastralNumber ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Предложение от</Text>
 							<View style={css.viewSelector}>
@@ -1269,7 +1253,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1280,13 +1263,12 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
+					// f_Bathroom == 0 ||
 					f_Window == 0 ||
 					!f_CadastralNumber ||
-					f_OfferFrom == 0 ? null : (
+					f_OfferFrom == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
 						<Fragment>
 							<Text style={css.title}>Цена</Text>
 							<View style={css.viewRow}>
@@ -1299,7 +1281,7 @@ export default function AddObject() {
 								/>
 
 								<View style={css.units}>
-									<Text style={fonts.regular}>руб.</Text>
+									<Text style={{ fontFamily: fonts.regular }}>руб.</Text>
 								</View>
 							</View>
 						</Fragment>
@@ -1309,7 +1291,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1320,14 +1301,13 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
+					// f_Bathroom == 0 ||
 					f_Window == 0 ||
 					!f_CadastralNumber ||
 					f_OfferFrom == 0 ||
-					!f_Price ? null : (
+					!f_Price ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
 						<Pressable style={css.checkBox} onPress={() => setf_Mortgage(f_Mortgage ? '' : '1')}>
 							<CheckBox
 								disabled={false}
@@ -1342,7 +1322,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1353,14 +1332,13 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
+					// f_Bathroom == 0 ||
 					f_Window == 0 ||
 					!f_CadastralNumber ||
 					f_OfferFrom == 0 ||
-					!f_Price ? null : (
+					!f_Price ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
 						<Fragment>
 							<Text style={css.title}>Телефон</Text>
 							<View style={css.viewRow}>
@@ -1379,7 +1357,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1390,14 +1367,13 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
+					// f_Bathroom == 0 ||
 					f_Window == 0 ||
 					!f_CadastralNumber ||
 					f_OfferFrom == 0 ||
-					!f_Price ? null : (
+					!f_Price ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
 						<Fragment>
 							<Text style={css.title}>Описание</Text>
 							<View style={css.viewSelectorWrapper}>
@@ -1417,7 +1393,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1428,14 +1403,13 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
+					// f_Bathroom == 0 ||
 					f_Window == 0 ||
 					!f_CadastralNumber ||
 					f_OfferFrom == 0 ||
-					!f_Price ? null : (
+					!f_Price ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
 						<Fragment>
 							<Text style={css.title}>Ссылка на видео youtube</Text>
 							<View style={css.viewSelectorWrapper}>
@@ -1454,7 +1428,6 @@ export default function AddObject() {
 					{f_Category == 0 ||
 					f_Type == 0 ||
 					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
 					!f_Region ||
 					!f_City ||
 					!f_Street ||
@@ -1465,15 +1438,14 @@ export default function AddObject() {
 					!f_FloorsInHouse ||
 					f_FirstFloorType == 0 ||
 					!f_TotalArea ||
-					!f_KitchenArea ||
 					!f_LivingArea ||
 					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
+					// f_Bathroom == 0 ||
 					f_Window == 0 ||
 					!f_CadastralNumber ||
 					f_OfferFrom == 0 ||
 					!f_Price ||
-					!f_Phone ? null : (
+					!f_Phone ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
 						<View style={css.addViewWrapper}>
 							<Pressable
 								android_ripple={{ color: '#fff' }}

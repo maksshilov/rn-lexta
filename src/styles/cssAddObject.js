@@ -223,7 +223,7 @@ export default StyleSheet.create({
 	},
 	addPress: {
 		backgroundColor: colors.red,
-		width: windowWidth * 0.88,
+		width: windowWidth * 0.94,
 		height: windowWidth * 0.1,
 		borderRadius: 10,
 		alignItems: 'center',
