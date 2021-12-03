@@ -130,6 +130,7 @@ export default StyleSheet.create({
 	viewWrapper_3_6_Btns: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		marginBottom: 20,
 	},
 	press_3_6_w25: {
 		width: windowWidth * 0.25,

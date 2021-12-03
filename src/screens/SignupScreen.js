@@ -98,10 +98,6 @@ export default function SignupScreen({ navigation }) {
 		[dispatchFormState]
 	)
 
-	// useEffect(() => {
-	// console.log('formState', formState)
-	// }, [formState])
-
 	return (
 		<React.Fragment>
 			<View style={css.view}>

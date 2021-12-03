@@ -86,6 +86,7 @@ export default class LextaService {
 
 	getMyObjects = async (token, email) => {
 		return await fetch(`${this._objectBase}profile=1&token=${token}&user=${email}`, {
+			// md5 for email
 			// mode: 'no-cors',
 		})
 	}
@@ -118,10 +119,7 @@ export default class LextaService {
 	}
 
 	getMessages = async (token, email, outbox) => {
-		return await fetch(
-			`${this._apiBase}GetMessages.php?token=${token}&user=${email}&outbox=${outbox}`,
-			{ mode: 'no-cors' }
-		)
+		return await fetch(`${this._apiBase}GetMessages.php?token=${token}&user=${email}&outbox=${outbox}`, { mode: 'no-cors' })
 	}
 
 	sendMessage = async (data) => {

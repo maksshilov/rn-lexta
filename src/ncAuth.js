@@ -44,25 +44,25 @@ export async function ncAuthAxios() {
 		.catch((err) => console.log(err))
 }
 
-export async function ncAuthAddObj(count) {
-	let data = new FormData(),
-		headers = new Headers({
-			// accept: '*',
-			// 'content-type': 'multipart/form-data',
-			'access-control-allow-origin': '*',
-			'access-control-allow-credentials': true,
-			// 'access-control-allow-headers': 'set-cookie',
-		})
-	data.append('cc', 6)
-	data.append('sub', 10)
-	data.append('posting', 1)
-	data.append('f_Price', count)
+export async function ncAuthAddObj(data) {
+	let headers = new Headers({
+		// accept: '*',
+		'content-type': 'multipart/form-data',
+		// 'access-control-allow-origin': '*',
+		// 'access-control-allow-credentials': true,
+		// 'access-control-allow-headers': 'set-cookie',
+	})
+	// let data = new FormData()
+	// data.append('cc', 6)
+	// data.append('sub', 10)
+	// data.append('posting', 1)
+	// data.append('f_Price', '123000')
 
 	await fetch('https://lexta.pro/netcat/add.php', {
 		method: 'post',
 		body: data,
-		// credentials: 'include', // STEP 4. OFF - OK!
 		// headers, // STEP 3. OFF - OK
+		// credentials: 'include', // STEP 4. OFF - OK!
 		// credentials: 'same-origin',
 		// credentials: 'omit',
 	})
@@ -71,4 +71,11 @@ export async function ncAuthAddObj(count) {
 	// })
 	// .then((json) => console.log('json', json))
 	// .catch((err) => console.log(err))
+}
+export async function ncAuthAddObjXML(data) {
+	console.log('XMLHttpRequest', data)
+	let xhr = new XMLHttpRequest()
+	xhr.open('POST', 'https://lexta.pro/netcat/add.php')
+	xhr.setRequestHeader('Content-Type', 'multipart/form-data')
+	xhr.send(data)
 }

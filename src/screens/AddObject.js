@@ -5,6 +5,8 @@ import { Dimensions, TextInput, Pressable, ScrollView, StyleSheet, Text, View, A
 import { useDispatch } from 'react-redux'
 import css from '../styles/cssAddObject'
 import { fonts } from '../styles/constants'
+import { phoneMask } from '../components/scripts'
+// import { ImagePicker } from 'react-native-image-crop-picker'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -33,66 +35,6 @@ const formReducer = (state, action) => {
 }
 
 export default function AddObject() {
-	// const [f_Name, setf_Name] = useState('')
-	// const [f_Description, setf_Description] = useState('')
-	// const [f_Type, setf_Type] = useState('0')
-	// const [f_LeaseType, setf_LeaseType] = useState('0')
-	// const [f_TravelType, setf_TravelType] = useState('0')
-	// const [f_Region, setf_Region] = useState('')
-	// const [f_City, setf_City] = useState('')
-	// const [f_ObjectType, setf_ObjectType] = useState('0')
-	// const [f_Category, setf_Category] = useState('0')
-	// const [f_NumberRooms, setf_NumberRooms] = useState('0')
-	// const [f_TypeProperty, setf_TypeProperty] = useState('')
-	// const [f_SubwayStation, setf_SubwayStation] = useState('')
-	// const [f_Street, setf_Street] = useState('')
-	// const [f_HouseNumber, setf_HouseNumber] = useState('')
-	// const [f_Price, setf_Price] = useState('')
-	// const [f_PriceHistory, setf_PriceHistory] = useState('')
-	// const [f_Finishing, setf_Finishing] = useState('0')
-	// const [f_TotalArea, setf_TotalArea] = useState('')
-	// const [f_KitchenArea, setf_KitchenArea] = useState('')
-	// const [f_LivingArea, setf_LivingArea] = useState()
-	// const [f_Floor, setf_Floor] = useState('')
-	// const [f_FloorsInHouse, setf_FloorsInHouse] = useState('')
-	// const [f_FirstFloorType, setf_FirstFloorType] = useState('')
-	// const [f_HouseType, setf_HouseType] = useState('')
-	// const [f_Bathroom, setf_Bathroom] = useState('0')
-	// const [f_Window, setf_Window] = useState('0')
-	// const [f_BalconyType, setf_BalconyType] = useState('0')
-	// const [f_Elevator, setf_Elevator] = useState('0')
-	// const [f_Parking, setf_Parking] = useState('0')
-	// const [f_TypeSale, setf_TypeSale] = useState('0')
-	// const [f_OfferFrom, setf_OfferFrom] = useState('0')
-	// const [f_YearBuilt, setf_YearBuilt] = useState('')
-	// const [f_Mortgage, setf_Mortgage] = useState('')
-	// const [f_Video, setf_Video] = useState('')
-	// const [f_Phone, setf_Phone] = useState('')
-	// const [f_CadastralNumber, setf_CadastralNumber] = useState('')
-	// const [f_Img, setf_Img] = useState('')
-	// const [f_Latitude, setf_Latitude] = useState('0')
-	// const [f_Longitude, setf_Longitude] = useState('0')
-	// const [f_LandAppointment, setf_LandAppointment] = useState('0')
-	// const [f_LandElectricity, setf_LandElectricity] = useState('0')
-	// const [f_LandGas, setf_LandGas] = useState('0')
-	// const [f_LandWater, setf_LandWater] = useState('0')
-	// const [f_LandSewerage, setf_LandSewerage] = useState('0')
-	// const [f_LandArea, setf_LandArea] = useState('0')
-	// const [f_Carport, setf_Carport] = useState('0')
-	// const [f_ParkingLot, setf_ParkingLot] = useState('0')
-	// const [f_Garage, setf_Garage] = useState('0')
-	// const [f_Bath, setf_Bath] = useState('0')
-	// const [f_GardenHouse, setf_GardenHouse] = useState('0')
-	// const [f_HouseholdBuilding, setf_HouseholdBuilding] = useState('0')
-	// const [f_Facilities, setf_Facilities] = useState('0')
-	// const [f_CommercialPropertyType, setf_CommercialPropertyType] = useState('0')
-	// const [f_LocationCommercial, setf_LocationCommercial] = useState('0')
-	// const [f_LeasePricePeriod, setf_LeasePricePeriod] = useState('0')
-	// const [f_ViewsNum, setf_ViewsNum] = useState(0) // — DON'T SEND
-	// const [f_ObjectChecked, setf_ObjectChecked] = useState(0) // — DON'T SEND
-	// const [f_ObjectRejected, setf_ObjectRejected] = useState(0) // — DON'T SEND
-	// const [f_ObjectRejectedComment, setf_ObjectRejectedComment] = useState('') // — DON'T SEND
-
 	const dispatch = useDispatch()
 	const [formState, dispatchFormState] = useReducer(formReducer, {
 		inputValues: {
@@ -141,12 +83,12 @@ export default function AddObject() {
 			f_LandWater: '',
 			f_LandSewerage: '',
 			f_LandArea: '',
-			f_Carport: '',
-			f_ParkingLot: '',
-			f_Garage: '',
-			f_Bath: '',
-			f_GardenHouse: '',
-			f_HouseholdBuilding: '',
+			f_Carport: '0',
+			f_ParkingLot: '0',
+			f_Garage: '0',
+			f_Bath: '0',
+			f_GardenHouse: '0',
+			f_HouseholdBuilding: '0',
 			f_Facilities: '',
 			f_CommercialPropertyType: '',
 			f_LocationCommercial: '',
@@ -209,7 +151,7 @@ export default function AddObject() {
 		f_GardenHouse,
 		f_HouseholdBuilding,
 		f_Facilities,
-		f_CommercialPropertyTyp,
+		f_CommercialPropertyType,
 		f_LocationCommercial,
 		f_LeasePricePeriod,
 		f_ViewsNum,
@@ -251,7 +193,28 @@ export default function AddObject() {
 			value: inputValue,
 		})
 	}
-	console.log(formState.inputValues)
+
+	const handlePickPhotos = () => {
+		ImagePicker.openPicker({
+			multiple: true,
+		}).then((images) => {
+			console.log(images)
+		})
+	}
+
+	const pickImage = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			aspect: [1, 1],
+			quality: 1,
+		})
+
+		if (!result.cancelled) {
+			console.log(result)
+			setImage(result.uri)
+		}
+	}
 
 	return (
 		<View style={css.mainViewWrapper}>
@@ -335,12 +298,11 @@ export default function AddObject() {
 							</Picker>
 						</View>
 					</View>
-
 					{/* F_LANDAPPOINTMENT */}
 					{f_Category == 7 ? (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Назначение</Text>
-							<View style={[css.viewSelector, f_LandAppointment !== '0' ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<View style={[css.viewSelector, f_LandAppointment != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
 								<Picker selectedValue={f_LandAppointment} onValueChange={(value) => inputChangeHandler('f_LandAppointment', value)}>
 									<Picker.Item label="-- выбрать --" value="0" />
 									<Picker.Item label="ИЖС" value="1" />
@@ -352,12 +314,11 @@ export default function AddObject() {
 							</View>
 						</View>
 					) : null}
-
 					{/* F_TYPE */}
 					{f_Category == 0 ? null : (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Тип сделки</Text>
-							<View style={[css.viewSelector, f_Type !== '0' ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<View style={[css.viewSelector, f_Type != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
 								<Picker selectedValue={f_Type} onValueChange={(value) => inputChangeHandler('f_Type', value)}>
 									<Picker.Item label="-- выбрать --" value="0" />
 									<Picker.Item label="Аренда" value="1" />
@@ -366,12 +327,11 @@ export default function AddObject() {
 							</View>
 						</View>
 					)}
-
 					{/* F_LEASETYPE */}
-					{f_Category == 0 ? null : f_Category >= 7 ? null : f_Type === '1' ? (
+					{f_Category == 0 ? null : f_Category >= 7 ? null : f_Type == 1 ? (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Тип аренды</Text>
-							<View style={[css.viewSelector, f_LeaseType !== '0' ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<View style={[css.viewSelector, f_LeaseType != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
 								<Picker selectedValue={f_LeaseType} onValueChange={(value) => inputChangeHandler('f_LeaseType', value)}>
 									<Picker.Item label="-- выбрать --" value="0" />
 									<Picker.Item label="Длительная" value="1" />
@@ -421,107 +381,95 @@ export default function AddObject() {
 						</View>
 					) : null}
 					{/* F_OBJECTTYPE */}
-					{f_Category == 0 || f_Type == 0 ? null : f_Category >= 7 ? null : (
-						<View style={css.viewRow}>
-							<Pressable
-								onPress={() => inputChangeHandler('f_ObjectType', 1)}
-								style={[css.select, css.objectTypeLeft, f_ObjectType === 1 ? css.selected : null]}
-							>
-								<Text style={[css.selectText, f_ObjectType === 1 ? css.selectedText : null]}>Новостройка</Text>
-							</Pressable>
-							<Pressable
-								onPress={() => inputChangeHandler('f_ObjectType', 2)}
-								style={[css.select, css.objectTypeRight, f_ObjectType === 2 ? css.selected : null]}
-							>
-								<Text style={[css.selectText, f_ObjectType === 2 ? css.selectedText : null]}>Вторичка</Text>
-							</Pressable>
-						</View>
-					)}
+					<View style={css.viewRow}>
+						<Pressable
+							onPress={() => inputChangeHandler('f_ObjectType', 1)}
+							style={[css.select, css.objectTypeLeft, f_ObjectType === 1 ? css.selected : null]}
+						>
+							<Text style={[css.selectText, f_ObjectType === 1 ? css.selectedText : null]}>Новостройка</Text>
+						</Pressable>
+						<Pressable
+							onPress={() => inputChangeHandler('f_ObjectType', 2)}
+							style={[css.select, css.objectTypeRight, f_ObjectType === 2 ? css.selected : null]}
+						>
+							<Text style={[css.selectText, f_ObjectType === 2 ? css.selectedText : null]}>Вторичка</Text>
+						</Pressable>
+					</View>
 					{/* F_TRAVELTYPE */}
-					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category >= 7 ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Тип туристического объекта</Text>
-							<View style={[css.viewSelector, f_TravelType !== '0' ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
-								<Picker selectedValue={f_TravelType} onValueChange={(value) => inputChangeHandler('f_TravelType', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Турбаза" value="1" />
-									<Picker.Item label="Отель" value="2" />
-									<Picker.Item label="Гостиница" value="3" />
-									<Picker.Item label="База отдыха" value="4" />
-								</Picker>
-							</View>
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Тип туристического объекта</Text>
+						<View style={[css.viewSelector, f_TravelType != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_TravelType} onValueChange={(value) => inputChangeHandler('f_TravelType', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Турбаза" value="1" />
+								<Picker.Item label="Отель" value="2" />
+								<Picker.Item label="Гостиница" value="3" />
+								<Picker.Item label="База отдыха" value="4" />
+							</Picker>
 						</View>
-					)}
+					</View>
 					{/* F_NUMBERROOMS */}
-					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category == 1 || f_Category >= 7 ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Количество комнат</Text>
-							<View style={[css.viewSelector, f_NumberRooms !== '0' ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
-								<Picker selectedValue={f_NumberRooms} onValueChange={(value) => inputChangeHandler('f_NumberRooms', value)}>
-									<Picker.Item label="-- не выбрано --" value="0" />
-									<Picker.Item label="1 комната" value="1" />
-									<Picker.Item label="2 комнаты" value="2" />
-									<Picker.Item label="3 комнаты" value="3" />
-									<Picker.Item label="4 комнаты" value="4" />
-									<Picker.Item label="5 комнат" value="5" />
-									<Picker.Item label="6 комнат" value="6" />
-									<Picker.Item label="7 комнат" value="7" />
-								</Picker>
-							</View>
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Количество комнат</Text>
+						<View style={[css.viewSelector, f_NumberRooms != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_NumberRooms} onValueChange={(value) => inputChangeHandler('f_NumberRooms', value)}>
+								<Picker.Item label="-- не выбрано --" value="0" />
+								<Picker.Item label="1 комната" value="1" />
+								<Picker.Item label="2 комнаты" value="2" />
+								<Picker.Item label="3 комнаты" value="3" />
+								<Picker.Item label="4 комнаты" value="4" />
+								<Picker.Item label="5 комнат" value="5" />
+								<Picker.Item label="6 комнат" value="6" />
+								<Picker.Item label="7 комнат" value="7" />
+							</Picker>
 						</View>
-					)}
+					</View>
 					{/* REGION & CITY */}
-					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
-						<View style={css.viewRow}>
-							<View>
-								<Text style={css.title}>Регион</Text>
-								<TextInput
-									value={f_Region}
-									onChangeText={(value) => inputChangeHandler('f_Region', value)}
-									placeholder="Регион"
-									keyboardType="default"
-									style={[css.textInput, css.textInputInput, css.regionStreetInput]}
-								/>
-							</View>
-							<View>
-								<Text style={css.title}>Город</Text>
-								<TextInput
-									value={f_City}
-									onChangeText={(value) => inputChangeHandler('f_City', value)}
-									placeholder="Город"
-									keyboardType="default"
-									style={[css.textInput, css.textInputInput, css.cityHouseNumberinput]}
-								/>
-							</View>
+					<View style={css.viewRow}>
+						<View>
+							<Text style={css.title}>Регион</Text>
+							<TextInput
+								value={f_Region}
+								onChangeText={(value) => inputChangeHandler('f_Region', value)}
+								placeholder="Регион"
+								keyboardType="default"
+								style={[css.textInput, css.textInputInput, css.regionStreetInput]}
+							/>
 						</View>
-					)}
+						<View>
+							<Text style={css.title}>Город</Text>
+							<TextInput
+								value={f_City}
+								onChangeText={(value) => inputChangeHandler('f_City', value)}
+								placeholder="Город"
+								keyboardType="default"
+								style={[css.textInput, css.textInputInput, css.cityHouseNumberinput]}
+							/>
+						</View>
+					</View>
 					{/* F_STREET, F_HOUSENUMBER */}
-					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 || !f_Region || !f_City ? null : f_Category >= 2 &&
-					  f_NumberRooms == 0 ? null : (
-						<View style={css.viewRow}>
-							<View>
-								<Text style={css.title}>Улица</Text>
-								<TextInput
-									value={f_Street}
-									onChangeText={(value) => inputChangeHandler('f_Street', value)}
-									placeholder="Улица"
-									keyboardType="default"
-									style={[css.textInput, css.textInputInput, css.regionStreetInput]}
-								/>
-							</View>
-							<View>
-								<Text style={css.title}>Номер дома</Text>
-								<TextInput
-									value={f_HouseNumber}
-									onChangeText={(value) => inputChangeHandler('f_HouseNumber', value)}
-									placeholder="Номер дома"
-									keyboardType="number-pad"
-									style={[css.textInput, css.textInputInput, css.cityHouseNumberinput]}
-								/>
-							</View>
+					<View style={css.viewRow}>
+						<View>
+							<Text style={css.title}>Улица</Text>
+							<TextInput
+								value={f_Street}
+								onChangeText={(value) => inputChangeHandler('f_Street', value)}
+								placeholder="Улица"
+								keyboardType="default"
+								style={[css.textInput, css.textInputInput, css.regionStreetInput]}
+							/>
 						</View>
-					)}
-
+						<View>
+							<Text style={css.title}>Номер дома</Text>
+							<TextInput
+								value={f_HouseNumber}
+								onChangeText={(value) => inputChangeHandler('f_HouseNumber', value)}
+								placeholder="Номер дома"
+								keyboardType="number-pad"
+								style={[css.textInput, css.textInputInput, css.cityHouseNumberinput]}
+							/>
+						</View>
+					</View>
 					{/* PROPERTY TYPE */}
 					{/* <View style={css.viewRow}>
 						<View style={css.viewSelector}>
@@ -535,150 +483,88 @@ export default function AddObject() {
 							/>
 						</View>
 					</View> */}
-
 					{/* LOCATION */}
-					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 || !f_Region || !f_City || !f_Street || !f_HouseNumber ? null : f_Category >=
-							2 && f_NumberRooms == 0 ? null : (
-						<View>
-							<Text style={css.title}>Метка на карте</Text>
-							<View style={css.viewLocation}>
-								<TextInput
-									// value={}
-									// onChangeText={() => {}}
-									placeholder="Широта, долгота"
-									keyboardType="number-pad"
-									style={[css.textInput, css.textInputInput, css.locationInput]}
-								/>
-								<Pressable android_ripple={{ color: '#fff' }} style={css.locationBtn} onPress={() => {}}>
-									<Text style={css.locationTxt}>+</Text>
-								</Pressable>
-							</View>
+					<View>
+						<Text style={css.title}>Метка на карте</Text>
+						<View style={css.viewLocation}>
+							<TextInput
+								// value={}
+								// onChangeText={() => {}}
+								placeholder="Широта, долгота"
+								keyboardType="number-pad"
+								style={[css.textInput, css.textInputInput, css.locationInput]}
+							/>
+							<Pressable android_ripple={{ color: '#fff' }} style={css.locationBtn} onPress={() => {}}>
+								<Text style={css.locationTxt}>+</Text>
+							</Pressable>
 						</View>
-					)}
+					</View>
 					{/* F_HOUSETYPE */}
-					{f_Category == 0 || f_Type == 0 || f_ObjectType == 0 || !f_Region || !f_City || !f_Street || !f_HouseNumber ? null : f_Category >=
-					  7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Тип дома</Text>
-							<View style={css.viewSelector}>
-								<Picker selectedValue={f_HouseType} onValueChange={(value) => inputChangeHandler('f_HouseType', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Кирпичный" value="1" />
-									<Picker.Item label="Панельный" value="2" />
-									<Picker.Item label="Деревянный" value="3" />
-									<Picker.Item label="Монолитный" value="4" />
-									<Picker.Item label="Монолитно кирпичный" value="5" />
-									<Picker.Item label="Монолитно блочный" value="6" />
-									<Picker.Item label="Сталинка" value="7" />
-									<Picker.Item label="Блочный" value="8" />
-								</Picker>
-							</View>
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Тип дома</Text>
+						<View style={[css.viewSelector, f_HouseType != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_HouseType} onValueChange={(value) => inputChangeHandler('f_HouseType', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Кирпичный" value="1" />
+								<Picker.Item label="Панельный" value="2" />
+								<Picker.Item label="Деревянный" value="3" />
+								<Picker.Item label="Монолитный" value="4" />
+								<Picker.Item label="Монолитно кирпичный" value="5" />
+								<Picker.Item label="Монолитно блочный" value="6" />
+								<Picker.Item label="Сталинка" value="7" />
+								<Picker.Item label="Блочный" value="8" />
+							</Picker>
 						</View>
-					)}
+					</View>
 					{/* YEAR */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
-						<Fragment>
-							<Text style={css.title}>Год постройки</Text>
-							<View style={css.viewRow}>
-								<TextInput
-									value={f_YearBuilt}
-									onChangeText={(value) => inputChangeHandler('f_YearBuilt', value)}
-									placeholder="Год постройки"
-									keyboardType="number-pad"
-									style={[css.textInput, css.textInputInput, css.fullRowInput]}
-								/>
-							</View>
-						</Fragment>
-					)}
+					<Fragment>
+						<Text style={css.title}>Год постройки</Text>
+						<View style={css.viewRow}>
+							<TextInput
+								value={f_YearBuilt}
+								onChangeText={(value) => inputChangeHandler('f_YearBuilt', value)}
+								placeholder="Год постройки"
+								keyboardType="number-pad"
+								style={[css.textInput, css.textInputInput, css.fullRowInput]}
+							/>
+						</View>
+					</Fragment>
 					{/*  F_FLOOR */}
-
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ? null : f_Category >= 3 && f_Category <= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Этаж</Text>
-							<TextInput
-								value={f_Floor}
-								onChangeText={(value) => inputChangeHandler('f_Floor', value)}
-								placeholder="Этаж"
-								keyboardType="number-pad"
-								style={[css.textInput, css.textInputInput, css.fullRowInput]}
-							/>
-						</View>
-					)}
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Этаж</Text>
+						<TextInput
+							value={f_Floor}
+							onChangeText={(value) => inputChangeHandler('f_Floor', value)}
+							placeholder="Этаж"
+							keyboardType="number-pad"
+							style={[css.textInput, css.textInputInput, css.fullRowInput]}
+						/>
+					</View>
 					{/* F_FLOORSINHOUSE */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Этажей в доме</Text>
-							<TextInput
-								value={f_FloorsInHouse}
-								onChangeText={(value) => inputChangeHandler('f_FloorsInHouse', value)}
-								placeholder="Этажей в доме"
-								keyboardType="number-pad"
-								style={[css.textInput, css.textInputInput, css.fullRowInput]}
-							/>
-						</View>
-					)}
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Этажей в доме</Text>
+						<TextInput
+							value={f_FloorsInHouse}
+							onChangeText={(value) => inputChangeHandler('f_FloorsInHouse', value)}
+							placeholder="Этажей в доме"
+							keyboardType="number-pad"
+							style={[css.textInput, css.textInputInput, css.fullRowInput]}
+						/>
+					</View>
 					{/* F_FIRSTFLOORTYPE */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Тип первого этаж</Text>
-							<View style={css.viewSelector}>
-								<Picker selectedValue={f_FirstFloorType} onValueChange={(value) => inputChangeHandler('f_FirstFloorType', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Жилой" value="1" />
-									<Picker.Item label="Нежилой" value="2" />
-									<Picker.Item label="Частично нежилой" value="3" />
-								</Picker>
-							</View>
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Тип первого этаж</Text>
+						<View style={[css.viewSelector, f_FirstFloorType != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_FirstFloorType} onValueChange={(value) => inputChangeHandler('f_FirstFloorType', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Жилой" value="1" />
+								<Picker.Item label="Нежилой" value="2" />
+								<Picker.Item label="Частично нежилой" value="3" />
+							</Picker>
 						</View>
-					)}
+					</View>
 					{/* AREA */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ? null : f_Category == 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : f_Category == 1 ||
-					  f_Category >= 8 ? (
+					{f_Category == 1 || f_Category >= 8 ? (
 						<View>
 							<Text style={{ ...css.title, marginBottom: 5 }}>Площадь</Text>
 							<View style={css.viewRow}>
@@ -855,212 +741,86 @@ export default function AddObject() {
 						</View>
 					)}
 					{/* F_FINISHING */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					// !f_KitchenArea ||
-					!f_LivingArea ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
-					  !f_KitchenArea ? null : (
-						<View style={css.viewRow}>
-							<View style={{ width: windowWidth * 0.94, paddingRight: 3 }}>
-								<Text style={css.title}>Отделка</Text>
-								<View style={css.viewSelector}>
-									<Picker selectedValue={f_Finishing} onValueChange={(value) => inputChangeHandler('f_Finishing', value)}>
-										<Picker.Item label="-- выбрать --" value="0" />
-										<Picker.Item label="С отделкой" value="1" />
-										<Picker.Item label="Без отделки" value="2" />
-										<Picker.Item label="Частично" value="3" />
-										<Picker.Item label="WhiteBox" value="4" />
-									</Picker>
-								</View>
+					<View style={css.viewRow}>
+						<View style={{ width: windowWidth * 0.94, paddingRight: 3 }}>
+							<Text style={css.title}>Отделка</Text>
+							<View style={[css.viewSelector, f_Finishing != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+								<Picker selectedValue={f_Finishing} onValueChange={(value) => inputChangeHandler('f_Finishing', value)}>
+									<Picker.Item label="-- выбрать --" value="0" />
+									<Picker.Item label="С отделкой" value="1" />
+									<Picker.Item label="Без отделки" value="2" />
+									<Picker.Item label="Частично" value="3" />
+									<Picker.Item label="WhiteBox" value="4" />
+								</Picker>
 							</View>
 						</View>
-					)}
+					</View>
 					{/* F_BATHROOM  */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_KitchenArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ? null : f_Category == 1 || f_Category >= 7 ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Санузел</Text>
-							<View style={css.viewSelector}>
-								<Picker selectedValue={f_Bathroom} onValueChange={(value) => inputChangeHandler('f_Bathroom', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Совмещенный" value="1" />
-									<Picker.Item label="Раздельный" value="2" />
-									<Picker.Item label="На этаже" value="3" />
-									<Picker.Item label="В комнате" value="4" />
-									<Picker.Item label="В блоке" value="5" />
-								</Picker>
-							</View>
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Санузел</Text>
+						<View style={[css.viewSelector, f_Bathroom != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_Bathroom} onValueChange={(value) => inputChangeHandler('f_Bathroom', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Совмещенный" value="1" />
+								<Picker.Item label="Раздельный" value="2" />
+								<Picker.Item label="На этаже" value="3" />
+								<Picker.Item label="В комнате" value="4" />
+								<Picker.Item label="В блоке" value="5" />
+							</Picker>
 						</View>
-					)}
+					</View>
 					{/* F_WINDOW */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					// f_Bathroom == 0 ||
-
-					f_Finishing == 0 ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
-					  !f_KitchenArea ? null : (
-						<View style={{ width: windowWidth * 0.94, paddingRight: 3, marginBottom: 20 }}>
-							<Text style={css.title}>Окна</Text>
-							<View style={css.viewSelector}>
-								<Picker selectedValue={f_Window} onValueChange={(value) => inputChangeHandler('f_Window', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Во двор" value="1" />
-									<Picker.Item label="На улицу" value="2" />
-								</Picker>
-							</View>
+					<View style={{ width: windowWidth * 0.94, paddingRight: 3, marginBottom: 20 }}>
+						<Text style={css.title}>Окна</Text>
+						<View style={[css.viewSelector, f_Window != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_Window} onValueChange={(value) => inputChangeHandler('f_Window', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Во двор" value="1" />
+								<Picker.Item label="На улицу" value="2" />
+							</Picker>
 						</View>
-					)}
+					</View>
 					{/* F_BALCONYTYPE */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
-					  !f_KitchenArea ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Тип балкона</Text>
-							<View style={css.viewSelector}>
-								<Picker selectedValue={f_BalconyType} onValueChange={(value) => inputChangeHandler('f_BalconyType', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Балкон" value="1" />
-									<Picker.Item label="Лоджия" value="2" />
-								</Picker>
-							</View>
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Тип балкона</Text>
+						<View style={[css.viewSelector, f_BalconyType != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_BalconyType} onValueChange={(value) => inputChangeHandler('f_BalconyType', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Балкон" value="1" />
+								<Picker.Item label="Лоджия" value="2" />
+							</Picker>
 						</View>
-					)}
+					</View>
 					{/* F_ELEVATOR */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
-					  !f_KitchenArea ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Лифт</Text>
-							<View style={css.viewSelector}>
-								<Picker selectedValue={f_Elevator} onValueChange={(value) => inputChangeHandler('f_Elevator', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Пассажирский" value="1" />
-									<Picker.Item label="Грузовой" value="2" />
-									<Picker.Item label="Пассажирский и грузовой" value="3" />
-								</Picker>
-							</View>
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Лифт</Text>
+						<View style={[css.viewSelector, f_Elevator != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_Elevator} onValueChange={(value) => inputChangeHandler('f_Elevator', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Пассажирский" value="1" />
+								<Picker.Item label="Грузовой" value="2" />
+								<Picker.Item label="Пассажирский и грузовой" value="3" />
+							</Picker>
 						</View>
-					)}
+					</View>
 					{/* F_PARKING */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category >= 7 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 &&
-					  !f_KitchenArea ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Парковка</Text>
-							<View style={css.viewSelector}>
-								<Picker selectedValue={f_Parking} onValueChange={(value) => inputChangeHandler('f_Parking', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Наземная" value="1" />
-									<Picker.Item label="Подземная" value="2" />
-								</Picker>
-							</View>
+
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Парковка</Text>
+						<View style={[css.viewSelector, f_Parking != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_Parking} onValueChange={(value) => inputChangeHandler('f_Parking', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Наземная" value="1" />
+								<Picker.Item label="Подземная" value="2" />
+							</Picker>
 						</View>
-					)}
+					</View>
+
 					{/* F_FACILITIES */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : f_Category ==
-					  1 ? (
+					{f_Category == 1 ? (
 						<View style={css.viewSelectorWrapper}>
 							<Text style={css.title}>Удобства</Text>
-							<View style={css.viewSelector}>
+							<View style={[css.viewSelector, f_Facilities != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
 								<Picker selectedValue={f_Facilities} onValueChange={(value) => inputChangeHandler('f_Facilities', value)}>
 									<Picker.Item label="-- выбрать --" value="0" />
 									<Picker.Item label="На этаже" value="1" />
@@ -1070,27 +830,8 @@ export default function AddObject() {
 							</View>
 						</View>
 					) : null}
-
 					{/* F_LANDELECTRICITY, F_LANDGAS, F_LANDWATER, F_LANDSEWERAGE, F_LANDAREA, F_CARPORT, F_PARKINGLOT, F_GARAGE, F_BATH, F_GARDENHOUSE, F_HOUSEHOLDBUILDING */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					f_NumberRooms == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_KitchenArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category >= 3 && f_Category <= 7 ? (
+					{f_Category >= 3 && f_Category <= 7 ? (
 						<Fragment>
 							<View style={css.viewSelectorWrapper}>
 								<Text style={css.title}>Электричество</Text>
@@ -1161,9 +902,9 @@ export default function AddObject() {
 											onPress={() =>
 												f_Carport === '0' ? inputChangeHandler('f_Carport', '1') : inputChangeHandler('f_Carport', '0')
 											}
-											style={[css.select, css.press_3_6_w25, f_Carport === '1' ? css.selected : null]}
+											style={[css.select, css.press_3_6_w25, f_Carport == 1 ? css.selected : null]}
 										>
-											<Text style={[css.selectText, css.text_3_6, f_Carport === '1' ? css.selectedText : null]}>
+											<Text style={[css.selectText, css.text_3_6, f_Carport == 1 ? css.selectedText : null]}>
 												Навес{'\n'}для авто
 											</Text>
 										</Pressable>
@@ -1173,9 +914,9 @@ export default function AddObject() {
 													? inputChangeHandler('f_ParkingLot', '1')
 													: inputChangeHandler('f_ParkingLot', '0')
 											}
-											style={[css.select, css.press_3_6_w35, f_ParkingLot === '1' ? css.selected : null]}
+											style={[css.select, css.press_3_6_w35, f_ParkingLot == 1 ? css.selected : null]}
 										>
-											<Text style={[css.selectText, css.text_3_6, f_ParkingLot === '1' ? css.selectedText : null]}>
+											<Text style={[css.selectText, css.text_3_6, f_ParkingLot == 1 ? css.selectedText : null]}>
 												Парковочное{'\n'}место
 											</Text>
 										</Pressable>
@@ -1183,18 +924,18 @@ export default function AddObject() {
 											onPress={() =>
 												f_Garage === '0' ? inputChangeHandler('f_Garage', '1') : inputChangeHandler('f_Garage', '0')
 											}
-											style={[css.select, css.press_3_6_w25, f_Garage === '1' ? css.selected : null]}
+											style={[css.select, css.press_3_6_w25, f_Garage == 1 ? css.selected : null]}
 										>
-											<Text style={[css.selectText, css.text_3_6, f_Garage === '1' ? css.selectedText : null]}>Гараж</Text>
+											<Text style={[css.selectText, css.text_3_6, f_Garage == 1 ? css.selectedText : null]}>Гараж</Text>
 										</Pressable>
 									</View>
 
 									<View style={css.viewWrapper_3_6_Btns}>
 										<Pressable
 											onPress={() => (f_Bath === '0' ? inputChangeHandler('f_Bath', '1') : inputChangeHandler('f_Bath', '0'))}
-											style={[css.select, css.press_3_6_w25, f_Bath === '1' ? css.selected : null]}
+											style={[css.select, css.press_3_6_w25, f_Bath == 1 ? css.selected : null]}
 										>
-											<Text style={[css.selectText, css.text_3_6, f_Bath === '1' ? css.selectedText : null]}>Баня</Text>
+											<Text style={[css.selectText, css.text_3_6, f_Bath == 1 ? css.selectedText : null]}>Баня</Text>
 										</Pressable>
 										<Pressable
 											onPress={() =>
@@ -1202,11 +943,9 @@ export default function AddObject() {
 													? inputChangeHandler('f_GardenHouse', '1')
 													: inputChangeHandler('f_GardenHouse', '0')
 											}
-											style={[css.select, css.press_3_6_w25, f_GardenHouse === '1' ? css.selected : null]}
+											style={[css.select, css.press_3_6_w25, f_GardenHouse == 1 ? css.selected : null]}
 										>
-											<Text style={[css.selectText, css.text_3_6, f_GardenHouse === '1' ? css.selectedText : null]}>
-												Беседка
-											</Text>
+											<Text style={[css.selectText, css.text_3_6, f_GardenHouse == 1 ? css.selectedText : null]}>Беседка</Text>
 										</Pressable>
 										<Pressable
 											onPress={() =>
@@ -1214,9 +953,9 @@ export default function AddObject() {
 													? inputChangeHandler('f_HouseholdBuilding', '1')
 													: inputChangeHandler('f_HouseholdBuilding', '0')
 											}
-											style={[css.select, css.press_3_6_w35, f_HouseholdBuilding === '1' ? css.selected : null]}
+											style={[css.select, css.press_3_6_w35, f_HouseholdBuilding == 1 ? css.selected : null]}
 										>
-											<Text style={[css.selectText, css.text_3_6, f_HouseholdBuilding === '1' ? css.selectedText : null]}>
+											<Text style={[css.selectText, css.text_3_6, f_HouseholdBuilding == 1 ? css.selectedText : null]}>
 												Другие хоз.{'\n'}постройки
 											</Text>
 										</Pressable>
@@ -1225,312 +964,154 @@ export default function AddObject() {
 							) : null}
 						</Fragment>
 					) : null}
-
 					{/* KADASTR */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
-						<Fragment>
-							<Text style={css.title}>Кадастровый номер</Text>
-							<View style={css.viewRow}>
-								<TextInput
-									value={f_CadastralNumber}
-									onChangeText={(value) => inputChangeHandler('f_CadastralNumber', value)}
-									placeholder="Кадастровый номер"
-									keyboardType="number-pad"
-									style={[css.textInput, css.textInputInput, css.fullRowInput]}
-								/>
-							</View>
-						</Fragment>
-					)}
+
+					<Fragment>
+						<Text style={css.title}>Кадастровый номер</Text>
+						<View style={css.viewRow}>
+							<TextInput
+								value={f_CadastralNumber}
+								onChangeText={(value) => inputChangeHandler('f_CadastralNumber', value)}
+								placeholder="Кадастровый номер"
+								keyboardType="number-pad"
+								style={[css.textInput, css.textInputInput, css.fullRowInput]}
+							/>
+						</View>
+					</Fragment>
 
 					{/* F_TYPESALE */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ||
-					!f_CadastralNumber ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Тип продажи</Text>
-							<View style={css.viewSelector}>
-								<Picker selectedValue={f_TypeSale} onValueChange={(value) => inputChangeHandler('f_TypeSale', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Свободная" value="1" />
-								</Picker>
-							</View>
+
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Тип продажи</Text>
+						<View style={[css.viewSelector, f_TypeSale != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_TypeSale} onValueChange={(value) => inputChangeHandler('f_TypeSale', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Свободная" value="1" />
+							</Picker>
 						</View>
-					)}
+					</View>
 
 					{/* F_OFFERFROM */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ||
-					!f_CadastralNumber ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
-						<View style={css.viewSelectorWrapper}>
-							<Text style={css.title}>Предложение от</Text>
-							<View style={css.viewSelector}>
-								<Picker selectedValue={f_OfferFrom} onValueChange={(value) => inputChangeHandler('f_OfferFrom', value)}>
-									<Picker.Item label="-- выбрать --" value="0" />
-									<Picker.Item label="Физическое лицо" value="1" />
-									<Picker.Item label="Юридическое лицо" value="2" />
-									<Picker.Item label="Застройщик" value="3" />
-									<Picker.Item label="Организатор торгов" value="4" />
-								</Picker>
-							</View>
+
+					<View style={css.viewSelectorWrapper}>
+						<Text style={css.title}>Предложение от</Text>
+						<View style={[css.viewSelector, f_OfferFrom != 0 ? css.viewSelectorChecked : css.viewSelectorUnchecked]}>
+							<Picker selectedValue={f_OfferFrom} onValueChange={(value) => inputChangeHandler('f_OfferFrom', value)}>
+								<Picker.Item label="-- выбрать --" value="0" />
+								<Picker.Item label="Физическое лицо" value="1" />
+								<Picker.Item label="Юридическое лицо" value="2" />
+								<Picker.Item label="Застройщик" value="3" />
+								<Picker.Item label="Организатор торгов" value="4" />
+							</Picker>
 						</View>
-					)}
+					</View>
 
 					{/* PRICE */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ||
-					!f_CadastralNumber ||
-					f_OfferFrom == 0 ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
-						<Fragment>
-							<Text style={css.title}>Цена</Text>
-							<View style={css.viewRow}>
-								<TextInput
-									value={f_Price}
-									onChangeText={(value) => inputChangeHandler('f_Price', value)}
-									placeholder="от"
-									keyboardType="number-pad"
-									style={[css.textInput, css.textInputInput, css.priceInput]}
-								/>
 
-								<View style={css.units}>
-									<Text style={{ fontFamily: fonts.regular }}>руб.</Text>
-								</View>
+					<View>
+						<Text style={css.title}>Цена</Text>
+						<View style={[css.viewRow, { marginBottom: 0 }]}>
+							<TextInput
+								value={f_Price}
+								onChangeText={(value) => inputChangeHandler('f_Price', value)}
+								placeholder="от"
+								keyboardType="number-pad"
+								style={[css.textInput, css.textInputInput, css.priceInput]}
+							/>
+
+							<View style={css.units}>
+								<Text style={{ fontFamily: fonts.regular }}>руб.</Text>
 							</View>
-						</Fragment>
-					)}
+						</View>
+					</View>
 
 					{/* MORTGAGE CHECKBOX */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ||
-					!f_CadastralNumber ||
-					f_OfferFrom == 0 ||
-					!f_Price ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
-						<Pressable style={css.checkBox} onPress={() => setf_Mortgage(f_Mortgage ? '' : '1')}>
-							<CheckBox
-								disabled={false}
-								value={Boolean(f_Mortgage)}
-								onValueChange={(newValue) => inputChangeHandler('f_Mortgage', f_Mortgage ? '' : '1')}
-							/>
-							<Text style={css.checkBoxText}>Подходит под ипотеку</Text>
-						</Pressable>
-					)}
+
+					<Pressable style={css.checkBox} onPress={() => setf_Mortgage(f_Mortgage ? '' : '1')}>
+						<CheckBox
+							disabled={false}
+							value={Boolean(f_Mortgage)}
+							onValueChange={(newValue) => inputChangeHandler('f_Mortgage', f_Mortgage ? '' : '1')}
+						/>
+						<Text style={css.checkBoxText}>Подходит под ипотеку</Text>
+					</Pressable>
 
 					{/* `PHONE` */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ||
-					!f_CadastralNumber ||
-					f_OfferFrom == 0 ||
-					!f_Price ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
-						<Fragment>
-							<Text style={css.title}>Телефон</Text>
-							<View style={css.viewRow}>
-								<TextInput
-									value={f_Phone}
-									onChangeText={(value) => inputChangeHandler('f_Phone', value)}
-									placeholder="Телефон"
-									keyboardType="number-pad"
-									style={[css.textInput, css.textInputInput, css.fullRowInput]}
-								/>
-							</View>
-						</Fragment>
-					)}
+
+					<Fragment>
+						<Text style={css.title}>Телефон</Text>
+						<View style={css.viewRow}>
+							<TextInput
+								value={f_Phone}
+								onChangeText={(value) => {
+									value = phoneMask(value)
+									value = inputChangeHandler('f_Phone', value)
+								}}
+								placeholder="Телефон"
+								keyboardType="number-pad"
+								style={[css.textInput, css.textInputInput, css.fullRowInput]}
+							/>
+						</View>
+					</Fragment>
 
 					{/* DESCRIPTION */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ||
-					!f_CadastralNumber ||
-					f_OfferFrom == 0 ||
-					!f_Price ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
-						<Fragment>
-							<Text style={css.title}>Описание</Text>
-							<View style={css.viewSelectorWrapper}>
-								<TextInput
-									multiline
-									value={f_Description}
-									onChangeText={(value) => inputChangeHandler('f_Description', value)}
-									placeholder="Описание"
-									keyboardType="default"
-									style={[css.textInput, css.textInputInput, css.descrInput]}
-								/>
-							</View>
-						</Fragment>
-					)}
+
+					<Fragment>
+						<Text style={css.title}>Описание</Text>
+						<View style={css.viewSelectorWrapper}>
+							<TextInput
+								multiline
+								value={f_Description}
+								onChangeText={(value) => inputChangeHandler('f_Description', value)}
+								placeholder="Описание"
+								keyboardType="default"
+								style={[css.textInput, css.textInputInput, css.descrInput]}
+							/>
+						</View>
+					</Fragment>
 
 					{/* YOUTUBE */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ||
-					!f_CadastralNumber ||
-					f_OfferFrom == 0 ||
-					!f_Price ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
-						<Fragment>
-							<Text style={css.title}>Ссылка на видео youtube</Text>
-							<View style={css.viewSelectorWrapper}>
-								<TextInput
-									value={f_Video}
-									onChangeText={(value) => inputChangeHandler('f_Video', value)}
-									placeholder="Ссылка на видео youtube"
-									keyboardType="number-pad"
-									style={[css.textInput, css.textInputInput, css.fullRowInput]}
-								/>
-							</View>
-						</Fragment>
-					)}
+
+					<Fragment>
+						<Text style={css.title}>Ссылка на видео youtube</Text>
+						<View style={css.viewSelectorWrapper}>
+							<TextInput
+								value={f_Video}
+								onChangeText={(value) => inputChangeHandler('f_Video', value)}
+								placeholder="Ссылка на видео youtube"
+								keyboardType="number-pad"
+								style={[css.textInput, css.textInputInput, css.fullRowInput]}
+							/>
+						</View>
+					</Fragment>
+
+					{/* PICK PHOTOS */}
+					<View style={css.addViewWrapper}>
+						<Pressable
+							android_ripple={{ color: '#fff' }}
+							style={css.addPress}
+							onPress={() => {
+								handlePickPhotos()
+							}}
+						>
+							<Text style={css.addText}>Добавить фото</Text>
+						</Pressable>
+					</View>
 
 					{/* Button ADD */}
-					{f_Category == 0 ||
-					f_Type == 0 ||
-					f_ObjectType == 0 ||
-					!f_Region ||
-					!f_City ||
-					!f_Street ||
-					!f_HouseNumber ||
-					f_HouseType == 0 ||
-					!f_YearBuilt ||
-					!f_Floor ||
-					!f_FloorsInHouse ||
-					f_FirstFloorType == 0 ||
-					!f_TotalArea ||
-					!f_LivingArea ||
-					f_Finishing == 0 ||
-					// f_Bathroom == 0 ||
-					f_Window == 0 ||
-					!f_CadastralNumber ||
-					f_OfferFrom == 0 ||
-					!f_Price ||
-					!f_Phone ? null : f_Category >= 2 && f_NumberRooms == 0 ? null : !f_Category == 1 && !f_KitchenArea ? null : (
-						<View style={css.addViewWrapper}>
-							<Pressable
-								android_ripple={{ color: '#fff' }}
-								style={css.addPress}
-								onPress={() => {
-									console.log('Button ДОБАВИТЬ')
-									handleAddObject()
-								}}
-							>
-								<Text style={css.addText}>Добавить</Text>
-							</Pressable>
-						</View>
-					)}
+
+					<View style={css.addViewWrapper}>
+						<Pressable
+							android_ripple={{ color: '#fff' }}
+							style={css.addPress}
+							onPress={() => {
+								console.log('Button ДОБАВИТЬ')
+								handleAddObject()
+							}}
+						>
+							<Text style={css.addText}>Добавить</Text>
+						</Pressable>
+					</View>
 				</View>
 			</ScrollView>
 		</View>

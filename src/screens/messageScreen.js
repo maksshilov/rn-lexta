@@ -1,15 +1,6 @@
 import React, { Fragment, useState } from 'react'
-import {
-	TouchableOpacity,
-	Button,
-	Dimensions,
-	ScrollView,
-	Text,
-	View,
-	StyleSheet,
-	Image,
-} from 'react-native'
-import { connect } from 'react-redux'
+import { TouchableOpacity, Button, Dimensions, ScrollView, Text, View, StyleSheet, Image } from 'react-native'
+import { connect, useSelector } from 'react-redux'
 import LextaService from '../services/LextaService'
 import store from '../store'
 import md5 from 'md5'
@@ -17,41 +8,62 @@ import { getDocumentAsync } from 'expo-document-picker'
 import * as ImagePicker from 'expo-image-picker'
 // import RNFetchBlob from 'rn-fetch-blob'
 import * as FileSystem from 'expo-file-system'
+import { launchImageLibrary } from 'react-native-image-picker'
+import { ncAuthAddObj, ncAuthAddObjXML, ncAuthFetch } from '../ncAuth'
 
 const lexta = new LextaService()
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const MessageScreen = ({ state }) => {
+const MessageScreen = () => {
 	const [messagesType, setMessagesType] = useState(0)
 
 	const handleGetMessages = async (type) => {
 		const lexta = new LextaService()
 		lexta
-			.getMessages(
-				store.getState().reducerUser.Token,
-				md5(store.getState().reducerUser.Email),
-				type
-			)
+			.getMessages(store.getState().reducerUser.Token, md5(store.getState().reducerUser.Email), type)
 			.then((res) => res.json())
 			.then((json) => console.log(json))
 			.catch((err) => console.error(err))
 	}
 
 	// FILE PICKER code start
-	const [image, setImage] = useState(null)
+	const [image1, setImage1] = useState(null)
+	const [image2, setImage2] = useState(null)
+	const [image3, setImage3] = useState(null)
+	const { Email } = useSelector((state) => state.profile)
+	const { token } = useSelector((state) => state.auth)
 
 	const uploadImage = async () => {
-		FileSystem.uploadAsync('https://lexta.pro/api/LoadingProfileImage.php', image, {
-			uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-			fieldName: 'LoadProfileImg',
-			parameters: {
-				user: md5(store.getState().reducerUser.Email),
-				token: store.getState().reducerUser.Token,
+		const data = new FormData()
+		// data.append('user', Email)
+		// data.append('token', token)
+		data.append('LoadProfileImg', {
+			uri: image ? image : '',
+			name: 'avatar',
+			type: 'image/jpeg',
+		})
+		console.log(data)
+		const response = await fetch('gs://rn-todo-app-4e018.appspot.com', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'multipart/form-data',
 			},
-		}).then((res) => console.log(JSON.parse(res.body)))
+			body: data,
+		})
+		const responseData = await response.json()
+		console.log(responseData)
+		// FileSystem.uploadAsync('https://lexta.pro/api/LoadingProfileImage.php', image, {
+		// 	uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+		// 	fieldName: 'LoadProfileImg',
+		// 	parameters: {
+		// 		user: '',
+		// 		token: '',
+		// 	},
+		// }).then((res) => console.log(JSON.parse(res.body)))
 	}
 
-	const pickImage = async () => {
+	const pickImage1 = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
 			allowsEditing: true,
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -60,7 +72,34 @@ const MessageScreen = ({ state }) => {
 		})
 
 		if (!result.cancelled) {
-			setImage(result.uri)
+			console.log(result)
+			setImage1(result.uri)
+		}
+	}
+	const pickImage2 = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			aspect: [1, 1],
+			quality: 1,
+		})
+
+		if (!result.cancelled) {
+			console.log(result)
+			setImage2(result.uri)
+		}
+	}
+	const pickImage3 = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			aspect: [1, 1],
+			quality: 1,
+		})
+
+		if (!result.cancelled) {
+			console.log(result)
+			setImage3(result.uri)
 		}
 	}
 	// FILE PICKER code end
@@ -219,10 +258,8 @@ const MessageScreen = ({ state }) => {
 									lineHeight: 15,
 								}}
 							>
-								Lorem ipsum dolor sit, amet consectetur adipisicing elit. A eum eius
-								maxime nobis beatae nulla labore debitis eligendi quam voluptatum in
-								laboriosam enim, odio inventore, blanditiis unde nemo autem
-								accusantium.
+								Lorem ipsum dolor sit, amet consectetur adipisicing elit. A eum eius maxime nobis beatae nulla labore debitis eligendi
+								quam voluptatum in laboriosam enim, odio inventore, blanditiis unde nemo autem accusantium.
 							</Text>
 						</View>
 						<View style={{ alignItems: 'flex-end', paddingRight: 10 }}>
@@ -246,28 +283,106 @@ const MessageScreen = ({ state }) => {
 					width: windowWidth,
 				}}
 			>
-				<View style={styles.mainBody}>
-					<TouchableOpacity
-						style={styles.buttonStyle}
-						activeOpacity={0.5}
-						onPress={pickImage}
-					>
-						<Text style={styles.buttonTextStyle}>Select File</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.buttonStyle}
-						activeOpacity={0.5}
-						onPress={uploadImage}
-					>
+				<View>
+					<View style={{ flexDirection: 'row' }}>
+						<TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={pickImage1}>
+							<Text style={styles.buttonTextStyle}>Select File</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={pickImage2}>
+							<Text style={styles.buttonTextStyle}>Select File</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={pickImage3}>
+							<Text style={styles.buttonTextStyle}>Select File</Text>
+						</TouchableOpacity>
+					</View>
+					<TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={uploadImage}>
 						<Text style={styles.buttonTextStyle}>Upload File</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
-			{image ? (
-				<View>
-					<Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+			<View style={{ flexDirection: 'row' }}>
+				{image1 ? (
+					<View>
+						<Image source={{ uri: image1 }} style={{ width: 100, height: 100 }} />
+					</View>
+				) : null}
+				{image2 ? (
+					<View>
+						<Image source={{ uri: image2 }} style={{ width: 100, height: 100 }} />
+					</View>
+				) : null}
+				{image3 ? (
+					<View>
+						<Image source={{ uri: image3 }} style={{ width: 100, height: 100 }} />
+					</View>
+				) : null}
+			</View>
+			<View
+				style={{
+					flexDirection: 'row',
+					marginTop: 20,
+					justifyContent: 'space-around',
+					width: windowWidth,
+				}}
+			>
+				<View style={{ alignItems: 'center' }}>
+					<TouchableOpacity
+						onPress={() => ncAuthFetch('qwe@qwe.qwe', 'qwe')}
+						style={{
+							alignItems: 'center',
+							justifyContent: 'center',
+							borderRadius: 15,
+							width: windowWidth * 0.3,
+							height: windowWidth * 0.1,
+							backgroundColor: '#74c8b4',
+						}}
+					>
+						<Text>QWE</Text>
+					</TouchableOpacity>
 				</View>
-			) : null}
+				<View style={{ alignItems: 'center' }}>
+					<TouchableOpacity
+						onPress={() => ncAuthFetch('zxc@zxc.zxc', 'zxc')}
+						style={{
+							alignItems: 'center',
+							justifyContent: 'center',
+							borderRadius: 15,
+							width: windowWidth * 0.3,
+							height: windowWidth * 0.1,
+							backgroundColor: '#79c874',
+						}}
+					>
+						<Text>ZXC</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+			<View style={{ width: windowWidth, alignItems: 'center', marginTop: 20 }}>
+				<TouchableOpacity
+					onPress={() => {
+						let data = new FormData()
+						data.append('cc', 6)
+						data.append('sub', 10)
+						data.append('posting', 1)
+						data.append('f_Price', '123017')
+						data.append('f_Img_file[]', { uri: image1, name: image1.split('/').pop(), type: 'image/jpg' })
+						data.append('f_Img_file[]', { uri: image2, name: image2.split('/').pop(), type: 'image/jpg' })
+						data.append('f_Img_file[]', { uri: image3, name: image3.split('/').pop(), type: 'image/jpg' })
+						console.log(data)
+						// console.log(File(image))
+						ncAuthAddObjXML(data)
+					}}
+					style={{
+						alignItems: 'center',
+						justifyContent: 'center',
+						borderRadius: 15,
+						width: windowWidth * 0.3,
+						height: windowWidth * 0.1,
+						backgroundColor: '#c8b374',
+					}}
+				>
+					<Text>Object</Text>
+				</TouchableOpacity>
+			</View>
 		</Fragment>
 	)
 }
@@ -291,9 +406,9 @@ const styles = StyleSheet.create({
 		height: 40,
 		alignItems: 'center',
 		borderRadius: 30,
-		marginLeft: 35,
-		marginRight: 35,
-		marginTop: 15,
+		// marginLeft: 35,
+		// marginRight: 35,
+		// marginTop: 15,
 	},
 	buttonTextStyle: {
 		color: '#FFFFFF',

@@ -1,19 +1,10 @@
 import md5 from 'md5'
 import React, { useEffect, useState } from 'react'
-import {
-	Dimensions,
-	FlatList,
-	Pressable,
-	ScrollView,
-	StyleSheet,
-	Text,
-	View,
-	RefreshControl,
-	ActivityIndicator,
-} from 'react-native'
+import { Dimensions, FlatList, Pressable, ScrollView, StyleSheet, Text, View, RefreshControl, ActivityIndicator } from 'react-native'
 import LextaService from '../services/LextaService'
 import store from '../store'
 import ObjectCard from '../components/ObjectCard'
+import { useSelector } from 'react-redux'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -22,13 +13,13 @@ export default function MyObjects({ navigation }) {
 	const [refreshing, setRefreshing] = useState(true)
 	const [myObjects, setmyObjects] = useState([])
 
+	const { Email } = useSelector((state) => state.profile)
+	const { token } = useSelector((state) => state.auth)
+
 	const handleGetMyObjects = () => {
 		const lexta = new LextaService()
 		lexta
-			.getMyObjects(
-				store.getState().reducerUser.Token,
-				md5(store.getState().reducerUser.Email)
-			)
+			.getMyObjects(token, md5(Email))
 			.then((res) => res.json())
 			.then((json) => {
 				setRefreshing(false)
@@ -38,9 +29,9 @@ export default function MyObjects({ navigation }) {
 			.catch((err) => console.error(err))
 	}
 
-	// useEffect(() => {
-	// handleGetMyObjects()
-	// }, [])
+	useEffect(() => {
+		handleGetMyObjects()
+	}, [])
 
 	const onRefresh = () => {
 		setmyObjects([])
@@ -84,9 +75,7 @@ export default function MyObjects({ navigation }) {
 				}}
 			>
 				<FlatList
-					refreshControl={
-						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-					}
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					data={myObjects}
 					renderItem={renderItem}
 					keyExtractor={(item) => {
