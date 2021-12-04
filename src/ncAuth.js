@@ -73,9 +73,10 @@ export async function ncAuthAddObj(data) {
 	// .catch((err) => console.log(err))
 }
 export async function ncAuthAddObjXML(data) {
-	console.log('XMLHttpRequest', data)
+	// console.log('XMLHttpRequest', data)
 	let xhr = new XMLHttpRequest()
 	xhr.open('POST', 'https://lexta.pro/netcat/add.php')
 	xhr.setRequestHeader('Content-Type', 'multipart/form-data')
 	xhr.send(data)
+	console.log(xhr.status)
 }
