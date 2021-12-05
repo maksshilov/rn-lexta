@@ -131,6 +131,10 @@ export default class LextaService {
 		})
 	}
 
+	autoSearch = async (queryString) => {
+		return await fetch(`https://lexta.pro/api/AutoSearch.php?queryString=${queryString}`, { method: 'GET' })
+	}
+
 	loginHandler = async () => {
 		let loginFormat = login.toLowerCase().replace(' ', '')
 		lexta

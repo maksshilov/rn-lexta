@@ -4,16 +4,20 @@ import { colors, fonts, windowWidth, windowHeight } from './constants'
 export default StyleSheet.create({
 	mainViewWrapper: {
 		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
 		backgroundColor: '#fff',
 	},
 	scrollView: {
 		width: windowWidth,
 	},
 	scrollViewCCS: {
+		flexGrow: 1,
 		paddingTop: 10,
 		paddingBottom: 25,
 		backgroundColor: '#fff',
 		alignItems: 'center',
+		// backgroundColor: 'red',
 	},
 	viewSelectorWrapper: {
 		width: windowWidth * 0.94,

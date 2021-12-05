@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux'
 import css from '../styles/cssAddObject'
 import { fonts } from '../styles/constants'
 import { phoneMask } from '../components/scripts'
+import LextaService from '../services/LextaService'
+import WebView from 'react-native-webview'
 // import { ImagePicker } from 'react-native-image-crop-picker'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
@@ -430,7 +432,14 @@ export default function AddObject() {
 							<Text style={css.title}>Регион</Text>
 							<TextInput
 								value={f_Region}
-								onChangeText={(value) => inputChangeHandler('f_Region', value)}
+								onChangeText={(value) => {
+									inputChangeHandler('f_Region', value)
+									const lexta = new LextaService()
+									lexta
+										.autoSearch(value)
+										.then((res) => res.json())
+										.then((json) => console.log(json))
+								}}
 								placeholder="Регион"
 								keyboardType="default"
 								style={[css.textInput, css.textInputInput, css.regionStreetInput]}
@@ -499,6 +508,149 @@ export default function AddObject() {
 							</Pressable>
 						</View>
 					</View>
+
+					<View style={{ height: windowWidth * 0.6 }}>
+						<WebView
+							// style={{ opacity: 0.99 }}
+							onError={(err) => console.log(err)}
+							source={{
+								html: `
+<body style="margin: 0px;padding: 0px;">
+	<div id="map" style="flex:0px ;margin: 0px ;padding: 0px; height: ${windowWidth * 1.5}px;"></div>
+	<script
+		src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=240cb70c-297a-44da-a3f6-c73039a7c654"
+		type="text/javascript"></script>
+	<script>
+		setTimeout("ymaps.ready(init);", 1000);
+		var myMap;
+		var myPlacemark;
+		function init() {
+			function createMap(state, myPosition) {
+				myMap = new ymaps.Map('map', state, {searchControlProvider: 'yandex#search'}),
+				myPlacemark = new ymaps.Placemark(myMap.getCenter(), {}, {
+					preset: 'islands#icon',
+					iconColor: 'red',
+					draggable: true,
+					visible: false
+				});
+				objectManager = new ymaps.ObjectManager(
+					{gridSize: 32, clusterDisableClickZoom: false}
+				);
+				objectManager
+					.clusters
+					.options
+					.set('preset', 'islands#redClusterIcons');
+				myMap
+					.geoObjects
+					.add(objectManager);
+				objectManager
+					.events
+					.add("balloonopen", function (e) {
+						myPlacemark
+							.options
+							.set({visible: false});
+					});
+				myPosition
+					.geoObjects
+					.options
+					.set({preset: 'islands#blueCircleIcon', hideIconOnBalloonOpen: false});
+				myPosition
+					.geoObjects
+					.get(0)
+					.properties
+					.set({hintContent: 'Мое местоположение'});
+				myPosition
+					.geoObjects
+					.events
+					.add("balloonopen", function (e) {
+						myPlacemark
+							.options
+							.set({visible: false});
+					});
+				myMap
+					.geoObjects
+					.add(myPosition.geoObjects);
+			}
+			createMap({
+				center: [
+					55.751574, 37.573856
+				],
+				zoom: 13,
+				controls:[]
+			})
+		}
+		var objects;
+		var myPlacemark1;
+		function putMark() {
+			const city = $('#f_City').val();
+			const street = $('#f_Street').val();
+			const houseNum = $('#f_HouseNumber').val();
+			if (city && street) {
+				myMap
+					.geoObjects
+					.remove(myPlacemark1);
+				myPlacemark1 = new ymaps.Placemark(myMap.getCenter(), {}, {
+					preset: 'islands#icon',
+					iconColor: 'red',
+					draggable: true,
+					visible: false
+				});
+				let coords;
+				ymaps
+					.geoQuery(ymaps.geocode(city + ' ' + street + ' ' + houseNum))
+					.each(function (pm) {
+						coords = pm
+							.geometry
+							.getCoordinates();
+						$("input[name=f_Latitude]").val(coords[0]);
+						$("input[name=f_Longitude]").val(coords[1]);
+						myPlacemark1
+							.geometry
+							.setCoordinates(coords);
+						myPlacemark1
+							.options
+							.set("visible", "true");
+						myMap
+							.geoObjects
+							.add(myPlacemark1);
+						myMap.setCenter(coords);
+						myMap.setZoom(16);
+						myPlacemark1
+							.events
+							.add("dragend", function (e) {
+								coordsNew = myPlacemark1
+									.geometry
+									.getCoordinates();
+								$("input[name=f_Latitude]").val(coordsNew[0]);
+								$("input[name=f_Longitude]").val(coordsNew[1]);
+							});
+						myMap
+							.events
+							.add("click", function (e) {
+								myPlacemark1
+									.geometry
+									.setCoordinates(e.get("coords"));
+								myPlacemark1
+									.options
+									.set("visible", "true");
+								coordsNewTest = myPlacemark1
+									.geometry
+									.getCoordinates();
+								$("input[name=f_Latitude]").val(coordsNewTest[0]);
+								$("input[name=f_Longitude]").val(coordsNewTest[1]);
+							});
+					});
+			} else {
+				swal('Введите город и улицу', '', 'error');
+			}
+		}
+	</script>
+</body>
+`,
+							}}
+						/>
+					</View>
+
 					{/* F_HOUSETYPE */}
 					<View style={css.viewSelectorWrapper}>
 						<Text style={css.title}>Тип дома</Text>

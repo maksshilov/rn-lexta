@@ -83,25 +83,29 @@ export const setDidTryAL = () => {
 
 export const updateTokenAction = (email, token, userid, userData) => {
 	return async (dispatch) => {
+		console.log('inputs:', email, token, userid, userData)
+		console.log('updateTokenAction > start')
 		const responseUpdateToken = await lexta.updateToken(email, token, md5(userid))
 		if (responseUpdateToken.ok) {
+			console.log('responseUpdateToken.ok >', responseUpdateToken.ok)
 			const resUpdateTokenData = await responseUpdateToken.json()
 			if (resUpdateTokenData.Status) {
-				console.log('auth.js > resUpdateTokenData.Status > ', resUpdateTokenData.Status)
+				console.log('resUpdateTokenData.Status >', resUpdateTokenData.Status)
 				let updatedToken = resUpdateTokenData.Token
 				dispatch({
 					type: UPDATE_TOKEN,
 					token: updatedToken,
 				})
-				let updatedUserData = JSON.parse(userData)
-				const updatedExpirationDate = new Date(
-					new Date().getTime() + 60000 * 5
-				).toISOString()
+
+				let oldUserData = JSON.parse(userData)
+				console.log('oldUserData', oldUserData)
+				const updatedExpirationDate = new Date(new Date().getTime() + 60000 * 5).toISOString()
 				updatedUserData = {
-					...updatedUserData,
+					...oldUserData,
 					Token: updatedToken,
 					expirationDate: updatedExpirationDate,
 				}
+				console.log('updatedUserData', updatedUserData)
 				saveDataToStorage(updatedUserData)
 			} else {
 				throw new Error('Ошибка токена')
@@ -117,6 +121,6 @@ export const logout = () => {
 	return { type: LOGOUT }
 }
 
-const saveDataToStorage = (userData) => {
-	AsyncStorage.setItem('userData', JSON.stringify(userData))
+const saveDataToStorage = async (userData) => {
+	await AsyncStorage.setItem('userData', JSON.stringify(userData))
 }
