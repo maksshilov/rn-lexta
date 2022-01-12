@@ -9,6 +9,7 @@ import AppNavigator from './src/navigators/AppNavigator'
 import { bootstrap } from './src/bootstrap'
 import authReducer from './src/store/reducers/auth'
 import profileReducer from './src/store/reducers/profile'
+import coordsReducer from './src/store/reducers/coords'
 import { reducerUser, reducerObjects } from './src/store/reducer'
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
 	const rootReducer = combineReducers({
 		auth: authReducer,
 		profile: profileReducer,
+		coords: coordsReducer,
 		reducerUser,
 		reducerObjects,
 	})
@@ -26,11 +28,7 @@ const App = () => {
 	if (!isReady) {
 		return (
 			<React.Fragment>
-				<AppLoading
-					startAsync={bootstrap}
-					onFinish={() => setIsReady(true)}
-					onError={(err) => console.log(err)}
-				/>
+				<AppLoading startAsync={bootstrap} onFinish={() => setIsReady(true)} onError={(err) => console.log(err)} />
 			</React.Fragment>
 		)
 	}
