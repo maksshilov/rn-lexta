@@ -10,26 +10,69 @@ import LextaService from '../services/LextaService'
 
 const lexta = new LextaService()
 
+const SEARCH_FORM = 'SEARCH_FORM'
+const formReducer = (state, action) => {
+	if (action.type == SEARCH_FORM) {
+		return {
+			...formState,
+			[action.input]: [action.value],
+		}
+	}
+	return state
+}
+
 export default function SearchScreen({ navigation }) {
-	const [cityOrRegion, setcityOrRegion] = useState('')
-	const [catalogType, setcatalogType] = useState(1)
-	const [f_Category, setf_Category] = useState('')
-	const [f_NumberRooms, setf_NumberRooms] = useState('')
-	const [objectType, setobjectType] = useState(0)
-	const [priceFrom, setpriceFrom] = useState('')
-	const [priceTo, setpriceTo] = useState('')
-	const [totalAreaFrom, settotalAreaFrom] = useState('')
-	const [totalAreaTo, settotalAreaTo] = useState('')
-	const [kitchenAreaFrom, setkitchenAreaFrom] = useState('')
-	const [kitchenAreaTo, setkitchenAreaTo] = useState('')
-	const [floorFrom, setfloorFrom] = useState('')
-	const [floorTo, setfloorTo] = useState('')
-	const [whichFloor1, setwhichFloor1] = useState('')
-	const [whichFloor2, setwhichFloor2] = useState('')
-	const [whichFloor3, setwhichFloor3] = useState('')
-	const [f_HouseType, setf_HouseType] = useState('')
-	const [mortgage, setmortgage] = useState('')
-	const [video, setvideo] = useState('')
+	const [formState, dispatchFormState] = useReducer(formReducer, {
+		cityOrRegion: '',
+		catalogType: '1',
+		f_Category: '',
+		f_NumberRooms: '',
+		objectType: '0',
+		priceFrom: '',
+		priceTo: '',
+		totalAreaFrom: '',
+		totalAreaTo: '',
+		kitchenAreaFrom: '',
+		kitchenAreaTo: '',
+		floorFrom: '',
+		floorTo: '',
+		whichFloor1: '',
+		whichFloor2: '',
+		whichFloor3: '',
+		f_HouseType: '',
+		mortgage: '',
+		video: '',
+	})
+
+	let {
+		cityOrRegion,
+		catalogType,
+		f_Category,
+		f_NumberRooms,
+		objectType,
+		priceFrom,
+		priceTo,
+		totalAreaFrom,
+		totalAreaTo,
+		kitchenAreaFrom,
+		kitchenAreaTo,
+		floorFrom,
+		floorTo,
+		whichFloor1,
+		whichFloor2,
+		whichFloor3,
+		f_HouseType,
+		mortgage,
+		video,
+	} = formState
+
+	const inputChangeHandler = (inputIdentifier, inputValue) => {
+		dispatchFormState({
+			type: SEARCH_FORM,
+			input: inputIdentifier,
+			value: inputValue,
+		})
+	}
 
 	// let params = `
 	// token=${store.getState().reducerUser.Token}&
@@ -79,17 +122,21 @@ export default function SearchScreen({ navigation }) {
 								style={css.inputCity}
 								placeholder="Укажите город или регион"
 								value={cityOrRegion}
-								onChangeText={(value) => setcityOrRegion(value)}
+								onChangeText={(value) => inputChangeHandler('cityOrRegion', value)}
 							/>
 						</View>
 						<View style={css.viewPickerBase}>
-							<Picker style={css.picker} selectedValue={catalogType} onValueChange={(itemValue) => setcatalogType(itemValue)}>
+							<Picker
+								style={css.picker}
+								selectedValue={catalogType}
+								onValueChange={(value) => inputChangeHandler('catalogType', value)}
+							>
 								<Picker.Item label="Продажа" value="1" />
 								<Picker.Item label="Аренда" value="2" />
 							</Picker>
 						</View>
 						<View style={[css.viewPickerBase, css.viewPickerCategory]}>
-							<Picker style={css.picker} selectedValue={f_Category} onValueChange={(itemValue) => setf_Category(itemValue)}>
+							<Picker style={css.picker} selectedValue={f_Category} onValueChange={(value) => inputChangeHandler('f_Category', value)}>
 								<Picker.Item label="Категория" value="0" />
 								<Picker.Item label="Комнаты" value="1" />
 								<Picker.Item label="Квартиры" value="2" />
@@ -100,7 +147,11 @@ export default function SearchScreen({ navigation }) {
 							</Picker>
 						</View>
 						<View style={[css.viewPickerBase, css.viewPickerRooms]}>
-							<Picker style={css.picker} selectedValue={f_NumberRooms} onValueChange={(itemValue) => setf_NumberRooms(itemValue)}>
+							<Picker
+								style={css.picker}
+								selectedValue={f_NumberRooms}
+								onValueChange={(value) => inputChangeHandler('f_NumberRooms', value)}
+							>
 								<Picker.Item label="Комнат" value="0" />
 								<Picker.Item label="1 комната" value="1" />
 								<Picker.Item label="2 комнаты" value="2" />
@@ -117,19 +168,19 @@ export default function SearchScreen({ navigation }) {
 					<Text style={css.title}>Вид объекта</Text>
 					<View style={css.wrapperFrowMb20}>
 						<Pressable
-							onPress={() => setobjectType(1)}
+							onPress={() => inputChangeHandler('objectType', 1)}
 							style={[css.selectBase, css.selectObjectTypelLeft, objectType === 1 ? css.selected : null]}
 						>
 							<Text style={[css.selectText, objectType === 1 ? css.selectedText : null]}>Все</Text>
 						</Pressable>
 						<Pressable
-							onPress={() => setobjectType(3)}
+							onPress={() => inputChangeHandler('objectType', 3)}
 							style={[css.selectBase, css.selectObjectTypelCenter, objectType === 3 ? css.selected : null]}
 						>
 							<Text style={[css.selectText, objectType === 3 ? css.selectedText : null]}>Новостройка</Text>
 						</Pressable>
 						<Pressable
-							onPress={() => setobjectType(2)}
+							onPress={() => inputChangeHandler('objectType', 2)}
 							style={[css.selectBase, css.selectObjectTypelRight, objectType === 2 ? css.selected : null]}
 						>
 							<Text style={[css.selectText, objectType === 2 ? css.selectedText : null]}>Вторичка</Text>
@@ -141,14 +192,14 @@ export default function SearchScreen({ navigation }) {
 					<View style={css.wrapperFrowMb20}>
 						<TextInput
 							value={priceFrom}
-							onChangeText={(value) => setpriceFrom(value)}
+							onChangeText={(value) => inputChangeHandler('priceFrom', value)}
 							placeholder="от"
 							keyboardType="number-pad"
 							style={css.inputPriceAreaLeft}
 						/>
 						<TextInput
 							value={priceTo}
-							onChangeText={(value) => setpriceTo(value)}
+							onChangeText={(value) => inputChangeHandler('priceTo', value)}
 							placeholder="до"
 							keyboardType="number-pad"
 							style={css.inputPriceAreaRight}
@@ -164,14 +215,14 @@ export default function SearchScreen({ navigation }) {
 					<View style={css.wrapperFrowMb20}>
 						<TextInput
 							value={totalAreaFrom}
-							onChangeText={(value) => settotalAreaFrom(value)}
+							onChangeText={(value) => inputChangeHandler('totalAreaFrom', value)}
 							placeholder="от"
 							keyboardType="number-pad"
 							style={css.inputPriceAreaLeft}
 						/>
 						<TextInput
 							value={totalAreaTo}
-							onChangeText={(value) => settotalAreaTo(value)}
+							onChangeText={(value) => inputChangeHandler('totalAreaTo', value)}
 							placeholder="до"
 							keyboardType="number-pad"
 							style={css.inputPriceAreaRight}
@@ -187,14 +238,14 @@ export default function SearchScreen({ navigation }) {
 					<View style={css.wrapperFrowMb20}>
 						<TextInput
 							value={kitchenAreaFrom}
-							onChangeText={(value) => setkitchenAreaFrom(value)}
+							onChangeText={(value) => inputChangeHandler('kitchenAreaFrom', value)}
 							placeholder="от"
 							keyboardType="number-pad"
 							style={css.inputPriceAreaLeft}
 						/>
 						<TextInput
 							value={kitchenAreaTo}
-							onChangeText={(value) => setkitchenAreaTo(value)}
+							onChangeText={(value) => inputChangeHandler('kitchenAreaTo', value)}
 							placeholder="до"
 							keyboardType="number-pad"
 							style={css.inputPriceAreaRight}
@@ -211,14 +262,14 @@ export default function SearchScreen({ navigation }) {
 						<View style={{ flexDirection: 'row' }}>
 							<TextInput
 								value={floorFrom}
-								onChangeText={(value) => setfloorFrom(value)}
+								onChangeText={(value) => inputChangeHandler('floorFrom', value)}
 								placeholder="от"
 								keyboardType="number-pad"
 								style={[css.inputFloorBase, css.inputFloorLeft]}
 							/>
 							<TextInput
 								value={floorTo}
-								onChangeText={(value) => setfloorTo(value)}
+								onChangeText={(value) => inputChangeHandler('floorTo', value)}
 								placeholder="до"
 								keyboardType="number-pad"
 								style={[css.inputFloorBase, css.inputFloorRight]}
@@ -226,19 +277,19 @@ export default function SearchScreen({ navigation }) {
 						</View>
 						<View style={{ flexDirection: 'row' }}>
 							<Pressable
-								onPress={() => setwhichFloor1(whichFloor1 ? '' : 1)}
+								onPress={() => inputChangeHandler('whichFloor1', whichFloor1 ? '' : 1)}
 								style={[css.selectBase, css.selectFloorLeft, whichFloor1 ? css.selected : null]}
 							>
 								<Text style={[css.selectText, whichFloor1 ? css.selectedText : null]}>Не первый</Text>
 							</Pressable>
 							<Pressable
-								onPress={() => setwhichFloor2(whichFloor2 ? '' : 1)}
+								onPress={() => inputChangeHandler('whichFloor2', whichFloor2 ? '' : 1)}
 								style={[css.selectBase, css.selectFloorCenter, whichFloor2 ? css.selected : null]}
 							>
 								<Text style={[css.selectText, whichFloor2 ? css.selectedText : null]}>Не последний</Text>
 							</Pressable>
 							<Pressable
-								onPress={() => setwhichFloor3(whichFloor3 ? '' : 1)}
+								onPress={() => inputChangeHandler('whichFloor3', whichFloor3 ? '' : 1)}
 								style={[css.selectBase, css.selectFloorRight, whichFloor3 ? css.selected : null]}
 							>
 								<Text style={[css.selectText, whichFloor3 ? css.selectedText : null]}>Последний</Text>
@@ -249,7 +300,7 @@ export default function SearchScreen({ navigation }) {
 					{/* HOUSE TYPE */}
 					<Text style={css.title}>Тип дома</Text>
 					<View style={[css.viewPickerBase, css.viewPickerHouseType]}>
-						<Picker style={css.picker} selectedValue={f_HouseType} onValueChange={(itemValue) => setf_HouseType(itemValue)}>
+						<Picker style={css.picker} selectedValue={f_HouseType} onValueChange={(value) => inputChangeHandler('f_HouseType', value)}>
 							<Picker.Item label="-- выбрать --" value="0" />
 							<Picker.Item label="Кирпичный" value="1" />
 							<Picker.Item label="Панельный" value="2" />
@@ -259,14 +310,18 @@ export default function SearchScreen({ navigation }) {
 					</View>
 
 					{/* MORTGAGE CHECKBOX */}
-					<Pressable style={css.checkBox} onPress={() => setmortgage(mortgage ? '' : 1)}>
-						<CheckBox disabled={false} value={Boolean(mortgage)} onValueChange={(newValue) => setmortgage(mortgage ? '' : '1')} />
+					<Pressable style={css.checkBox} onPress={() => inputChangeHandler('mortgage', mortgage ? '' : 1)}>
+						<CheckBox
+							disabled={false}
+							value={Boolean(mortgage)}
+							onValueChange={() => inputChangeHandler('mortgage', mortgage ? '' : '1')}
+						/>
 						<Text style={css.checkBoxText}>Подходит под ипотеку</Text>
 					</Pressable>
 
 					{/* VIDEO CHECKBOX */}
-					<Pressable style={css.checkBox} onPress={() => setvideo(video ? '' : '1')}>
-						<CheckBox disabled={false} value={Boolean(video)} onValueChange={() => setvideo(video ? '' : '1')} />
+					<Pressable style={css.checkBox} onPress={() => inputChangeHandler('video', video ? '' : '1')}>
+						<CheckBox disabled={false} value={Boolean(video)} onValueChange={() => inputChangeHandler('video', video ? '' : '1')} />
 						<Text style={css.checkBoxText}>С видео</Text>
 					</Pressable>
 					<View style={{ alignItems: 'center' }}>
