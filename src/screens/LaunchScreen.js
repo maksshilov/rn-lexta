@@ -33,9 +33,8 @@ export default function LaunchScreen(navigation) {
 		}
 
 		console.log('LaunchScreen.js > OK')
-		setTimeout(() => {
-			dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
-		}, 5000) // когла токен умирает, то слишком быстро запрашивает 2 раза
+		// AsyncStorage.removeItem('userData')
+		dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
 	}
 	useEffect(() => {
 		tryLogin()

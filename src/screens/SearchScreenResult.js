@@ -12,20 +12,13 @@ export default function SearchScreenResult({ route, navigation }) {
 
 	const [userFavorites, setUserFavorites] = useState([])
 
-	const { Token, Email } = store.getState().reducerUser
+	// const { Token, Email } = store.getState().reducerUser
 	const ending = (count) => {
 		switch (true) {
 			case Boolean(count % 10) && count % 10 === 1 && count !== 11 && count !== 111:
 				return 'ие'
 				break
-			case count % 10 > 1 &&
-				count % 10 < 5 &&
-				count !== 12 &&
-				count !== 13 &&
-				count !== 14 &&
-				count !== 112 &&
-				count !== 113 &&
-				count !== 114:
+			case count % 10 > 1 && count % 10 < 5 && count !== 12 && count !== 13 && count !== 14 && count !== 112 && count !== 113 && count !== 114:
 				return 'ия'
 				break
 			case count > 4:
@@ -42,13 +35,11 @@ export default function SearchScreenResult({ route, navigation }) {
 			.then((res) => res.json())
 			.then((json) => setUserFavorites(JSON.parse(json[0].Favorites)))
 	}
-	useEffect(() => {
-		getFavorites()
-	}, [])
+	// useEffect(() => {
+	// getFavorites()
+	// }, [])
 
-	const renderItem = ({ item }) => (
-		<ObjectCard item={item} userFavorites={userFavorites} navigation={navigation} />
-	)
+	const renderItem = ({ item }) => <ObjectCard item={item} userFavorites={userFavorites} navigation={navigation} />
 
 	return (
 		<View
@@ -70,11 +61,7 @@ export default function SearchScreenResult({ route, navigation }) {
 				Туть нашлось {DATA.length} объявлен{ending(DATA.length)}
 			</Text>
 
-			<FlatList
-				data={DATA}
-				renderItem={renderItem}
-				keyExtractor={(item) => item.Message_ID}
-			/>
+			<FlatList data={DATA} renderItem={renderItem} keyExtractor={(item) => item.Message_ID} />
 		</View>
 	)
 }

@@ -11,8 +11,9 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 		<View style={{ width: windowWidth, alignItems: 'center', paddingTop: 20 }}>
 			<TouchableOpacity
 				onPress={() => {
-					navigation.navigate('Object', {
-						item,
+					navigation.navigate('Elements', {
+						screen: 'Object',
+						params: { item },
 					})
 				}}
 				android_ripple

@@ -1,15 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import {
-	ScrollView,
-	Dimensions,
-	View,
-	Text,
-	Modal,
-	Pressable,
-	TextInput,
-	TouchableOpacity,
-	Animated,
-} from 'react-native'
+import { ScrollView, Dimensions, View, Text, Modal, Pressable, TextInput, TouchableOpacity, Animated } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AppDetails from '../components/AppDetails'
 import AppEgrn from '../components/AppEgrn'
@@ -28,7 +18,7 @@ import LextaService from '../services/LextaService'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ObjectScreen = ({ route, navigation, state }) => {
-	// console.log(route.params.item)
+	console.log(route.params.item)
 
 	const [modal, setModal] = useState(false)
 
@@ -76,7 +66,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 	messageFormData.append('catalogue', 1)
 	messageFormData.append('posting', 1)
 	messageFormData.append('f_Checked', 1)
-	messageFormData.append('uid', store.getState().reducerUser.UserId)
+	// messageFormData.append('uid', store.getState().reducerUser.UserId)
 	messageFormData.append('f_ToUserID', User_ID)
 	messageFormData.append('f_Subject', `${Category}, ${TotalArea} м2`)
 	messageFormData.append('f_Message', message)
@@ -98,20 +88,12 @@ const ObjectScreen = ({ route, navigation, state }) => {
 	return (
 		<React.Fragment>
 			<Animated.View style={{ opacity: opacityMain }}>
-				<ScrollView
-					ref={scrollToTop}
-					scrollTo
-					contentContainerStyle={{ backgroundColor: '#fff' }}
-				>
+				<ScrollView ref={scrollToTop} scrollTo contentContainerStyle={{ backgroundColor: '#fff' }}>
 					<View style={{ alignItems: 'center' }}>
 						<ObjectCarousel imgArray={Img} />
 						<View style={{ position: 'absolute', left: 20, top: 30 }}>
 							<TouchableOpacity onPress={() => navigation.goBack()}>
-								<MaterialCommunityIcons
-									name="arrow-left-thick"
-									color="#fff"
-									size={30}
-								/>
+								<MaterialCommunityIcons name="arrow-left-thick" color="#fff" size={30} />
 							</TouchableOpacity>
 						</View>
 					</View>
@@ -159,17 +141,9 @@ const ObjectScreen = ({ route, navigation, state }) => {
 										setModal(true)
 									}}
 								>
-									<MaterialCommunityIcons
-										name="email-outline"
-										color="#8f2d32"
-										size={24}
-									/>
+									<MaterialCommunityIcons name="email-outline" color="#8f2d32" size={24} />
 								</TouchableOpacity>
-								<MaterialCommunityIcons
-									name="forum-outline"
-									color="#8f2d32"
-									size={24}
-								/>
+								<MaterialCommunityIcons name="forum-outline" color="#8f2d32" size={24} />
 							</View>
 						</View>
 						{/* PARAMS */}
@@ -205,11 +179,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 										alignItems: 'center',
 									}}
 								></View>
-								<MaterialCommunityIcons
-									name="arrow-down-drop-circle"
-									color="#d0d0d0"
-									size={15}
-								/>
+								<MaterialCommunityIcons name="arrow-down-drop-circle" color="#d0d0d0" size={15} />
 							</View>
 							<Text
 								style={{
@@ -249,11 +219,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 										alignItems: 'center',
 									}}
 								></View>
-								<MaterialCommunityIcons
-									name="arrow-down-drop-circle"
-									color="#d0d0d0"
-									size={15}
-								/>
+								<MaterialCommunityIcons name="arrow-down-drop-circle" color="#d0d0d0" size={15} />
 							</View>
 							<Text
 								style={{
@@ -289,11 +255,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 										alignItems: 'center',
 									}}
 								></View>
-								<MaterialCommunityIcons
-									name="arrow-down-drop-circle"
-									color="#d0d0d0"
-									size={15}
-								/>
+								<MaterialCommunityIcons name="arrow-down-drop-circle" color="#d0d0d0" size={15} />
 							</View>
 							<Text
 								style={{
@@ -336,11 +298,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 										alignItems: 'center',
 									}}
 								></View>
-								<MaterialCommunityIcons
-									name="arrow-down-drop-circle"
-									color="#d0d0d0"
-									size={15}
-								/>
+								<MaterialCommunityIcons name="arrow-down-drop-circle" color="#d0d0d0" size={15} />
 							</View>
 							<Text
 								style={{
@@ -354,9 +312,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 							</Text>
 						</View>
 					</View>
-					<View
-						style={{ width: windowWidth, height: windowWidth * 0.5, marginBottom: 30 }}
-					>
+					<View style={{ width: windowWidth, height: windowWidth * 0.5, marginBottom: 30 }}>
 						<WebView
 							style={{ opacity: 0.99 }}
 							onError={(err) => console.log(err)}
@@ -378,7 +334,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 						>
 							Похожие объявления рядом
 						</Text>
-						<View
+						{/* <View
 							style={{
 								flexDirection: 'row',
 								justifyContent: 'space-between',
@@ -396,8 +352,8 @@ const ObjectScreen = ({ route, navigation, state }) => {
 								item={state.reducerObjects[3]}
 								navigation={navigation}
 							/>
-						</View>
-						<View
+						</View> */}
+						{/* <View
 							style={{
 								flexDirection: 'row',
 								justifyContent: 'space-between',
@@ -415,7 +371,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 								item={state.reducerObjects[5]}
 								navigation={navigation}
 							/>
-						</View>
+						</View> */}
 					</View>
 					<TouchableOpacity style={{ alignItems: 'center' }}>
 						<View
@@ -482,9 +438,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 									}}
 								>
 									<View style={{ width: '80%' }}>
-										<Text
-											style={{ fontFamily: 'gothampro-bold', fontSize: 20 }}
-										>
+										<Text style={{ fontFamily: 'gothampro-bold', fontSize: 20 }}>
 											{Category}, {TotalArea} м2
 										</Text>
 									</View>
