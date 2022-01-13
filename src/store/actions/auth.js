@@ -116,6 +116,8 @@ export const updateTokenAction = (email, token, userid, userData) => {
 	}
 }
 
+// export const updateUserPhoto = () => {}
+
 export const logout = () => {
 	AsyncStorage.removeItem('userData')
 	return { type: LOGOUT }

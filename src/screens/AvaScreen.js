@@ -1,18 +1,19 @@
 import React, { Fragment } from 'react'
 import { Dimensions, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-
-import { getDocumentAsync } from 'expo-document-picker'
 import * as ImagePicker from 'expo-image-picker'
 import * as FileSystem from 'expo-file-system'
+import md5 from 'md5'
 
 import { colors, fonts } from '../styles/constants'
 import { useState } from 'react'
-import md5 from 'md5'
+import LextaService from '../services/LextaService'
+import { SET_PROFILE } from '../store/actions/profile'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function AvaScreen({ route }) {
+	const dispatch = useDispatch()
 	const [photo, setPhoto] = useState('')
 	const { token } = useSelector((state) => state.auth)
 	const { Email, Photo } = useSelector((state) => state.profile)
@@ -26,7 +27,25 @@ export default function AvaScreen({ route }) {
 				user: md5(Email),
 				token: token,
 			},
-		}).then((res) => console.log(JSON.parse(res.body)))
+		})
+			.then((res) => JSON.parse(res.body))
+			.then((json) => {
+				if (json.status) {
+					let lexta = new LextaService()
+					lexta
+						.getUserInfo(token, Email)
+						.then((res) => res.json())
+						.then((json) => {
+							if (json) {
+								dispatch({
+									type: SET_PROFILE,
+									payload: json[0],
+								})
+								setPhoto('')
+							}
+						})
+				}
+			})
 	}
 
 	const pickPhoto = async () => {
