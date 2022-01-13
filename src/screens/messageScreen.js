@@ -17,10 +17,13 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 const MessageScreen = () => {
 	const [messagesType, setMessagesType] = useState(0)
 
-	const handleGetMessages = async (type) => {
-		const lexta = new LextaService()
+	const { Email } = useSelector((state) => state.profile)
+	const { token } = useSelector((state) => state.auth)
+
+	const handleGetMessages = async (outbox) => {
+		let lexta = new LextaService()
 		lexta
-			.getMessages(store.getState().reducerUser.Token, md5(store.getState().reducerUser.Email), type)
+			.getMessages(token, md5(Email), outbox)
 			.then((res) => res.json())
 			.then((json) => console.log(json))
 			.catch((err) => console.error(err))
@@ -30,8 +33,6 @@ const MessageScreen = () => {
 	const [image1, setImage1] = useState(null)
 	const [image2, setImage2] = useState(null)
 	const [image3, setImage3] = useState(null)
-	const { Email } = useSelector((state) => state.profile)
-	const { token } = useSelector((state) => state.auth)
 
 	const uploadImage = async () => {
 		const data = new FormData()
@@ -105,7 +106,7 @@ const MessageScreen = () => {
 	// FILE PICKER code end
 
 	return (
-		<Fragment>
+		<ScrollView>
 			<View
 				style={{
 					backgroundColor: '#fff',
@@ -363,7 +364,7 @@ const MessageScreen = () => {
 						data.append('cc', 6)
 						data.append('sub', 10)
 						data.append('posting', 1)
-						data.append('f_Price', '12301')
+						data.append('f_Price', '12301111')
 						data.append('f_Img_file[]', { uri: image1, name: image1.split('/').pop(), type: 'image/jpg' })
 						data.append('f_Img_file[]', { uri: image2, name: image2.split('/').pop(), type: 'image/jpg' })
 						data.append('f_Img_file[]', { uri: image3, name: image3.split('/').pop(), type: 'image/jpg' })
@@ -386,7 +387,24 @@ const MessageScreen = () => {
 					<Text>Object</Text>
 				</TouchableOpacity>
 			</View>
-		</Fragment>
+			<View style={{ width: windowWidth, alignItems: 'center', marginTop: 20 }}>
+				<TouchableOpacity
+					onPress={() => {
+						handleGetMessages(0)
+					}}
+					style={{
+						alignItems: 'center',
+						justifyContent: 'center',
+						borderRadius: 15,
+						width: windowWidth * 0.3,
+						height: windowWidth * 0.1,
+						backgroundColor: '#e397e7',
+					}}
+				>
+					<Text>Get Messages</Text>
+				</TouchableOpacity>
+			</View>
+		</ScrollView>
 	)
 }
 

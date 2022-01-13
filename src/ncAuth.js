@@ -32,6 +32,8 @@ export async function ncAuthFetch(user, pass) {
 		// credentials: 'include',
 		body: secondAuth, // STEP 5. INCLUDE FORM DATA - OK!
 	})
+		.then((res) => res.text())
+		.then((json) => console.log(typeof json))
 	// .then((res) => res.headers)
 	// .then((text) => console.log(text))
 	// .catch((err) => console.log(err))
