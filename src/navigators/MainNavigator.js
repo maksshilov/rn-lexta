@@ -15,6 +15,7 @@ import AddObject from '../screens/AddObject'
 import ProfileScreen from '../screens/ProfileScreen'
 import ObjectScreen from '../screens/ObjectScreen'
 import SearchScreenResult from '../screens/SearchScreenResult'
+import AvaScreen from '../screens/AvaScreen'
 
 const MainStack = createStackNavigator()
 export const MainNavigator = () => {
@@ -97,6 +98,14 @@ export const ProfileMenuNavigator = () => {
 			{/* PROFILE MENU start */}
 			<ProfileMenuStack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
 
+			<ProfileMenuStack.Screen
+				name="Ava"
+				component={AvaScreen}
+				options={{
+					...screenOptions,
+					title: 'Фото',
+				}}
+			/>
 			<ProfileMenuStack.Screen
 				name="ProfileDetails"
 				component={ProfileDetailsScreen}

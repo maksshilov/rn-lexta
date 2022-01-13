@@ -18,8 +18,6 @@ import LextaService from '../services/LextaService'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ObjectScreen = ({ route, navigation, state }) => {
-	console.log(route.params.item)
-
 	const [modal, setModal] = useState(false)
 
 	const {

@@ -2,12 +2,15 @@ import React from 'react'
 import { Image, View, Dimensions, Animated } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { useSelector } from 'react-redux'
 import { handlePressIn, handlePressOut } from './AnimatedScale'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function Header({ navigation, scrollY }) {
 	const touchScaleAva = React.useRef(new Animated.Value(1)).current
+
+	const avatar = useSelector((state) => state.profile.Photo)
 
 	return (
 		<Animated.View
@@ -53,7 +56,11 @@ export default function Header({ navigation, scrollY }) {
 						}}
 						activeOpacity={0.7}
 					>
-						<MaterialCommunityIcons name="account-circle" size={40} color="grey" />
+						{avatar ? (
+							<Image source={{ uri: avatar }} style={{ width: 40, height: 40, borderRadius: 100 }} resizeMethod="scale" />
+						) : (
+							<MaterialCommunityIcons name="account-circle" size={40} color="grey" />
+						)}
 					</TouchableOpacity>
 				</Animated.View>
 			</View>

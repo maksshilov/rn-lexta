@@ -10,7 +10,6 @@ export default function LaunchScreen(navigation) {
 	const dispatch = useDispatch()
 	const tryLogin = async () => {
 		const userData = await AsyncStorage.getItem('userData')
-		// console.log(userData)
 
 		if (!userData) {
 			console.log('LaunchScreen.js > if (!userData)')
@@ -27,18 +26,18 @@ export default function LaunchScreen(navigation) {
 			try {
 				await dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
 			} catch (err) {
-				Alert.alert('Ошибка', 'Войти ещё раз', [{ text: 'Ok', onPress: () => authActions.logout() }])
+				Alert.alert('Ошибка', error, [{ text: 'Ok', onPress: () => authActions.logout() }])
 				setError(err.message)
 			}
+		} else {
+			console.log('LaunchScreen.js > OK')
+			AsyncStorage.removeItem('userData')
+			// dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
 		}
-
-		console.log('LaunchScreen.js > OK')
-		// AsyncStorage.removeItem('userData')
-		dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
 	}
 	useEffect(() => {
 		tryLogin()
-	})
+	}, [])
 
 	return (
 		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

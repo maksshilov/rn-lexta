@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
+import { Text, View, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -11,14 +11,20 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function ProfileScreen({ navigation }) {
 	const dispatch = useDispatch()
-	const { FirstName, LastName } = useSelector((state) => state.profile)
+	const { FirstName, LastName, Photo } = useSelector((state) => state.profile)
 
 	return (
 		<ScrollView contentContainerStyle={{ flex: 0, paddingHorizontal: 10, backgroundColor: '#fff' }}>
 			<View style={{ paddingTop: windowHeight * 0.05, alignItems: 'center' }}>
-				<View style={{ paddingVertical: 10 }}>
-					<MaterialCommunityIcons name="account-circle" size={80} color="grey" />
-				</View>
+				<TouchableOpacity onPress={() => navigation.navigate('ProfileMenu', { screen: 'Ava' })}>
+					<View style={{ paddingVertical: 10 }}>
+						{Photo ? (
+							<Image source={{ uri: Photo }} style={{ width: 80, height: 80, borderRadius: 100 }} resizeMethod="scale" />
+						) : (
+							<MaterialCommunityIcons name="account-circle" size={80} color="grey" />
+						)}
+					</View>
+				</TouchableOpacity>
 				<Text style={{ fontFamily: 'gothampro-bold', fontSize: 22 }}>
 					{FirstName} {LastName}
 				</Text>
