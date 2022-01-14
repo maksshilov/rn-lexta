@@ -1,16 +1,18 @@
 import md5 from 'md5'
 import React, { useState, useEffect } from 'react'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { useSelector } from 'react-redux'
 import LextaService from '../services/LextaService'
 import store from '../store'
 
 export default function Like(props) {
-	lextaService = new LextaService()
+	let lextaService = new LextaService()
 	const { objectId } = props
 	const [userFavorites, setUserFavorites] = useState([])
 	const [like, setLike] = useState(false)
 
-	const { Token, Email } = store.getState().reducerUser
+	const { token: Token } = useSelector((state) => state.auth)
+	const { Email } = useSelector((state) => state.profile)
 
 	useEffect(() => {
 		setLike(props.like)
@@ -36,9 +38,7 @@ export default function Like(props) {
 				lextaService
 					.getUserInfo(Token, Email)
 					.then((res) => res.json())
-					.then((json) =>
-						console.log('SEARCHSCREENRESULTS.JS > favorites after >', json[0].Favorites)
-					)
+					.then((json) => console.log('SEARCHSCREENRESULTS.JS > favorites after >', json[0].Favorites))
 			})
 			.catch((err) => console.error(err))
 	}

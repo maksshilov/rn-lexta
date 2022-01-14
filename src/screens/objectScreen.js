@@ -14,11 +14,14 @@ import store from '../store'
 
 import { connect } from 'react-redux'
 import LextaService from '../services/LextaService'
+import MapMark from '../components/MapMark'
+import { colors, fonts } from '../styles/constants'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 const ObjectScreen = ({ route, navigation, state }) => {
 	const [modal, setModal] = useState(false)
+	const [mapMark, setMapMark] = useState(false)
 
 	const {
 		Category,
@@ -37,6 +40,8 @@ const ObjectScreen = ({ route, navigation, state }) => {
 		Date: date,
 		Img,
 		User_ID,
+		Latitude,
+		Longitude,
 	} = route.params.item
 
 	const scrollToTop = useRef(null)
@@ -310,19 +315,41 @@ const ObjectScreen = ({ route, navigation, state }) => {
 							</Text>
 						</View>
 					</View>
-					<View style={{ width: windowWidth, height: windowWidth * 0.5, marginBottom: 30 }}>
-						<WebView
-							style={{ opacity: 0.99 }}
-							onError={(err) => console.log(err)}
-							originWhitelist={['*']}
-							source={{
-								html: '<div style="margin:-10"><script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Abca82711819eec264960544252481589b96aea2acaadee5d058cc52bc27247ab&amp;width=1000&amp;height=500&amp;lang=ru_RU&amp;scroll=true"></script></div>',
+
+					<View style={{ alignItems: 'center', marginBottom: 20 }}>
+						<Pressable
+							android_ripple={{ color: '#fff' }}
+							style={{
+								backgroundColor: '#912e33',
+								width: windowWidth * 0.8,
+								height: windowWidth * 0.1,
+								borderRadius: 5,
+								alignItems: 'center',
+								justifyContent: 'center',
 							}}
-						/>
+							onPress={() => setMapMark(!mapMark)}
+						>
+							<Text
+								style={{
+									color: '#fdfffc',
+									fontFamily: 'gothampro-regular',
+									fontSize: 13,
+								}}
+							>
+								{mapMark ? 'Убрать карту' : 'Показать на карте'}
+							</Text>
+						</Pressable>
 					</View>
+
+					{mapMark ? (
+						<View style={{ width: windowWidth, height: windowWidth * 0.5, marginBottom: 30 }}>
+							<MapMark reverse latitude={Latitude} longtitude={Longitude} />
+						</View>
+					) : null}
+
 					{/* PHONE */}
 					<PhoneShow />
-					<View style={{ paddingHorizontal: 10 }}>
+					{/* <View style={{ paddingHorizontal: 10 }}>
 						<Text
 							style={{
 								fontFamily: 'gothampro-bold',
@@ -332,7 +359,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 						>
 							Похожие объявления рядом
 						</Text>
-						{/* <View
+						<View
 							style={{
 								flexDirection: 'row',
 								justifyContent: 'space-between',
@@ -350,8 +377,8 @@ const ObjectScreen = ({ route, navigation, state }) => {
 								item={state.reducerObjects[3]}
 								navigation={navigation}
 							/>
-						</View> */}
-						{/* <View
+						</View>
+						<View
 							style={{
 								flexDirection: 'row',
 								justifyContent: 'space-between',
@@ -369,9 +396,9 @@ const ObjectScreen = ({ route, navigation, state }) => {
 								item={state.reducerObjects[5]}
 								navigation={navigation}
 							/>
-						</View> */}
-					</View>
-					<TouchableOpacity style={{ alignItems: 'center' }}>
+						</View>
+					</View> */}
+					{/* <TouchableOpacity style={{ alignItems: 'center' }}>
 						<View
 							style={{
 								alignItems: 'center',
@@ -395,7 +422,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 								Показать другие похожие
 							</Text>
 						</View>
-					</TouchableOpacity>
+					</TouchableOpacity> */}
 				</ScrollView>
 			</Animated.View>
 

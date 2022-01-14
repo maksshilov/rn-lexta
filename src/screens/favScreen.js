@@ -1,24 +1,16 @@
 import md5 from 'md5'
 import React, { useEffect, useState } from 'react'
-import {
-	FlatList,
-	Image,
-	ImageBackground,
-	Text,
-	View,
-	RefreshControl,
-	ScrollView,
-	ActivityIndicator,
-} from 'react-native'
+import { FlatList, Image, ImageBackground, Text, View, RefreshControl, ScrollView, ActivityIndicator } from 'react-native'
 import ObjectCard from '../components/ObjectCard'
 import LextaService from '../services/LextaService'
 import store from '../store'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import updateToken from '../services/updateToken'
+import { updateTokenAction } from '../store/actions/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const FavScreen = ({ state, navigation }) => {
+export default FavScreen = ({ navigation }) => {
 	const lexta = new LextaService()
-	const { Token, Email } = store.getState().reducerUser
 
 	const [loading, setLoading] = useState(false)
 
@@ -27,8 +19,12 @@ const FavScreen = ({ state, navigation }) => {
 	const [favObjects, setFavObjects] = useState([])
 
 	const getFavoritesObjects = async () => {
+		const userData = await AsyncStorage.getItem('userData')
+		const userDataJson = JSON.parse(userData)
+		const { Email, Token, userId } = userDataJson
+
 		const handlegetFavoritesObjects = async (json) => {
-			const favArray = JSON.parse(json[0].Favorites)
+			let favArray = JSON.parse(json[0].Favorites)
 			if (favArray.length) {
 				let favObjectsId = favArray
 				let favObjects = []
@@ -38,8 +34,8 @@ const FavScreen = ({ state, navigation }) => {
 					await lexta
 						.getSearchObjects(
 							`token=${Token}&
-					 user=${md5(Email)}&
-					 objectId=${objectId}`
+							user=${md5(Email)}&
+							objectId=${objectId}`
 						)
 						.then((res) => res.json())
 						.then((result) => {
@@ -64,13 +60,11 @@ const FavScreen = ({ state, navigation }) => {
 				return res.json()
 			})
 			.then(async (json) => {
-				console.log(json.Message)
 				if (json.Message !== 'auth error') {
-					console.log('FAVSCREEN.JS', json.Message)
 					handlegetFavoritesObjects(json)
 				} else {
 					console.log('FAVSCREEN.JS >>> token is dead > update token')
-					updateToken()
+					dispatch(updateTokenAction(Email, Token, userId, userData))
 					setRefreshing(false)
 					setLoading(false)
 				}
@@ -87,10 +81,9 @@ const FavScreen = ({ state, navigation }) => {
 		getFavoritesObjects()
 	}
 
-	const renderItem = ({ item }) => (
-		<ObjectCard item={item[0]} userFavorites={userFavorites} navigation={navigation} />
-	)
+	const renderItem = ({ item }) => <ObjectCard item={item[0]} userFavorites={userFavorites} navigation={navigation} />
 
+	console.log('userFavorites.length', userFavorites.length)
 	return userFavorites.length ? (
 		<View
 			style={{
@@ -124,21 +117,9 @@ const FavScreen = ({ state, navigation }) => {
 				<ActivityIndicator color="#912e33" />
 			) : (
 				<Text style={{ fontFamily: 'gothampro-bold', fontSize: 30, color: '#999' }}>
-					ТУ{'\n'}ТЬ{'\n'}НИ{'\n'}ЧА{'\n'}ВО
+					Вы пока ничего{'\n'}не добавили{'\n'}сюда
 				</Text>
 			)}
 		</ScrollView>
 	)
 }
-
-const mapStateToProps = (state) => {
-	return { state }
-}
-const mapDispatchToProps = (dispatch) => {
-	return {
-		// setUserInfo: (token) => dispatch({ type: 'SET_USER_INFO', payload: token }),
-		// setObjects: (payload) => dispatch({ type: 'SET_OBJECTS', payload }),
-	}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(FavScreen)

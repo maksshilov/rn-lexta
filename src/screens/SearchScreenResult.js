@@ -3,6 +3,7 @@ import { Dimensions, FlatList, Image, Text, TouchableOpacity, View } from 'react
 import LextaService from '../services/LextaService'
 import store from '../store'
 import ObjectCard from '../components/ObjectCard'
+import { useSelector } from 'react-redux'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -12,7 +13,9 @@ export default function SearchScreenResult({ route, navigation }) {
 
 	const [userFavorites, setUserFavorites] = useState([])
 
-	// const { Token, Email } = store.getState().reducerUser
+	const { token } = useSelector((state) => state.auth)
+	const { Email } = useSelector((state) => state.profile)
+
 	const ending = (count) => {
 		switch (true) {
 			case Boolean(count % 10) && count % 10 === 1 && count !== 11 && count !== 111:
@@ -31,13 +34,13 @@ export default function SearchScreenResult({ route, navigation }) {
 	}
 	const getFavorites = async () => {
 		await lextaService
-			.getUserInfo(Token, Email)
+			.getUserInfo(token, Email)
 			.then((res) => res.json())
 			.then((json) => setUserFavorites(JSON.parse(json[0].Favorites)))
 	}
-	// useEffect(() => {
-	// getFavorites()
-	// }, [])
+	useEffect(() => {
+		getFavorites()
+	}, [])
 
 	const renderItem = ({ item }) => <ObjectCard item={item} userFavorites={userFavorites} navigation={navigation} />
 
