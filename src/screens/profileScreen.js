@@ -43,21 +43,21 @@ export default function ProfileScreen({ navigation }) {
 				<ProfileMenuItem title="Мои объявления" icon="format-list-bulleted-square" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<ProfileMenuItem title="Мои подписки" icon="email-newsletter" />
+			<ProfileMenuItem title="Мои подписки" icon="email-newsletter" disable />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileMenu', { screen: 'FavScreen' })}>
 				<ProfileMenuItem title="Избранное" icon="heart-outline" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<ProfileMenuItem title="Изменение цен" icon="update" />
+			<ProfileMenuItem title="Изменение цен" icon="update" disable />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<ProfileMenuItem title="Сообщения" icon="forum-outline" last />
+			<ProfileMenuItem title="Сообщения" icon="forum-outline" disable last />
 
 			<ProfileMenuSection title="ПОДДЕРЖКА" />
 
-			<ProfileMenuItem title="Как устроена платформа ЛЕХТА" icon="wan" />
+			<ProfileMenuItem title="Как устроена платформа ЛЕХТА" icon="wan" disable />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<ProfileMenuItem title="Помощь" icon="help" />
+			<ProfileMenuItem title="Помощь" icon="help" disable />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<TouchableOpacity
 				android_ripple
