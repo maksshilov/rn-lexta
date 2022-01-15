@@ -16,8 +16,12 @@ import { connect } from 'react-redux'
 import LextaService from '../services/LextaService'
 import MapMark from '../components/MapMark'
 import { colors, fonts } from '../styles/constants'
+import md5 from 'md5'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
+
+const lexta = new LextaService()
 
 const ObjectScreen = ({ route, navigation, state }) => {
 	const [modal, setModal] = useState(false)
@@ -42,6 +46,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 		User_ID,
 		Latitude,
 		Longitude,
+		Message_ID,
 	} = route.params.item
 
 	const scrollToTop = useRef(null)
@@ -62,6 +67,31 @@ const ObjectScreen = ({ route, navigation, state }) => {
 		}).start()
 	}
 
+	const handleSubscribeGet = async () => {
+		const userData = await AsyncStorage.getItem('userData')
+		const { Email, Token, userId } = JSON.parse(userData)
+
+		lexta
+			.getSubscribePrice(Token, md5(Email))
+			.then((res) => res.json())
+			.then((json) => console.log('handleSubscribeGet', json))
+	}
+
+	const handleSubscribe = async () => {
+		const userData = await AsyncStorage.getItem('userData')
+		const { Email, Token, userId } = JSON.parse(userData)
+
+		let email_MD5 = md5(Email)
+		let pass_MD5 = md5('zxc')
+
+		console.log(`email_MD5`, email_MD5, 'pass_MD5', pass_MD5, 'Message_ID', Message_ID)
+
+		lexta
+			.setSubscribePrice(email_MD5, pass_MD5, Message_ID, 'subscribe')
+			.then((res) => res.json())
+			.then((json) => console.log(json))
+	}
+
 	const [message, setMessage] = useState('')
 	const messageFormData = new FormData()
 	messageFormData.append('cc', 10)
@@ -76,7 +106,6 @@ const ObjectScreen = ({ route, navigation, state }) => {
 
 	const handleSendMessage = async () => {
 		console.log(messageFormData)
-		const lexta = new LextaService()
 		lexta
 			.sendMessage(message)
 			.then((res) => {
@@ -136,7 +165,14 @@ const ObjectScreen = ({ route, navigation, state }) => {
 									justifyContent: 'space-between',
 								}}
 							>
-								<MaterialCommunityIcons name="update" color="#8f2d32" size={24} />
+								<TouchableOpacity
+									onPress={() => {
+										handleSubscribeGet()
+										// handleSubscribe()
+									}}
+								>
+									<MaterialCommunityIcons name="update" color="#8f2d32" size={24} />
+								</TouchableOpacity>
 								<TouchableOpacity
 									android_ripple
 									onPress={() => {
@@ -157,7 +193,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 								paddingVertical: 20,
 							}}
 						>
-							<ObjectParams type="Квартира" value={`${NumberRooms}-комн`} />
+							<ObjectParams type="Квартира" value={`${NumberRooms}`} />
 							<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />
 							<ObjectParams type="Площадь" value={`${TotalArea} м2`} />
 							<View style={{ width: 1, height: '80%', backgroundColor: '#d0d0d0' }} />

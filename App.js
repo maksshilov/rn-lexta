@@ -11,6 +11,7 @@ import authReducer from './src/store/reducers/auth'
 import profileReducer from './src/store/reducers/profile'
 import coordsReducer from './src/store/reducers/coords'
 import popObjectsReducer from './src/store/reducers/popObjects'
+import authCookiesReducer from './src/store/reducers/authCookies'
 import { reducerUser, reducerObjects } from './src/store/reducer'
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
 		profile: profileReducer,
 		coords: coordsReducer,
 		popObjects: popObjectsReducer,
+		authCookies: authCookiesReducer,
 		// reducerUser,
 		// reducerObjects,
 	})

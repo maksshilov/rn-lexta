@@ -1,14 +1,15 @@
 import React, { Fragment, useEffect, useReducer, useRef, useState } from 'react'
 import CheckBox from '@react-native-community/checkbox'
 import { Picker } from '@react-native-picker/picker'
-import { Dimensions, TextInput, Pressable, ScrollView, StyleSheet, Text, View, Animated } from 'react-native'
+import { Dimensions, TextInput, Pressable, ScrollView, StyleSheet, Text, View, Animated, Alert, ActivityIndicator, Image } from 'react-native'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import css from '../styles/cssAddObject'
 import { fonts } from '../styles/constants'
 import { phoneMask } from '../components/scripts'
 import LextaService from '../services/LextaService'
-import WebView from 'react-native-webview'
 import MapMark from '../components/MapMark'
+import * as ImagePicker from 'expo-image-picker'
+
 // import { ImagePicker } from 'react-native-image-crop-picker'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
@@ -37,7 +38,10 @@ const formReducer = (state, action) => {
 	return state
 }
 
-function AddObject({ state }) {
+function AddObject({ state, navigation }) {
+	const authCookies = useSelector((state) => state.authCookies)
+
+	const [loading, setLoading] = useState(false)
 	const [mapMark, setMapMark] = useState(false)
 	const [formState, dispatchFormState] = useReducer(formReducer, {
 		inputValues: {
@@ -197,44 +201,60 @@ function AddObject({ state }) {
 		})
 	}
 
+	let coords = useSelector((state) => state.coords)
+	coords = coords.split(',')
+	console.log('coords', coords)
 	const mapMarkToggle = () => {
 		if (!mapMark) {
 			setMapMark(!mapMark)
-			// setTimeout(() => {
-			// console.log('timeout is over')
-			// inputChangeHandler('f_Latitude', coords[0])
-			// inputChangeHandler('f_Longitude', coords[1])
-			// }, 3000)
 		} else {
 			setMapMark(!mapMark)
-			inputChangeHandler('f_Latitude', '')
-			inputChangeHandler('f_Longitude', '')
 		}
 	}
 
-	const handlePickPhotos = () => {
-		ImagePicker.openPicker({
-			multiple: true,
-		}).then((images) => {
-			console.log(images)
-		})
-	}
+	const [image1, setImage1] = useState(null)
+	const [image2, setImage2] = useState(null)
+	const [image3, setImage3] = useState(null)
 
-	const pickImage = async () => {
+	const pickImage1 = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
 			allowsEditing: true,
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			aspect: [1, 1],
+			aspect: [16, 9],
 			quality: 1,
 		})
 
 		if (!result.cancelled) {
 			console.log(result)
-			setImage(result.uri)
+			setImage1(result.uri)
 		}
 	}
+	const pickImage2 = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			aspect: [16, 9],
+			quality: 1,
+		})
 
-	console.log(f_Latitude, f_Longitude)
+		if (!result.cancelled) {
+			console.log(result)
+			setImage2(result.uri)
+		}
+	}
+	const pickImage3 = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			aspect: [16, 9],
+			quality: 1,
+		})
+
+		if (!result.cancelled) {
+			console.log(result)
+			setImage3(result.uri)
+		}
+	}
 
 	return (
 		<View style={css.mainViewWrapper}>
@@ -1107,15 +1127,79 @@ function AddObject({ state }) {
 					</Fragment>
 
 					{/* PICK PHOTOS */}
-					<View style={css.addViewWrapper}>
+					<View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 20 }}>
 						<Pressable
 							android_ripple={{ color: '#fff' }}
-							style={css.addPress}
-							onPress={() => {
-								handlePickPhotos()
+							style={{
+								width: windowWidth * 0.16 * 1.8,
+								height: windowWidth * 0.09 * 1.8,
+								backgroundColor: '#ddd',
+								borderRadius: 10,
+								justifyContent: 'center',
+								marginHorizontal: 5,
 							}}
+							onPress={pickImage1}
 						>
-							<Text style={css.addText}>Добавить фото</Text>
+							{image1 ? (
+								<Image
+									style={{ width: windowWidth * 0.16 * 1.8, height: windowWidth * 0.09 * 1.8, borderRadius: 10 }}
+									source={{ uri: image1 }}
+								/>
+							) : (
+								<Text style={{ fontSize: 15, fontFamily: fonts.regular, color: '#999', textAlign: 'center' }}>
+									Добавить{'\n'}фото
+								</Text>
+							)}
+						</Pressable>
+						<Pressable
+							android_ripple={{ color: '#fff' }}
+							style={{
+								width: windowWidth * 0.16 * 1.8,
+								height: windowWidth * 0.09 * 1.8,
+								backgroundColor: '#ddd',
+								borderRadius: 10,
+								justifyContent: 'center',
+								marginHorizontal: 5,
+							}}
+							onPress={pickImage2}
+						>
+							{image2 ? (
+								<View>
+									<Image
+										style={{ width: windowWidth * 0.16 * 1.8, height: windowWidth * 0.09 * 1.8, borderRadius: 10 }}
+										source={{ uri: image2 }}
+									/>
+								</View>
+							) : (
+								<Text style={{ fontSize: 15, fontFamily: fonts.regular, color: '#999', textAlign: 'center' }}>
+									Добавить{'\n'}фото
+								</Text>
+							)}
+						</Pressable>
+						<Pressable
+							android_ripple={{ color: '#fff' }}
+							style={{
+								width: windowWidth * 0.16 * 1.8,
+								height: windowWidth * 0.09 * 1.8,
+								backgroundColor: '#ddd',
+								borderRadius: 10,
+								justifyContent: 'center',
+								marginHorizontal: 5,
+							}}
+							onPress={pickImage3}
+						>
+							{image3 ? (
+								<View>
+									<Image
+										style={{ width: windowWidth * 0.16 * 1.8, height: windowWidth * 0.09 * 1.8, borderRadius: 10 }}
+										source={{ uri: image3 }}
+									/>
+								</View>
+							) : (
+								<Text style={{ fontSize: 15, fontFamily: fonts.regular, color: '#999', textAlign: 'center' }}>
+									Добавить{'\n'}фото
+								</Text>
+							)}
 						</Pressable>
 					</View>
 
@@ -1126,11 +1210,124 @@ function AddObject({ state }) {
 							android_ripple={{ color: '#fff' }}
 							style={css.addPress}
 							onPress={() => {
-								console.log('Button ДОБАВИТЬ')
-								handleAddObject()
+								setLoading(true)
+								setMapMark(false)
+								// AUTH COOKIE START --->
+								let secondAuth = new FormData()
+								secondAuth.append('AuthPhase', '1')
+								secondAuth.append('REQUESTED_FROM', '/')
+								secondAuth.append('REQUESTED_BY', 'GET')
+								secondAuth.append('catalogue', '1')
+								secondAuth.append('sub', '6')
+								secondAuth.append('cc', '')
+								secondAuth.append('AUTH_USER', authCookies.email)
+								secondAuth.append('AUTH_PW', authCookies.password)
+
+								fetch('https://lexta.pro/netcat/modules/auth/', {
+									method: 'POST',
+									body: secondAuth,
+								})
+								// AUTH COOKIE <--- END
+
+								let data = new FormData()
+								data.append('cc', 6)
+								data.append('sub', 10)
+								data.append('posting', 1)
+								data.append('f_Name', f_Name)
+								data.append('f_Description', f_Description)
+								data.append('f_Type', f_Type)
+								data.append('f_LeaseType', f_LeaseType)
+								data.append('f_TravelType', f_TravelType)
+								data.append('f_Region', f_Region)
+								data.append('f_City', f_City)
+								data.append('f_ObjectType', f_ObjectType)
+								data.append('f_Category', f_Category)
+								data.append('f_NumberRooms', f_NumberRooms)
+								data.append('f_TypeProperty', f_TypeProperty)
+								data.append('f_SubwayStation', f_SubwayStation)
+								data.append('f_Street', f_Street)
+								data.append('f_HouseNumber', f_HouseNumber)
+								data.append('f_Price', f_Price)
+								data.append('f_PriceHistory', f_PriceHistory)
+								data.append('f_Finishing', f_Finishing)
+								data.append('f_TotalArea', f_TotalArea)
+								data.append('f_KitchenArea', f_KitchenArea)
+								data.append('f_LivingArea', f_LivingArea)
+								data.append('f_Floor', f_Floor)
+								data.append('f_FloorsInHouse', f_FloorsInHouse)
+								data.append('f_FirstFloorType', f_FirstFloorType)
+								data.append('f_HouseType', f_HouseType)
+								data.append('f_Bathroom', f_Bathroom)
+								data.append('f_Window', f_Window)
+								data.append('f_BalconyType', f_BalconyType)
+								data.append('f_Elevator', f_Elevator)
+								data.append('f_Parking', f_Parking)
+								data.append('f_TypeSale', f_TypeSale)
+								data.append('f_OfferFrom', f_OfferFrom)
+								data.append('f_YearBuilt', f_YearBuilt)
+								data.append('f_Mortgage', f_Mortgage)
+								data.append('f_Video', f_Video)
+								data.append('f_Phone', f_Phone)
+								data.append('f_CadastralNumber', f_CadastralNumber)
+								// data.append('f_Img', f_Img)
+								data.append('f_Latitude', coords[0])
+								data.append('f_Longitude', coords[1])
+								data.append('f_LandAppointment', f_LandAppointment)
+								data.append('f_LandElectricity', f_LandElectricity)
+								data.append('f_LandGas', f_LandGas)
+								data.append('f_LandWater', f_LandWater)
+								data.append('f_LandSewerage', f_LandSewerage)
+								data.append('f_LandArea', f_LandArea)
+								data.append('f_Carport', f_Carport)
+								data.append('f_ParkingLot', f_ParkingLot)
+								data.append('f_Garage', f_Garage)
+								data.append('f_Bath', f_Bath)
+								data.append('f_GardenHouse', f_GardenHouse)
+								data.append('f_HouseholdBuilding', f_HouseholdBuilding)
+								data.append('f_Facilities', f_Facilities)
+								data.append('f_CommercialPropertyType', f_CommercialPropertyType)
+								data.append('f_LocationCommercial', f_LocationCommercial)
+								data.append('f_LeasePricePeriod', f_LeasePricePeriod)
+								// data.append('f_ViewsNum', f_ViewsNum)
+								// data.append('f_ObjectChecked', f_ObjectChecked)
+								// data.append('f_ObjectRejected', f_ObjectRejected)
+								// data.append('f_ObjectRejectedComment', f_ObjectRejectedComment)
+								console.log(data)
+								if (image1 && image2 && image3) {
+									data.append('f_Img_file[]', { uri: image1, name: image1.split('/').pop(), type: 'image/jpg' })
+									data.append('f_Img_file[]', { uri: image2, name: image2.split('/').pop(), type: 'image/jpg' })
+									data.append('f_Img_file[]', { uri: image3, name: image3.split('/').pop(), type: 'image/jpg' })
+									data.append('settings_Img[use_preview]', 1)
+									data.append('settings_Img[preview_width]', 120)
+									data.append('settings_Img[preview_height]', 100)
+									data.append('settings_Img_hash', 'f421907ea9d21e51ad744d7d0f33eac7')
+								}
+
+								fetch('https://lexta.pro/netcat/modules/auth/', {
+									method: 'POST',
+									body: secondAuth,
+								})
+									.then((res) => res.ok)
+									.then((ok) => {
+										if (ok) {
+											// console.log('response OK', ok)
+											let xhr = new XMLHttpRequest()
+											xhr.open('POST', 'https://lexta.pro/netcat/add.php')
+											xhr.setRequestHeader('Content-Type', 'multipart/form-data')
+											xhr.send(data)
+										}
+									})
+									.then(() => {
+										setTimeout(() => {
+											setLoading(false)
+											Alert.alert('Добавлено', 'Ваш объект добавлен!', [
+												{ text: 'Мои объекты', onPress: () => navigation.navigate('ProfileMenu', { screen: 'MyObjects' }) },
+											])
+										}, 3000)
+									})
 							}}
 						>
-							<Text style={css.addText}>Добавить</Text>
+							<Text style={css.addText}>{loading ? <ActivityIndicator color="#fff" /> : 'Добавить'}</Text>
 						</Pressable>
 					</View>
 				</View>

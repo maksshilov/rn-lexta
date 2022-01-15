@@ -50,6 +50,9 @@ export const login = (email, password) => {
 				let { Token, UserId } = resTokenData
 				const responseUser = await lexta.getUserInfo(Token, email)
 				if (responseUser.ok) {
+					console.log('auth.js > login() > Token', Token)
+					console.log('auth.js > login() > Email MD5', md5(email))
+
 					const resUserData = await responseUser.json()
 
 					saveDataToStorage({ ...resTokenData, ...resUserData[0], expirationDate })

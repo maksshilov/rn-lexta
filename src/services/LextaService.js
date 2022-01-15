@@ -135,6 +135,23 @@ export default class LextaService {
 		})
 	}
 
+	setSubscribePrice = async (email_MD5, password, objectId, type) => {
+		let data = new FormData()
+		data.append('objectId', objectId)
+		data.append('type', type)
+		data.append('user', email_MD5)
+		data.append('password', password)
+
+		return await fetch(`https://lexta.pro/api/SubscribePriceObject.php`, {
+			method: 'POST',
+			body: data,
+		})
+	}
+
+	getSubscribePrice = async (token, email_MD5) => {
+		return await fetch(`https://lexta.pro/object-api/?subscribePrice=1&token=${token}&user=${email_MD5}`)
+	}
+
 	autoSearch = async (queryString) => {
 		return await fetch(`https://lexta.pro/api/AutoSearch.php?queryString=${queryString}`, { method: 'GET' })
 	}

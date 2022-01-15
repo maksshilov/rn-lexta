@@ -12,13 +12,14 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 export default function ProfileScreen({ navigation }) {
 	const dispatch = useDispatch()
 	const { FirstName, LastName, Photo } = useSelector((state) => state.profile)
+	console.log(Photo)
 
 	return (
 		<ScrollView contentContainerStyle={{ flex: 0, paddingHorizontal: 10, backgroundColor: '#fff' }}>
 			<View style={{ paddingTop: windowHeight * 0.05, alignItems: 'center' }}>
 				<TouchableOpacity onPress={() => navigation.navigate('ProfileMenu', { screen: 'Ava' })}>
 					<View style={{ paddingVertical: 10 }}>
-						{Photo ? (
+						{Boolean(Photo.split('/').pop()) ? (
 							<Image source={{ uri: Photo }} style={{ width: 80, height: 80, borderRadius: 100 }} resizeMethod="scale" />
 						) : (
 							<MaterialCommunityIcons name="account-circle" size={80} color="grey" />

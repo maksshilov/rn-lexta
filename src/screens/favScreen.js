@@ -4,12 +4,14 @@ import { FlatList, Image, ImageBackground, Text, View, RefreshControl, ScrollVie
 import ObjectCard from '../components/ObjectCard'
 import LextaService from '../services/LextaService'
 import store from '../store'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import updateToken from '../services/updateToken'
 import { updateTokenAction } from '../store/actions/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default FavScreen = ({ navigation }) => {
+	const dispatch = useDispatch()
+
 	const lexta = new LextaService()
 
 	const [loading, setLoading] = useState(false)

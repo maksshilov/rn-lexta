@@ -57,10 +57,12 @@ export default function Header({ navigation, scrollY }) {
 						activeOpacity={0.7}
 					>
 						{avatar ? (
-							<Image source={{ uri: avatar }} style={{ width: 40, height: 40, borderRadius: 100 }} resizeMethod="scale" />
-						) : (
-							<MaterialCommunityIcons name="account-circle" size={40} color="grey" />
-						)}
+							Boolean(avatar.split('/').pop()) ? (
+								<Image source={{ uri: avatar }} style={{ width: 40, height: 40, borderRadius: 100 }} resizeMethod="scale" />
+							) : (
+								<MaterialCommunityIcons name="account-circle" size={40} color="grey" />
+							)
+						) : null}
 					</TouchableOpacity>
 				</Animated.View>
 			</View>
