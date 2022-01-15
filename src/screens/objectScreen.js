@@ -321,7 +321,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 							android_ripple={{ color: '#fff' }}
 							style={{
 								backgroundColor: '#912e33',
-								width: windowWidth * 0.8,
+								width: windowWidth * 0.94,
 								height: windowWidth * 0.1,
 								borderRadius: 5,
 								alignItems: 'center',

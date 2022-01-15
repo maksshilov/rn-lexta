@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Dimensions, View, Text, Pressable } from 'react-native'
+import { colors, fonts } from '../styles/constants'
 const { width: windowWidth } = Dimensions.get('window')
 
 export default function PhoneShow({ phoneNumber }) {
@@ -14,8 +15,8 @@ export default function PhoneShow({ phoneNumber }) {
 			<Pressable
 				android_ripple={{ color: '#fff' }}
 				style={{
-					backgroundColor: '#912e33',
-					width: windowWidth * 0.8,
+					backgroundColor: colors.red,
+					width: windowWidth * 0.94,
 					height: windowWidth * 0.1,
 					borderRadius: 5,
 					alignItems: 'center',
@@ -28,7 +29,7 @@ export default function PhoneShow({ phoneNumber }) {
 				<Text
 					style={{
 						color: '#fdfffc',
-						fontFamily: 'gothampro-regular',
+						fontFamily: fonts.regular,
 						fontSize: 13,
 					}}
 				>

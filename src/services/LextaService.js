@@ -92,7 +92,7 @@ export default class LextaService {
 	}
 
 	getSearchObjects = async (params) => {
-		return await fetch(`${this._objectBase}${params}`, { mode: 'no-cors' })
+		return await fetch(`${this._objectBase}${params}`)
 	}
 
 	addObject = async (data) => {
