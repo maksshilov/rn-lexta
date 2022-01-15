@@ -16,6 +16,7 @@ import ProfileScreen from '../screens/ProfileScreen'
 import ObjectScreen from '../screens/ObjectScreen'
 import SearchScreenResult from '../screens/SearchScreenResult'
 import AvaScreen from '../screens/AvaScreen'
+import NewsScreen from '../screens/NewsScreen'
 
 const MainStack = createStackNavigator()
 export const MainNavigator = () => {
@@ -157,6 +158,7 @@ export const ElementsStackNavigator = () => {
 		<ElementsStack.Navigator>
 			<ElementsStack.Screen name="Object" component={ObjectScreen} options={{ headerShown: false }} />
 			<ElementsStack.Screen name="SearchResult" component={SearchScreenResult} options={{ headerShown: false }} />
+			<ElementsStack.Screen name="News" component={NewsScreen} options={{ headerShown: false }} />
 		</ElementsStack.Navigator>
 	)
 }

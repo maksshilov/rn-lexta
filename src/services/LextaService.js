@@ -122,6 +122,10 @@ export default class LextaService {
 		return await fetch(`${this._apiBase}GetMessages.php?token=${token}&user=${email}&outbox=${outbox}`)
 	}
 
+	getNews = async (id) => {
+		return await fetch(`${this._apiBase}GetNews.php?newsId=${id}`)
+	}
+
 	sendMessage = async (data) => {
 		return await fetch(`${this._netcatBase}add.php`, {
 			// mode: 'no-cors',

@@ -79,7 +79,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				</View>
 				{/* NEWS */}
 				<View>
-					<SubHeader title="Новости" />
+					<SubHeader title="Новости" navigation={navigation} />
 					<View style={styles.popularAndNewsView}>
 						<News date="30.02.2036" title="Lorem, ipsum dolor sit amet consectetur adipisicing elit." />
 
