@@ -3,6 +3,7 @@ import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native'
 import { numSplit } from './scripts'
 import PhoneShow from './PhoneShow'
 import Like from './Like'
+import { fonts } from '../styles/constants'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -44,7 +45,7 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 					>
 						<Text
 							style={{
-								fontFamily: 'gothampro-bold',
+								fontFamily: fonts.bold,
 								fontSize: 20,
 								marginVertical: 10,
 							}}
@@ -55,7 +56,7 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 					</View>
 					<Text
 						style={{
-							fontFamily: 'gothampro-regular',
+							fontFamily: fonts.regular,
 							fontSize: 15,
 							lineHeight: 20,
 							marginBottom: 20,
@@ -68,7 +69,7 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 					</Text>
 					<Text
 						style={{
-							fontFamily: 'gothampro-regular',
+							fontFamily: fonts.regular,
 							fontSize: 15,
 							lineHeight: 20,
 							marginBottom: 20,
@@ -79,7 +80,7 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 						{item.Street}, {item.HouseNumber}
 					</Text>
 				</View>
-				<PhoneShow phoneNumber={item.Phone} />
+				<PhoneShow phoneNumber={item.Phone} cart />
 			</TouchableOpacity>
 		</View>
 	)
