@@ -1,12 +1,14 @@
 import md5 from 'md5'
 import React, { useState, useEffect } from 'react'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import LextaService from '../services/LextaService'
 import store from '../store'
+import { SET_PROFILE } from '../store/actions/profile'
 
 export default function Like(props) {
 	let lextaService = new LextaService()
+	const dispatch = useDispatch()
 	const { objectId } = props
 	const [userFavorites, setUserFavorites] = useState([])
 	const [like, setLike] = useState(false)
@@ -38,6 +40,13 @@ export default function Like(props) {
 				lextaService
 					.getUserInfo(Token, Email)
 					.then((res) => res.json())
+					.then((json) => {
+						dispatch({
+							type: SET_PROFILE,
+							payload: json[0],
+						})
+						return json
+					})
 					.then((json) => console.log('SEARCHSCREENRESULTS.JS > favorites after >', json[0].Favorites))
 			})
 			.catch((err) => console.error(err))
