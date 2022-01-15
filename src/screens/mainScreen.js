@@ -28,15 +28,11 @@ export default function MainScreen({ navigation }) {
 
 	const getObjects = async () => {
 		const userData = await AsyncStorage.getItem('userData')
-		console.log('userData', userData)
 		const { Email, Token, UserId, expirationDate } = JSON.parse(userData)
 
-		// let params = `
-		// token=${Token}&user=${md5(Email)}&recNum=5&curPos=0
-		// `
 		const lexta = new LextaService()
 		lexta
-			.getSearchObjects(`token=${Token}&user=${md5(Email)}&recNum=5&curPos=0`)
+			.getSearchObjects(`token=${Token}&user=${md5(Email)}&recNum=20&curPos=0`)
 			.then((res) => res.json())
 			.then((json) => {
 				const idxs = shuffle(Array.from({ length: json.length }).map((_, i) => i))
