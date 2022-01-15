@@ -1,0 +1,1 @@
+export const SET_POP_OBJECTS = 'SET_POP_OBJECTS'

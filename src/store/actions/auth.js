@@ -52,6 +52,8 @@ export const login = (email, password) => {
 				if (responseUser.ok) {
 					const resUserData = await responseUser.json()
 
+					saveDataToStorage({ ...resTokenData, ...resUserData[0], expirationDate })
+
 					dispatch({
 						type: LOGIN,
 						token: Token,
@@ -64,7 +66,6 @@ export const login = (email, password) => {
 					})
 
 					const expirationDate = new Date(new Date().getTime() + 60000 * 5).toISOString()
-					saveDataToStorage({ ...resTokenData, ...resUserData[0], expirationDate })
 				} else {
 					throw new Error('Ошибка записи данных')
 				}

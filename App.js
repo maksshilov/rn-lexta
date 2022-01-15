@@ -10,6 +10,7 @@ import { bootstrap } from './src/bootstrap'
 import authReducer from './src/store/reducers/auth'
 import profileReducer from './src/store/reducers/profile'
 import coordsReducer from './src/store/reducers/coords'
+import popObjectsReducer from './src/store/reducers/popObjects'
 import { reducerUser, reducerObjects } from './src/store/reducer'
 
 const App = () => {
@@ -19,8 +20,9 @@ const App = () => {
 		auth: authReducer,
 		profile: profileReducer,
 		coords: coordsReducer,
-		reducerUser,
-		reducerObjects,
+		popObjects: popObjectsReducer,
+		// reducerUser,
+		// reducerObjects,
 	})
 
 	const store = createStore(rootReducer, applyMiddleware(ReduxThunk))

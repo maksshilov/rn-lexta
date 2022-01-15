@@ -10,9 +10,7 @@ export default function ObjectMini({ item, navigation, toTop = null }) {
 	return (
 		<TouchableOpacity
 			onPress={() => {
-				navigation.navigate('Object', {
-					item,
-				})
+				navigation.navigate('Elements', { screen: 'Object', params: { item } })
 				toTop && toTop({ x: 0, y: 0, animated: true })
 			}}
 		>

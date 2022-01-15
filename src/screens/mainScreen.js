@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, View, Dimensions, Animated, Pressable, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Carousel from '../components/Carousel'
@@ -6,37 +6,50 @@ import ObjectMini from '../components/ObjectMini'
 import Header from '../components/Header'
 import SubHeader from '../components/SubHeader'
 import News from '../components/News'
-import { connect } from 'react-redux'
-import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 import { shuffle } from '../components/scripts'
 import LextaService from '../services/LextaService'
 import md5 from 'md5'
+import { useDispatch, useSelector } from 'react-redux'
+import { SET_POP_OBJECTS } from '../store/actions/popObjects'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
-	const { getItem } = useAsyncStorage('@storage_key')
+export default function MainScreen({ navigation }) {
+	const dispatch = useDispatch()
+
+	const popObjects = useSelector((state) => state.popObjects)
+	const popObjectsVar = popObjects.length ? (
+		<React.Fragment>
+			<ObjectMini item={popObjects[0]} navigation={navigation} />
+			<ObjectMini item={popObjects[1]} navigation={navigation} />
+		</React.Fragment>
+	) : null
+
 	const getObjects = async () => {
-		const item = await getItem()
-		if (item) {
-			const itemToJson = JSON.parse(item)
-			setUserInfo(itemToJson)
-			const lexta = new LextaService()
-			lexta
-				.getAllObjects(itemToJson.Token, md5(itemToJson.Email))
-				.then((res) => res.json())
-				.then((json) => {
-					const idxs = shuffle(Array.from({ length: json.length }).map((_, i) => i))
-					let popular = []
-					for (let i = 0; i < json.length; i++) {
-						popular.push(json[idxs[i]])
-					}
-					setObjects(popular)
+		const userData = await AsyncStorage.getItem('userData')
+		console.log('userData', userData)
+		const { Email, Token, UserId, expirationDate } = JSON.parse(userData)
+
+		// let params = `
+		// token=${Token}&user=${md5(Email)}&recNum=5&curPos=0
+		// `
+		const lexta = new LextaService()
+		lexta
+			.getSearchObjects(`token=${Token}&user=${md5(Email)}&recNum=5&curPos=0`)
+			.then((res) => res.json())
+			.then((json) => {
+				const idxs = shuffle(Array.from({ length: json.length }).map((_, i) => i))
+				let popular = []
+				for (let i = 0; i < json.length; i++) {
+					popular.push(json[idxs[i]])
+				}
+				dispatch({
+					type: SET_POP_OBJECTS,
+					popObjects: popular,
 				})
-				.catch((e) => console.log(e))
-		} else {
-			// console.log('MAINSCREEN.JS > MainScreen error')
-		}
+			})
+			.catch((e) => console.log(e))
 	}
 
 	useEffect(() => {
@@ -68,14 +81,7 @@ const MainScreen = ({ state, navigation, setUserInfo, setObjects }) => {
 				{/* ПОПУЛЯРНО В ВАШЕМ ГОРОДЕ */}
 				<View style={{ marginBottom: 40 }}>
 					<SubHeader title="Популярное в Вашем городе" />
-					<View style={styles.popularAndNewsView}>
-						{Boolean(state.reducerObjects) && (
-							<React.Fragment>
-								<ObjectMini item={state.reducerObjects[0]} navigation={navigation} />
-								<ObjectMini item={state.reducerObjects[1]} navigation={navigation} />
-							</React.Fragment>
-						)}
-					</View>
+					<View style={styles.popularAndNewsView}>{popObjectsVar}</View>
 				</View>
 				{/* NEWS */}
 				<View>
@@ -102,15 +108,3 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 })
-
-const mapStateToProps = (state) => {
-	return { state }
-}
-const mapDispatchToProps = (dispatch) => {
-	return {
-		setUserInfo: (token) => dispatch({ type: 'SET_USER_INFO', payload: token }),
-		setObjects: (payload) => dispatch({ type: 'SET_OBJECTS', payload }),
-	}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
