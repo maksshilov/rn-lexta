@@ -118,12 +118,12 @@ export default class LextaService {
 		})
 	}
 
-	getMessages = async (token, email, outbox) => {
-		return await fetch(`${this._apiBase}GetMessages.php?token=${token}&user=${email}&outbox=${outbox}`)
+	getMessages = async (email, token, outbox = '') => {
+		return await fetch(`https://lexta.pro/api/GetMessages.php?user=${email}&token=${token}&outbox=${outbox}`, { method: 'GET' })
 	}
 
-	getNews = async (id) => {
-		return await fetch(`${this._apiBase}GetNews.php?newsId=${id}`)
+	getNews = async (recNum = '', curPos = '') => {
+		return await fetch(`https://lexta.pro/api/GetNews.php?recNum=${recNum}&curPos=${curPos}`, { method: 'GET' })
 	}
 
 	sendMessage = async (data) => {
@@ -135,12 +135,12 @@ export default class LextaService {
 		})
 	}
 
-	setSubscribePrice = async (email_MD5, password, objectId, type) => {
+	setSubscribePrice = async (email_MD5, token, objectId, type) => {
 		let data = new FormData()
 		data.append('objectId', objectId)
 		data.append('type', type)
 		data.append('user', email_MD5)
-		data.append('password', password)
+		data.append('token', token)
 
 		return await fetch(`https://lexta.pro/api/SubscribePriceObject.php`, {
 			method: 'POST',

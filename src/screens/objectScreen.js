@@ -82,12 +82,9 @@ const ObjectScreen = ({ route, navigation, state }) => {
 		const { Email, Token, userId } = JSON.parse(userData)
 
 		let email_MD5 = md5(Email)
-		let pass_MD5 = md5('zxc')
-
-		console.log(`email_MD5`, email_MD5, 'pass_MD5', pass_MD5, 'Message_ID', Message_ID)
 
 		lexta
-			.setSubscribePrice(email_MD5, pass_MD5, Message_ID, 'subscribe')
+			.setSubscribePrice(email_MD5, Token, Message_ID, 'subscribe')
 			.then((res) => res.json())
 			.then((json) => console.log(json))
 	}
@@ -167,8 +164,8 @@ const ObjectScreen = ({ route, navigation, state }) => {
 							>
 								<TouchableOpacity
 									onPress={() => {
-										handleSubscribeGet()
-										// handleSubscribe()
+										// handleSubscribeGet()
+										handleSubscribe()
 									}}
 								>
 									<MaterialCommunityIcons name="update" color="#8f2d32" size={24} />

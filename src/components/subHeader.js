@@ -6,11 +6,7 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function SubHeader({ navigation, title }) {
 	return (
-		<TouchableOpacity
-			onPress={() => {
-				navigation.navigate('Elements', { screen: 'News' })
-			}}
-		>
+		<TouchableOpacity onPress={navigation}>
 			<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 				<View style={{ width: '80%' }}>
 					<Text

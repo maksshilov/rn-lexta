@@ -18,6 +18,11 @@ import SearchScreenResult from '../screens/SearchScreenResult'
 import AvaScreen from '../screens/AvaScreen'
 import NewsScreen from '../screens/NewsScreen'
 
+const screenOptions = {
+	headerShown: true,
+	headerTitleStyle: { fontFamily: 'gothampro-bold' },
+}
+
 const MainStack = createStackNavigator()
 export const MainNavigator = () => {
 	return (
@@ -77,7 +82,7 @@ export const TabNavigator = () => {
 				}}
 			/>
 			<BottomTab.Screen
-				name="message"
+				name="messagesTab"
 				component={MessageScreen}
 				options={{
 					tabBarLabel: <Text style={{ fontSize: 11, fontFamily: 'gothampro-regular' }}>Сообщения</Text>,
@@ -90,10 +95,6 @@ export const TabNavigator = () => {
 
 const ProfileMenuStack = createStackNavigator()
 export const ProfileMenuNavigator = () => {
-	const screenOptions = {
-		headerShown: true,
-		headerTitleStyle: { fontFamily: 'gothampro-bold' },
-	}
 	return (
 		<ProfileMenuStack.Navigator>
 			{/* PROFILE MENU start */}
@@ -159,6 +160,11 @@ export const ElementsStackNavigator = () => {
 			<ElementsStack.Screen name="Object" component={ObjectScreen} options={{ headerShown: false }} />
 			<ElementsStack.Screen name="SearchResult" component={SearchScreenResult} options={{ headerShown: false }} />
 			<ElementsStack.Screen name="News" component={NewsScreen} options={{ headerShown: false }} />
+			<ElementsStack.Screen
+				name="MessagesStack"
+				component={MessageScreen}
+				options={{ ...screenOptions, headerShown: true, title: 'Сообщения' }}
+			/>
 		</ElementsStack.Navigator>
 	)
 }

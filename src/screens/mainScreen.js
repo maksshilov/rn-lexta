@@ -19,14 +19,14 @@ export default function MainScreen({ navigation }) {
 	const dispatch = useDispatch()
 
 	const popObjects = useSelector((state) => state.popObjects)
-	const popObjectsVar = popObjects.length ? (
+	const popObjectsComponent = popObjects.length ? (
 		<React.Fragment>
 			<ObjectMini item={popObjects[0]} navigation={navigation} />
 			<ObjectMini item={popObjects[1]} navigation={navigation} />
 		</React.Fragment>
 	) : null
 
-	const getObjects = async () => {
+	const handleGetObjects = async () => {
 		const userData = await AsyncStorage.getItem('userData')
 		const { Email, Token, UserId, expirationDate } = JSON.parse(userData)
 
@@ -48,8 +48,29 @@ export default function MainScreen({ navigation }) {
 			.catch((e) => console.log(e))
 	}
 
+	const [news, setNews] = useState()
+	const newsComponent = news ? (
+		<View style={styles.popularAndNewsView}>
+			<News date={news[0].Created.split(' ')[0].split('-').reverse().join('.')} title={news[0].Name} />
+
+			<View style={{ width: 1, backgroundColor: 'grey' }}></View>
+			<News date={news[1].Created.split(' ')[0].split('-').reverse().join('.')} title={news[1].Name} />
+		</View>
+	) : null
+	const handleGetNews = async () => {
+		const lexta = new LextaService()
+		lexta
+			.getNews(2, 0)
+			.then((res) => res.json())
+			.then((json) => {
+				setNews(json.data)
+			})
+			.catch((err) => console.log(err))
+	}
+
 	useEffect(() => {
-		getObjects()
+		handleGetObjects()
+		handleGetNews()
 	}, [])
 
 	const scrollY = React.useRef(new Animated.Value(0)).current
@@ -75,19 +96,14 @@ export default function MainScreen({ navigation }) {
 					<Image source={require('../../assets/map.png')} style={{ width: windowWidth * 0.95, height: 200 }} resizeMode="contain" />
 				</View>
 				{/* ПОПУЛЯРНО В ВАШЕМ ГОРОДЕ */}
-				<View style={{ marginBottom: 40 }}>
-					<SubHeader title="Популярное в Вашем городе" />
-					<View style={styles.popularAndNewsView}>{popObjectsVar}</View>
+				<View>
+					<SubHeader title="Популярное в Вашем городе" navigation={() => {}} />
+					<View style={styles.popularAndNewsView}>{popObjectsComponent}</View>
 				</View>
 				{/* NEWS */}
 				<View>
-					<SubHeader title="Новости" navigation={navigation} />
-					<View style={styles.popularAndNewsView}>
-						<News date="30.02.2036" title="Lorem, ipsum dolor sit amet consectetur adipisicing elit." />
-
-						<View style={{ width: 1, backgroundColor: 'grey' }}></View>
-						<News date="31.02.2036" title="Lorem, ipsum dolor sit amet consectetur adipisicing elit." />
-					</View>
+					<SubHeader title="Новости" navigation={() => navigation.navigate('Elements', { screen: 'News' })} />
+					{newsComponent}
 				</View>
 			</ScrollView>
 		</>

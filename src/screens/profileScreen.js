@@ -52,7 +52,9 @@ export default function ProfileScreen({ navigation }) {
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<ProfileMenuItem title="Изменение цен" icon="update" disable />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<ProfileMenuItem title="Сообщения" icon="forum-outline" disable last />
+			<TouchableOpacity onPress={() => navigation.navigate('Elements', { screen: 'MessagesStack' })}>
+				<ProfileMenuItem title="Сообщения" icon="forum-outline" last />
+			</TouchableOpacity>
 
 			<ProfileMenuSection title="ПОДДЕРЖКА" />
 
