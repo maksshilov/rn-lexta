@@ -1,5 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ScrollView, Dimensions, View, Text, Modal, Pressable, TextInput, TouchableOpacity, Animated, ActivityIndicator } from 'react-native'
+import {
+	ScrollView,
+	Dimensions,
+	View,
+	Text,
+	Modal,
+	Pressable,
+	TextInput,
+	TouchableOpacity,
+	Animated,
+	ActivityIndicator,
+	ToastAndroid,
+} from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AppDetails from '../components/AppDetails'
 import AppEgrn from '../components/AppEgrn'
@@ -83,12 +95,16 @@ const ObjectScreen = ({ route, navigation, state }) => {
 		const userData = await AsyncStorage.getItem('userData')
 		const { Email, Token } = JSON.parse(userData)
 
-		let email_MD5 = md5(Email)
-
 		lexta
-			.setSubscribePrice(email_MD5, Token, Message_ID, 'subscribe')
+			.setSubscribePrice(md5(Email), Token, Message_ID, 'subscribe')
 			.then((res) => res.json())
-			.then((json) => console.log(json))
+			.then((json) => {
+				if (json.status) {
+					ToastAndroid.show('Теперь этот объект в Ваших подписках!', ToastAndroid.SHORT)
+				} else {
+					ToastAndroid.show('Ошибка! Попробуйте позже.', ToastAndroid.SHORT)
+				}
+			})
 	}
 
 	const [message, setMessage] = useState('')
@@ -164,7 +180,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 						{/* DATE */}
 						<Text
 							style={{
-								fontFamily: 'gothampro-regular',
+								fontFamily: fonts.regular,
 								fontSize: 13,
 								color: '#7e7e7e',
 								marginTop: 25,
@@ -183,7 +199,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 						>
 							<Text
 								style={{
-									fontFamily: 'gothampro-bold',
+									fontFamily: fonts.bold,
 									fontSize: 20,
 								}}
 							>
@@ -196,24 +212,18 @@ const ObjectScreen = ({ route, navigation, state }) => {
 									justifyContent: 'space-between',
 								}}
 							>
-								<TouchableOpacity
-									onPress={() => {
-										// handleSubscribeGet()
-										handleSubscribe()
-									}}
-								>
-									<MaterialCommunityIcons name="update" color="#8f2d32" size={24} />
+								<MaterialCommunityIcons name="update" color="#ccc" size={24} />
+								<TouchableOpacity android_ripple onPress={() => handleSubscribe()}>
+									<MaterialCommunityIcons name="email-outline" color="#8f2d32" size={24} />
 								</TouchableOpacity>
 								<TouchableOpacity
-									android_ripple
 									onPress={() => {
 										handleOpacityMainDown()
 										setModal(true)
 									}}
 								>
-									<MaterialCommunityIcons name="email-outline" color="#8f2d32" size={24} />
+									<MaterialCommunityIcons name="forum-outline" color="#8f2d32" size={24} />
 								</TouchableOpacity>
-								<MaterialCommunityIcons name="forum-outline" color="#8f2d32" size={24} />
 							</View>
 						</View>
 						{/* PARAMS */}
