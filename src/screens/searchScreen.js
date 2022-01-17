@@ -1,17 +1,10 @@
-import React, { useReducer, useState } from 'react'
+import React, { useReducer } from 'react'
 import { ScrollView, Pressable, Text, TextInput, View, Animated } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import CheckBox from '@react-native-community/checkbox'
-import md5 from 'md5'
 
 import Header from '../components/Header'
 import css from '../styles/cssSearchScreen'
-import LextaService from '../services/LextaService'
-import { updateTokenAction } from '../store/actions/auth'
-import { connect, useDispatch } from 'react-redux'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
-const lexta = new LextaService()
 
 const SEARCH_FORM = 'SEARCH_FORM'
 const formReducer = (state, action) => {
@@ -25,7 +18,6 @@ const formReducer = (state, action) => {
 }
 
 export default function SearchScreen({ navigation }) {
-	const dispatch = useDispatch()
 	const [formState, dispatchFormState] = useReducer(formReducer, {
 		cityOrRegion: '',
 		catalogType: '1',
@@ -77,62 +69,6 @@ export default function SearchScreen({ navigation }) {
 			value: inputValue,
 		})
 	}
-
-	// const handleSearch = async () => {
-
-	// 	const userData = await AsyncStorage.getItem('userData')
-	// 	const { Email, Token, UserId, expirationDate } = JSON.parse(userData)
-
-	// 	let params = `
-	// 	token=${Token}&
-	// 	user=${md5(Email)}&
-	// 	cityOrRegion=${cityOrRegion}&
-	// 	catalogType=${catalogType}&
-	// 	f_Category=${f_Category}&
-	// 	f_NumberRooms=${f_NumberRooms}&
-	// 	objectType=${objectType}&
-	// 	priceFrom=${priceFrom}&
-	// 	priceTo=${priceTo}&
-	// 	totalAreaFrom=${totalAreaFrom}&
-	// 	totalAreaTo=${totalAreaTo}&
-	// 	kitchenAreaFrom=${kitchenAreaFrom}&
-	// 	kitchenAreaTo=${kitchenAreaTo}&
-	// 	floorFrom=${floorFrom}&
-	// 	floorTo=${floorTo}&
-	// 	whichFloor1=${whichFloor1}&
-	// 	whichFloor2=${whichFloor2}&
-	// 	whichFloor3=${whichFloor3}&
-	// 	f_HouseType=${f_HouseType}&
-	// 	mortgage=${mortgage}&
-	// 	video=${video}`
-
-	// 	if (new Date(expirationDate) <= new Date()) {
-	// 		console.log('SearchScreen.js > if (expirationDate <= new Date())')
-	// 		try {
-	// 			await dispatch(updateTokenAction(Email, Token, UserId, userData))
-
-	// 			lexta
-	// 				.getSearchObjects(params)
-	// 				.then((res) => {
-	// 					console.log(res.status)
-	// 					return res.json()
-	// 				})
-	// 				.then((result) => navigation.navigate('Elements', { screen: 'SearchResult', params: { result } }))
-	// 				.catch((err) => console.log(err))
-	// 		} catch (err) {
-	// 			Alert.alert('Ошибка', 'Войти ещё раз', [{ text: 'Ok', onPress: () => authActions.logout() }])
-	// 			setError(err.message)
-	// 		}
-	// 	} else {
-	// 		console.log('SearchScreen.js > ok!')
-
-	// 		lexta
-	// 			.getSearchObjects(params)
-	// 			.then((res) => res.json())
-	// 			.then((result) => navigation.navigate('Elements', { screen: 'SearchResult', params: { result } }))
-	// 			.catch((err) => console.log(err))
-	// 	}
-	// }
 
 	const scrollY = React.useRef(new Animated.Value(0)).current
 

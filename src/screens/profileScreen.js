@@ -12,7 +12,6 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 export default function ProfileScreen({ navigation }) {
 	const dispatch = useDispatch()
 	const { FirstName, LastName, Photo } = useSelector((state) => state.profile)
-	console.log(Photo)
 
 	return (
 		<ScrollView contentContainerStyle={{ flex: 0, paddingHorizontal: 10, backgroundColor: '#fff' }}>
@@ -33,34 +32,34 @@ export default function ProfileScreen({ navigation }) {
 			<View style={{ height: 3, width: '100%', backgroundColor: '#d0d0d0', marginTop: 20 }} />
 			<ProfileMenuSection title="НАСТРОЙКИ АККАУНТА" />
 			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileMenu', { screen: 'ProfileDetails' })}>
-				<ProfileMenuItem title="Персональные данные" icon="account-outline" />
+				<ProfileMenuItem key={1} title="Персональные данные" icon="account-outline" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileMenu', { screen: 'PassChange' })}>
-				<ProfileMenuItem title="Изменить пароль" icon="lock-outline" />
+				<ProfileMenuItem key={2} title="Изменить пароль" icon="lock-outline" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileMenu', { screen: 'MyObjects' })}>
-				<ProfileMenuItem title="Мои объявления" icon="format-list-bulleted-square" />
+				<ProfileMenuItem key={3} title="Мои объявления" icon="format-list-bulleted-square" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<ProfileMenuItem title="Мои подписки" icon="email-newsletter" disable />
+			<ProfileMenuItem key={4} title="Мои подписки" icon="email-newsletter" disable />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<TouchableOpacity android_ripple onPress={() => navigation.navigate('ProfileMenu', { screen: 'FavScreen' })}>
-				<ProfileMenuItem title="Избранное" icon="heart-outline" />
+				<ProfileMenuItem key={5} title="Избранное" icon="heart-outline" />
 			</TouchableOpacity>
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<ProfileMenuItem title="Изменение цен" icon="update" disable />
+			<ProfileMenuItem key={6} title="Изменение цен" icon="update" disable />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<TouchableOpacity onPress={() => navigation.navigate('Elements', { screen: 'MessagesStack' })}>
-				<ProfileMenuItem title="Сообщения" icon="forum-outline" last />
+				<ProfileMenuItem key={7} title="Сообщения" icon="forum-outline" last />
 			</TouchableOpacity>
 
 			<ProfileMenuSection title="ПОДДЕРЖКА" />
 
-			<ProfileMenuItem title="Как устроена платформа ЛЕХТА" icon="wan" disable />
+			<ProfileMenuItem key={8} title="Как устроена платформа ЛЕХТА" icon="wan" disable />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
-			<ProfileMenuItem title="Помощь" icon="help" disable />
+			<ProfileMenuItem key={9} title="Помощь" icon="help" disable />
 			<View style={{ height: 1, width: '100%', backgroundColor: '#d0d0d0' }} />
 			<TouchableOpacity
 				android_ripple
@@ -68,7 +67,7 @@ export default function ProfileScreen({ navigation }) {
 					dispatch(logout())
 				}}
 			>
-				<ProfileMenuItem title="Выйти" icon="logout" last />
+				<ProfileMenuItem key={10} title="Выйти" icon="logout" last />
 			</TouchableOpacity>
 		</ScrollView>
 	)

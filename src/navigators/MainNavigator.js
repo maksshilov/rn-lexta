@@ -159,6 +159,7 @@ export const ElementsStackNavigator = () => {
 		<ElementsStack.Navigator>
 			<ElementsStack.Screen name="Object" component={ObjectScreen} options={{ headerShown: false }} />
 			<ElementsStack.Screen name="SearchResult" component={SearchScreenResult} options={{ headerShown: false }} />
+			<ElementsStack.Screen name="SearchCategoryResult" component={SearchScreenResult} options={{ headerShown: false }} />
 			<ElementsStack.Screen name="News" component={NewsScreen} options={{ headerShown: false }} />
 			<ElementsStack.Screen
 				name="MessagesStack"

@@ -1,11 +1,9 @@
 import md5 from 'md5'
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, ImageBackground, Text, View, RefreshControl, ScrollView, ActivityIndicator } from 'react-native'
+import { FlatList, Text, View, RefreshControl, ScrollView, ActivityIndicator } from 'react-native'
 import ObjectCard from '../components/ObjectCard'
 import LextaService from '../services/LextaService'
-import store from '../store'
-import { connect, useDispatch, useSelector } from 'react-redux'
-import updateToken from '../services/updateToken'
+import { useDispatch } from 'react-redux'
 import { updateTokenAction } from '../store/actions/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 

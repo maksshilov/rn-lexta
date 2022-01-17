@@ -12,7 +12,6 @@ import profileReducer from './src/store/reducers/profile'
 import coordsReducer from './src/store/reducers/coords'
 import popObjectsReducer from './src/store/reducers/popObjects'
 import authCookiesReducer from './src/store/reducers/authCookies'
-import { reducerUser, reducerObjects } from './src/store/reducer'
 
 const App = () => {
 	const [isReady, setIsReady] = React.useState(false)
@@ -23,8 +22,6 @@ const App = () => {
 		coords: coordsReducer,
 		popObjects: popObjectsReducer,
 		authCookies: authCookiesReducer,
-		// reducerUser,
-		// reducerObjects,
 	})
 
 	const store = createStore(rootReducer, applyMiddleware(ReduxThunk))

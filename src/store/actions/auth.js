@@ -112,10 +112,10 @@ export const updateTokenAction = (email, token, userid, userData) => {
 				})
 				saveDataToStorage(updatedUserData)
 			} else {
-				throw new Error('redux > actions > auth.js > updateTokenAction > Ошибка токена')
+				throw new Error('Ошибка токена')
 			}
 		} else {
-			throw new Error('redux > actions > auth.js > updateTokenAction > Проблемы с сервером')
+			throw new Error('Проблемы с сервером')
 		}
 	}
 }

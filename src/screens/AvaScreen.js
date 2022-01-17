@@ -64,7 +64,7 @@ export default function AvaScreen({ route }) {
 	return (
 		<ScrollView contentContainerStyle={{ flex: 1, paddingVertical: 20, backgroundColor: '#fff', alignItems: 'center' }}>
 			<View style={{ marginBottom: 20 }}>
-				{Photo ? (
+				{Boolean(Photo.split('/').pop()) ? (
 					<Image source={{ uri: Photo }} style={{ width: windowWidth * 0.6, height: windowWidth * 0.6, borderRadius: 200 }} />
 				) : (
 					<MaterialCommunityIcons name="account-circle" size={windowWidth * 0.6} color="grey" />

@@ -88,7 +88,7 @@ export default function MainScreen({ navigation }) {
 				{/* ЖИЛЬЁ НА ЛЮБОЙ ВКУС */}
 
 				<View>
-					<SubHeader title="Жильё на любой вкус" />
+					<SubHeader title="Жильё на любой вкус" navigation={() => navigation.navigate('Tab', { screen: 'search' })} />
 					<Carousel navigation={navigation} />
 				</View>
 				{/* MAP */}

@@ -5,16 +5,20 @@ import { useDispatch } from 'react-redux'
 
 import * as authActions from '../store/actions/auth'
 
-export default function LaunchScreen(navigation) {
-	const [error, setError] = useState()
+export default function LaunchScreen() {
 	const dispatch = useDispatch()
+
 	const tryLogin = async () => {
 		const userData = await AsyncStorage.getItem('userData')
 
 		if (!userData) {
 			console.log('LaunchScreen.js > if (!userData)')
-			dispatch(authActions.setDidTryAL())
-			return
+			try {
+				dispatch(authActions.setDidTryAL())
+				return
+			} catch (error) {
+				Alert.alert('Ошибка', error.message, [{ text: 'Войти заного', onPress: () => authActions.logout() }])
+			}
 		}
 
 		const userDataJson = JSON.parse(userData)
@@ -25,24 +29,29 @@ export default function LaunchScreen(navigation) {
 			console.log('LaunchScreen.js > if (expirationDate <= new Date())')
 			try {
 				await dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
-			} catch (err) {
-				Alert.alert('Ошибка', error, [{ text: 'Ok', onPress: () => authActions.logout() }])
-				setError(err.message)
+				return
+			} catch (error) {
+				Alert.alert('Ошибка', error.message, [{ text: 'Войти заного', onPress: () => authActions.logout() }])
 			}
-		} else {
-			console.log('LaunchScreen.js > OK')
-			AsyncStorage.removeItem('userData')
-			// dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
+		}
+
+		// AsyncStorage.removeItem('userData')
+		console.log('LaunchScreen.js > OK')
+		try {
+			await dispatch(authActions.updateTokenAction(Email, Token, UserId, userData))
+		} catch (error) {
+			Alert.alert('Ошибка', error.message, [{ text: 'Войти заного', onPress: () => authActions.logout() }])
 		}
 	}
 	useEffect(() => {
+		console.log('useEffect() => tryLogin()')
 		tryLogin()
 	}, [])
 
 	return (
 		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 			<ActivityIndicator size="large" color="red" />
-			<TouchableOpacity on onPress={tryLogin}>
+			<TouchableOpacity onPress={tryLogin}>
 				<Text>try login</Text>
 			</TouchableOpacity>
 		</View>

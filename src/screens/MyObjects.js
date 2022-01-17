@@ -2,7 +2,6 @@ import md5 from 'md5'
 import React, { useEffect, useState } from 'react'
 import { Dimensions, FlatList, Pressable, ScrollView, StyleSheet, Text, View, RefreshControl, ActivityIndicator } from 'react-native'
 import LextaService from '../services/LextaService'
-import store from '../store'
 import ObjectCard from '../components/ObjectCard'
 import { useSelector } from 'react-redux'
 

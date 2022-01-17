@@ -47,26 +47,6 @@ const dummyData = [
 ]
 
 export default function Carousel({ navigation }) {
-	const handleChooseCategory = async (category) => {
-		const userData = await AsyncStorage.getItem('userData')
-		const { Email, Token } = JSON.parse(userData)
-
-		let params = `
-			token=${Token}&
-			user=${md5(Email)}&
-			f_Category=${category}`
-
-		let lexta = new LextaService()
-		lexta
-			.getSearchObjects(params)
-			.then((res) => {
-				console.log(res.status)
-				return res.json()
-			})
-			.then((result) => navigation.navigate('Elements', { screen: 'SearchResult', params: { result } }))
-			.catch((err) => console.log(err))
-	}
-
 	const Slide = ({ data }) => {
 		return (
 			<View style={styles.slide}>
@@ -74,7 +54,8 @@ export default function Carousel({ navigation }) {
 					android_ripple={{ color: '#fff' }}
 					style={{ ...styles.slideImage, elevation: 5 }}
 					onPress={() => {
-						handleChooseCategory(data.category)
+						// handleChooseCategory(data.category)
+						navigation.navigate('Elements', { screen: 'SearchCategoryResult', params: data.category })
 					}}
 				>
 					{/* <View style={{ ...styles.slideImage, elevation: 5 }}> */}

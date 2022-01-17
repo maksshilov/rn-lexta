@@ -1,16 +1,14 @@
-import React, { Fragment, useEffect, useReducer, useRef, useState } from 'react'
+import React, { Fragment, useReducer, useState } from 'react'
 import CheckBox from '@react-native-community/checkbox'
 import { Picker } from '@react-native-picker/picker'
-import { Dimensions, TextInput, Pressable, ScrollView, StyleSheet, Text, View, Animated, Alert, ActivityIndicator, Image } from 'react-native'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { Dimensions, TextInput, Pressable, ScrollView, Text, View, Alert, ActivityIndicator, Image } from 'react-native'
+import { connect, useSelector } from 'react-redux'
 import css from '../styles/cssAddObject'
 import { fonts } from '../styles/constants'
 import { phoneMask } from '../components/scripts'
 import LextaService from '../services/LextaService'
 import MapMark from '../components/MapMark'
 import * as ImagePicker from 'expo-image-picker'
-
-// import { ImagePicker } from 'react-native-image-crop-picker'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
