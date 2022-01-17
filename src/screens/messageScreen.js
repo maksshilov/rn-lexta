@@ -47,7 +47,7 @@ const MessageScreen = ({ route }) => {
 		//     "Subject": "Нижегородская область, Нижний Новгород, р-н Советский, 50, Дома, 158,7 м2, 158.7 м2",
 		//     "ToUserID": "23",
 		//     "User_ID": "16",
-		<View style={{ width: windowWidth * 0.9 }}>
+		<View style={{ width: windowWidth * 0.9, marginVertical: 10 }}>
 			<View
 				style={{
 					backgroundColor: colors.red,

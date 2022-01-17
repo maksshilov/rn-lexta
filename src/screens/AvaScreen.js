@@ -19,7 +19,6 @@ export default function AvaScreen({ route }) {
 	const { Email, Photo } = useSelector((state) => state.profile)
 
 	const uploadImage = async () => {
-		console.log(photo, Email, token)
 		FileSystem.uploadAsync('https://lexta.pro/api/LoadingProfileImage.php', photo, {
 			uploadType: FileSystem.FileSystemUploadType.MULTIPART,
 			fieldName: 'LoadProfileImg',
@@ -90,7 +89,7 @@ export default function AvaScreen({ route }) {
 			)}
 			{Photo ? (
 				<Fragment>
-					<TouchableOpacity>
+					{/* <TouchableOpacity>
 						<View
 							style={{
 								width: windowWidth * 0.7,
@@ -104,7 +103,7 @@ export default function AvaScreen({ route }) {
 						>
 							<Text style={{ fontFamily: fonts.regular, fontSize: 20, color: '#fff' }}>Удалить фото</Text>
 						</View>
-					</TouchableOpacity>
+					</TouchableOpacity> */}
 					<TouchableOpacity onPress={pickPhoto}>
 						<View
 							style={{

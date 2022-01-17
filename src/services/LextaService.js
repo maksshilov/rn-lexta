@@ -98,7 +98,6 @@ export default class LextaService {
 	addObject = async (data) => {
 		return await fetch(`${this._netcatBase}add.php`, {
 			method: 'POST',
-			// mode: 'no-cors',
 			headers: new Headers(),
 			body: data,
 		})
@@ -128,7 +127,6 @@ export default class LextaService {
 
 	sendMessage = async (data) => {
 		return await fetch(`${this._netcatBase}add.php`, {
-			// mode: 'no-cors',
 			method: 'POST',
 			headers: { 'Content-Type': 'multipart/form-data' },
 			body: data,

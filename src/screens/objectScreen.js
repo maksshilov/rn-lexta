@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ScrollView, Dimensions, View, Text, Modal, Pressable, TextInput, TouchableOpacity, Animated } from 'react-native'
+import { ScrollView, Dimensions, View, Text, Modal, Pressable, TextInput, TouchableOpacity, Animated, ActivityIndicator } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AppDetails from '../components/AppDetails'
 import AppEgrn from '../components/AppEgrn'
@@ -12,7 +12,7 @@ import { numSplit } from '../components/scripts'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import store from '../store'
 
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import LextaService from '../services/LextaService'
 import MapMark from '../components/MapMark'
 import { colors, fonts } from '../styles/constants'
@@ -24,6 +24,8 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 const lexta = new LextaService()
 
 const ObjectScreen = ({ route, navigation, state }) => {
+	const authCookies = useSelector((state) => state.authCookies)
+
 	const [modal, setModal] = useState(false)
 	const [mapMark, setMapMark] = useState(false)
 
@@ -79,7 +81,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 
 	const handleSubscribe = async () => {
 		const userData = await AsyncStorage.getItem('userData')
-		const { Email, Token, userId } = JSON.parse(userData)
+		const { Email, Token } = JSON.parse(userData)
 
 		let email_MD5 = md5(Email)
 
@@ -90,28 +92,60 @@ const ObjectScreen = ({ route, navigation, state }) => {
 	}
 
 	const [message, setMessage] = useState('')
-	const messageFormData = new FormData()
-	messageFormData.append('cc', 10)
-	messageFormData.append('sub', 28)
-	messageFormData.append('catalogue', 1)
-	messageFormData.append('posting', 1)
-	messageFormData.append('f_Checked', 1)
-	// messageFormData.append('uid', store.getState().reducerUser.UserId)
-	messageFormData.append('f_ToUserID', User_ID)
-	messageFormData.append('f_Subject', `${Category}, ${TotalArea} м2`)
-	messageFormData.append('f_Message', message)
-
+	const [loading, setLoading] = useState(false)
 	const handleSendMessage = async () => {
-		console.log(messageFormData)
-		lexta
-			.sendMessage(message)
-			.then((res) => {
-				console.log(res.status)
-				return res.text()
+		setLoading(true)
+		// AUTH COOKIE START --->
+		let secondAuth = new FormData()
+		secondAuth.append('AuthPhase', '1')
+		secondAuth.append('REQUESTED_FROM', '/')
+		secondAuth.append('REQUESTED_BY', 'GET')
+		secondAuth.append('catalogue', '1')
+		secondAuth.append('sub', '6')
+		secondAuth.append('cc', '')
+		secondAuth.append('AUTH_USER', authCookies.email)
+		secondAuth.append('AUTH_PW', authCookies.password)
+
+		fetch('https://lexta.pro/netcat/modules/auth/', {
+			method: 'POST',
+			body: secondAuth,
+		})
+		// AUTH COOKIE <--- END
+
+		const userData = await AsyncStorage.getItem('userData')
+		const { UserId } = JSON.parse(userData)
+
+		const messageFormData = new FormData()
+		messageFormData.append('cc', 10)
+		messageFormData.append('sub', 28)
+		messageFormData.append('catalogue', 1)
+		messageFormData.append('posting', 1)
+		messageFormData.append('f_Checked', 1)
+		messageFormData.append('uid', UserId)
+		messageFormData.append('f_ToUserID', User_ID)
+		messageFormData.append('f_Subject', `${Category}, ${TotalArea} м2`)
+		messageFormData.append('f_Message', message)
+
+		fetch('https://lexta.pro/netcat/modules/auth/', {
+			method: 'POST',
+			body: secondAuth,
+		})
+			.then((res) => res.ok)
+			.then((ok) => {
+				if (ok) {
+					console.log(ok)
+					console.log(messageFormData)
+					let xhr = new XMLHttpRequest()
+					xhr.open('POST', 'https://lexta.pro/netcat/add.php')
+					xhr.setRequestHeader('Content-Type', 'multipart/form-data')
+					xhr.send(messageFormData)
+				}
 			})
-			.then((json) => console.log(json))
-			.then(() => setModal(false))
-			.catch((err) => console.log(err))
+			.then(() => {
+				setLoading(false)
+				handleOpacityMainUp()
+				setModal(false)
+			})
 	}
 
 	return (
@@ -547,7 +581,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 											fontSize: 20,
 										}}
 									>
-										Отправить
+										{loading ? <ActivityIndicator color="#fff" /> : 'Отправить'}
 									</Text>
 								</View>
 							</Pressable>
