@@ -12,6 +12,7 @@ import md5 from 'md5'
 import { useDispatch, useSelector } from 'react-redux'
 import { SET_POP_OBJECTS } from '../store/actions/popObjects'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { colors, fonts } from '../styles/constants'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
@@ -21,8 +22,14 @@ export default function MainScreen({ navigation }) {
 	const popObjects = useSelector((state) => state.popObjects)
 	const popObjectsComponent = popObjects.length ? (
 		<React.Fragment>
-			<ObjectMini item={popObjects[0]} navigation={navigation} />
-			<ObjectMini item={popObjects[1]} navigation={navigation} />
+			<View>
+				<ObjectMini item={popObjects[0]} navigation={navigation} />
+				<ObjectMini item={popObjects[1]} navigation={navigation} />
+			</View>
+			<View>
+				<ObjectMini item={popObjects[2]} navigation={navigation} />
+				<ObjectMini item={popObjects[4]} navigation={navigation} />
+			</View>
 		</React.Fragment>
 	) : null
 
@@ -50,17 +57,37 @@ export default function MainScreen({ navigation }) {
 
 	const [news, setNews] = useState()
 	const newsComponent = news ? (
-		<View style={styles.popularAndNewsView}>
+		<View style={[styles.popularAndNewsView, { flexDirection: 'column' }]}>
 			<News date={news[0].Created.split(' ')[0].split('-').reverse().join('.')} title={news[0].Name} />
-
-			<View style={{ width: 1, backgroundColor: 'grey' }}></View>
+			<View style={{ height: 1, width: windowWidth * 0.94, backgroundColor: colors.grey, marginVertical: 15 }}></View>
 			<News date={news[1].Created.split(' ')[0].split('-').reverse().join('.')} title={news[1].Name} />
+			<View style={{ height: 1, width: windowWidth * 0.94, backgroundColor: colors.grey, marginVertical: 15 }}></View>
+			<News date={news[2].Created.split(' ')[0].split('-').reverse().join('.')} title={news[2].Name} />
+			<View style={{ height: 1, width: windowWidth * 0.94, backgroundColor: colors.grey, marginVertical: 15 }}></View>
+			<News date={news[3].Created.split(' ')[0].split('-').reverse().join('.')} title={news[3].Name} />
+			{/* <TouchableOpacity>
+				<View
+					style={{
+						alignItems: 'center',
+						justifyContent: 'center',
+						marginVertical: 10,
+						width: windowWidth * 0.5,
+						height: windowWidth * 0.1,
+						backgroundColor: '#fff',
+						borderWidth: 2,
+						borderColor: colors.red,
+						borderRadius: 10,
+					}}
+				>
+					<Text style={{ fontFamily: fonts.bold, color: colors.red }}>Все новости</Text>
+				</View>
+			</TouchableOpacity> */}
 		</View>
 	) : null
 	const handleGetNews = async () => {
 		const lexta = new LextaService()
 		lexta
-			.getNews(2, 0)
+			.getNews(4, 0)
 			.then((res) => res.json())
 			.then((json) => {
 				setNews(json.data)

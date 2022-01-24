@@ -106,11 +106,13 @@ export const updateTokenAction = (email, token, userid, userData) => {
 					Token: updatedToken,
 					expirationDate: updatedExpirationDate,
 				}
+
+				saveDataToStorage(updatedUserData)
+
 				dispatch({
 					type: SET_PROFILE,
 					payload: updatedUserData,
 				})
-				saveDataToStorage(updatedUserData)
 			} else {
 				throw new Error('Ошибка токена')
 			}

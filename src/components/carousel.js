@@ -1,9 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import md5 from 'md5'
 import React from 'react'
 import { Text, View, Dimensions, Image, StyleSheet, Pressable } from 'react-native'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
-import LextaService from '../services/LextaService'
+import { FlatList } from 'react-native-gesture-handler'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 

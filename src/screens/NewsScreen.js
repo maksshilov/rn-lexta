@@ -35,10 +35,12 @@ export default function NewsScreen() {
 		if (item) {
 			return (
 				<View style={{ marginVertical: 10, width: windowWidth * 0.94 }}>
+					<Text style={{ fontFamily: fonts.regular, fontSize: 20, color: colors.red, marginVertical: 5 }}>
+						{item.Created.split(' ')[0].split('-').reverse().join('.')}
+					</Text>
 					<TouchableOpacity onPress={() => setUnfold(item.Message_ID)}>
 						<Text style={{ fontFamily: fonts.bold, fontSize: 20, color: '#000' }}>{item.Name}</Text>
 					</TouchableOpacity>
-					<Text style={{ fontFamily: fonts.regular, fontSize: 12, color: '#000', marginVertical: 5 }}>{item.Created}</Text>
 					<Text style={{ fontFamily: fonts.regular, lineHeight: 20 }}>{item.Message_ID == unfold ? item.Text : null}</Text>
 				</View>
 			)

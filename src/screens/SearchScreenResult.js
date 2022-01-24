@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { ActivityIndicator, FlatList, Text, View } from 'react-native'
 import LextaService from '../services/LextaService'
 import ObjectCard from '../components/ObjectCard'
@@ -113,7 +113,10 @@ export default function SearchScreenResult({ route, navigation }) {
 		getData()
 	}, [])
 
-	const renderItem = ({ item }) => <ObjectCard item={item} userFavorites={userFavorites} navigation={navigation} />
+	// const renderItem = ({ item }) => <ObjectCard item={item} userFavorites={userFavorites} navigation={navigation} />
+	const RenderItem = memo(function renderItem({ data }) {
+		return <ObjectCard item={data} userFavorites={userFavorites} navigation={navigation} />
+	})
 
 	return (
 		<View style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -137,7 +140,7 @@ export default function SearchScreenResult({ route, navigation }) {
 				</Text>
 				<FlatList
 					data={dataSource}
-					renderItem={renderItem}
+					renderItem={({ item }) => <RenderItem data={item} />}
 					keyExtractor={(item) => item.Message_ID}
 					ListFooterComponent={renderFooter}
 					onEndReached={getData}
