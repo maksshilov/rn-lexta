@@ -17,6 +17,7 @@ import ObjectScreen from '../screens/ObjectScreen'
 import SearchScreenResult from '../screens/SearchScreenResult'
 import AvaScreen from '../screens/AvaScreen'
 import NewsScreen from '../screens/NewsScreen'
+import TravelScreen from '../screens/TravelScreen'
 
 const screenOptions = {
 	headerShown: true,
@@ -161,6 +162,8 @@ export const ElementsStackNavigator = () => {
 			<ElementsStack.Screen name="SearchResult" component={SearchScreenResult} options={{ headerShown: false }} />
 			<ElementsStack.Screen name="SearchCategoryResult" component={SearchScreenResult} options={{ headerShown: false }} />
 			<ElementsStack.Screen name="News" component={NewsScreen} options={{ headerShown: false }} />
+			<ElementsStack.Screen name="Travel" component={TravelScreen} options={{ headerShown: false }} />
+
 			<ElementsStack.Screen
 				name="MessagesStack"
 				component={MessageScreen}

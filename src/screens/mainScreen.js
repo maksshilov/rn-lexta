@@ -120,7 +120,13 @@ export default function MainScreen({ navigation }) {
 				</View>
 				{/* MAP */}
 				<View style={{ alignItems: 'center' }}>
-					<Image source={require('../../assets/map.png')} style={{ width: windowWidth * 0.95, height: 200 }} resizeMode="contain" />
+					<TouchableOpacity
+						onPress={() => {
+							navigation.navigate('Elements', { screen: 'Travel' })
+						}}
+					>
+						<Image source={require('../../assets/map.png')} style={{ width: windowWidth * 0.95, height: 200 }} resizeMode="contain" />
+					</TouchableOpacity>
 				</View>
 				{/* ПОПУЛЯРНО В ВАШЕМ ГОРОДЕ */}
 				<View>
