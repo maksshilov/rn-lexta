@@ -6,11 +6,11 @@ import { useDispatch } from 'react-redux'
 import * as coordsActons from '../store/actions/coords'
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default function MapMark({ city, street, houseNum, reverse, latitude, longtitude }) {
+export default function MapMark({ city, street, houseNum, reverse, latitude = '55.55', longtitude = '35.35' }) {
 	const dispatch = useDispatch()
 
 	return reverse ? (
-		<View style={{ height: windowWidth * 0.6 }}>
+		<View style={{ height: windowWidth }}>
 			<WebView
 				// style={{ opacity: 0.99 }}
 				onError={(err) => console.log(err)}
@@ -20,7 +20,7 @@ export default function MapMark({ city, street, houseNum, reverse, latitude, lon
 				source={{
 					html: `
                     <body style="margin: 0px;padding: 0px;">
-                        <div id="map" style="flex:0px ;margin: 0px ;padding: 0px; height: ${windowWidth * 1.5}px;"></div>
+                        <div id="map" style="flex:0px ;margin: 0px ;padding: 0px; height: ${windowWidth * 2}px;"></div>
                         <script
                             src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=240cb70c-297a-44da-a3f6-c73039a7c654"
                             type="text/javascript"></script>
