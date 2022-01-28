@@ -1,14 +1,15 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { TouchableOpacity, Dimensions, Text, View, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
+import { TouchableOpacity, Dimensions, Text, View, StyleSheet, FlatList, ActivityIndicator, Animated } from 'react-native'
 import { useSelector } from 'react-redux'
 import LextaService from '../services/LextaService'
 import md5 from 'md5'
 import { colors, fonts } from '../styles/constants'
+import Header from '../components/Header'
 
 const lexta = new LextaService()
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
-export default MessageScreen = ({ route }) => {
+export default MessageScreen = ({ route, navigation }) => {
 	const [loading, setLoading] = useState(true)
 	const [messagesType, setMessagesType] = useState(0)
 
@@ -97,23 +98,18 @@ export default MessageScreen = ({ route }) => {
 		handleGetMessages()
 	}, [])
 
+	const scrollY = React.useRef(new Animated.Value(0)).current
+
 	return (
 		<Fragment>
+			{route.name === 'messagesTab' && <Header navigation={navigation} scrollY={scrollY} />}
 			<View
-				style={[
-					{
-						flex: 1,
-						backgroundColor: '#fff',
-						alignItems: 'center',
-					},
-					route.name === 'messagesTab'
-						? {
-								paddingTop: 50,
-						  }
-						: {
-								paddingTop: 10,
-						  },
-				]}
+				style={{
+					flex: 1,
+					backgroundColor: '#fff',
+					alignItems: 'center',
+					paddingTop: 10,
+				}}
 			>
 				<View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 10 }}>
 					<TouchableOpacity

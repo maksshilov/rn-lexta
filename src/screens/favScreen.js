@@ -1,13 +1,14 @@
 import md5 from 'md5'
-import React, { useEffect, useState } from 'react'
-import { FlatList, Text, View, RefreshControl, ScrollView, ActivityIndicator } from 'react-native'
+import React, { Fragment, useEffect, useState } from 'react'
+import { FlatList, Text, View, RefreshControl, ScrollView, ActivityIndicator, Animated } from 'react-native'
 import ObjectCard from '../components/ObjectCard'
 import LextaService from '../services/LextaService'
 import { useDispatch } from 'react-redux'
 import { updateTokenAction } from '../store/actions/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Header from '../components/Header'
 
-export default FavScreen = ({ navigation }) => {
+export default FavScreen = ({ route, navigation }) => {
 	const dispatch = useDispatch()
 
 	const lexta = new LextaService()
@@ -83,26 +84,30 @@ export default FavScreen = ({ navigation }) => {
 
 	const renderItem = ({ item }) => <ObjectCard item={item[0]} userFavorites={userFavorites} navigation={navigation} />
 
-	console.log('userFavorites.length', userFavorites.length)
+	const scrollY = React.useRef(new Animated.Value(0)).current
+
 	return userFavorites.length ? (
-		<View
-			style={{
-				flex: 1,
-				alignItems: 'center',
-				justifyContent: 'center',
-				paddingTop: 30,
-				backgroundColor: '#fff',
-			}}
-		>
-			<FlatList
-				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-				data={favObjects}
-				renderItem={renderItem}
-				keyExtractor={(item) => {
-					return item[0].Message_ID
+		<Fragment>
+			{route.name === 'fav' && <Header navigation={navigation} scrollY={scrollY} />}
+			<View
+				style={{
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+					paddingTop: 0,
+					backgroundColor: '#fff',
 				}}
-			/>
-		</View>
+			>
+				<FlatList
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+					data={favObjects}
+					renderItem={renderItem}
+					keyExtractor={(item) => {
+						return item[0].Message_ID
+					}}
+				/>
+			</View>
+		</Fragment>
 	) : (
 		<ScrollView
 			contentContainerStyle={{
