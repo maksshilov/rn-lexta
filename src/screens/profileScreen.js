@@ -14,7 +14,7 @@ export default function ProfileScreen({ navigation }) {
 	const { FirstName, LastName, Photo } = useSelector((state) => state.profile)
 
 	return (
-		<ScrollView contentContainerStyle={{ flex: 0, paddingHorizontal: 10, backgroundColor: '#fff' }}>
+		<ScrollView contentContainerStyle={{ flex: 1, paddingHorizontal: 10, backgroundColor: '#fff' }}>
 			<View style={{ paddingTop: windowHeight * 0.05, alignItems: 'center' }}>
 				<TouchableOpacity onPress={() => navigation.navigate('ProfileMenu', { screen: 'Ava' })}>
 					<View style={{ paddingVertical: 10 }}>

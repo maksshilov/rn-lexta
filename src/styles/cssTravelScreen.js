@@ -39,7 +39,7 @@ export default StyleSheet.create({
 	btnSearch: {
 		marginTop: 10,
 		width: windowWidth * 0.94,
-		height: windowWidth * 0.1,
+		height: windowWidth * 0.15,
 		borderRadius: 10,
 		backgroundColor: colors.red,
 		alignItems: 'center',
