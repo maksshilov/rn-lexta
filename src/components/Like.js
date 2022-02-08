@@ -58,8 +58,8 @@ export default function Like(props) {
 			}}
 			name={like ? 'heart' : 'heart-outline'}
 			color="#912e33"
-			size={25}
-			style={{ marginRight: 5 }}
+			size={20}
+			// style={{ marginRight: 5 }}
 		/>
 	)
 }

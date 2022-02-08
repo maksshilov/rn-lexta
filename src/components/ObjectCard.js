@@ -9,7 +9,7 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window')
 
 export default function ObjectCard({ item, userFavorites, navigation }) {
 	return (
-		<View style={{ width: windowWidth, alignItems: 'center', paddingTop: 20 }}>
+		<View style={{ width: windowWidth, alignItems: 'center', paddingTop: 10 }}>
 			<TouchableOpacity
 				onPress={() => {
 					navigation.navigate('Elements', {
@@ -21,6 +21,7 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 				activeOpacity={0.5}
 				key={item.Message_ID}
 				style={{
+					flexDirection: 'row',
 					backgroundColor: '#fff',
 					elevation: 5,
 					width: windowWidth * 0.94,
@@ -31,11 +32,11 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 				<View>
 					<Image
 						source={{ uri: `https://lexta.pro${item.Img[0]}` }}
-						style={{ width: windowWidth * 0.94, height: windowWidth * 0.94 }}
+						style={{ width: windowWidth * 0.3, height: windowWidth * 0.5 }}
 						resizeMethod="scale"
 					/>
 				</View>
-				<View style={{ paddingHorizontal: 10 }}>
+				<View style={{ justifyContent: 'space-between', width: windowWidth * 0.64, paddingHorizontal: 10 }}>
 					<View
 						style={{
 							flexDirection: 'row',
@@ -46,7 +47,7 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 						<Text
 							style={{
 								fontFamily: fonts.bold,
-								fontSize: 20,
+								fontSize: 15,
 								marginVertical: 10,
 							}}
 						>
@@ -57,30 +58,27 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 					<Text
 						style={{
 							fontFamily: fonts.regular,
-							fontSize: 15,
+							fontSize: 13,
 							lineHeight: 20,
-							marginBottom: 20,
+							// marginBottom: 20,
 						}}
 					>
-						{item.Name}, {item.ObjectType}
-						{'\n'}
-						{item.TotalArea} м2,{'\n'}
+						{item.Category}, {item.ObjectType}, {item.TotalArea} м2,{'\n'}
 						{item.Floor}/{item.FloorsInHouse} эт.
 					</Text>
 					<Text
 						style={{
 							fontFamily: fonts.regular,
-							fontSize: 15,
+							fontSize: 13,
 							lineHeight: 20,
-							marginBottom: 20,
 						}}
 					>
 						{item.City}, {item.Region}
 						{'\n'}
 						{item.Street}, {item.HouseNumber}
 					</Text>
+					<PhoneShow phoneNumber={item.Phone} cart />
 				</View>
-				<PhoneShow phoneNumber={item.Phone} cart />
 			</TouchableOpacity>
 		</View>
 	)

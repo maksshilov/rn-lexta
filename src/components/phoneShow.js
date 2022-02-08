@@ -8,7 +8,7 @@ export default function PhoneShow({ phoneNumber, cart }) {
 	return (
 		<View
 			style={{
-				marginBottom: 20,
+				marginVertical: 10,
 				alignItems: 'center',
 			}}
 		>
@@ -17,14 +17,14 @@ export default function PhoneShow({ phoneNumber, cart }) {
 				style={[
 					{
 						backgroundColor: colors.red,
-						height: windowWidth * 0.1,
+						height: windowWidth * 0.08,
 						borderRadius: 5,
 						alignItems: 'center',
 						justifyContent: 'center',
 					},
 					cart
 						? {
-								width: windowWidth * 0.8,
+								width: windowWidth * 0.55,
 						  }
 						: {
 								width: windowWidth * 0.94,
