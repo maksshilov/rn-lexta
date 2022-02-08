@@ -37,6 +37,9 @@ export default function MainScreen({ navigation }) {
 		const userData = await AsyncStorage.getItem('userData')
 		const { Email, Token, UserId, expirationDate } = JSON.parse(userData)
 
+		console.log('MainScreen.js > EMAIL', md5(Email))
+		console.log('MainScreen.js > TOKEN', Token)
+
 		const lexta = new LextaService()
 		lexta
 			.getSearchObjects(`token=${Token}&user=${md5(Email)}&recNum=20&curPos=0`)

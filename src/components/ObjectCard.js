@@ -23,7 +23,7 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 				style={{
 					backgroundColor: '#fff',
 					elevation: 5,
-					width: windowWidth * 0.88,
+					width: windowWidth * 0.94,
 					marginBottom: 20,
 				}}
 			>
@@ -31,7 +31,7 @@ export default function ObjectCard({ item, userFavorites, navigation }) {
 				<View>
 					<Image
 						source={{ uri: `https://lexta.pro${item.Img[0]}` }}
-						style={{ width: windowWidth * 0.88, height: windowWidth * 0.88 }}
+						style={{ width: windowWidth * 0.94, height: windowWidth * 0.94 }}
 						resizeMethod="scale"
 					/>
 				</View>

@@ -100,18 +100,23 @@ export default function TravelScreen({ navigation }) {
 			travelType4=${restbase ? '4' : ''}&
 			leaseType=${appartments ? '2' : ''}&
 			recNum=5&
-			curPos=${curPos}`
-		console.log('params', params)
+			curPos=${curPos}
+			`
+		// similar=1&
+		// ​​travel=1&
+		// ​​catalogType=2&
 		console.log('loading', loading)
 		console.log('isListEnd', isListEnd)
 
 		if (!loading && !isListEnd) {
+			// пофиксить isListEnd - проходит проверку только первый раз.
+			// вроде всё ок. надо мониторить
 			setLoading(true)
 			lexta
 				.getSearchObjects(params)
 				.then((response) => response.json())
 				.then((responseJson) => {
-					console.log(responseJson.length)
+					console.log('TravelScreen.js > getData() > getSearchObject > responseJson.length ', responseJson.length)
 					if (responseJson.length > 0) {
 						setCurPos(curPos + 5)
 						setDataSource([...dataSource, ...responseJson])
