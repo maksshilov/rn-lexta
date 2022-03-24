@@ -64,6 +64,7 @@ const ObjectScreen = ({ route, navigation, state }) => {
 	const scrollToTop = useRef(null)
 
 	const opacityMain = useRef(new Animated.Value(1)).current
+
 	const handleOpacityMainDown = () => {
 		Animated.timing(opacityMain, {
 			toValue: 0.2,
